@@ -130,7 +130,6 @@ function sendRequestNew(token) {
 const proxyUrl = '/api/server';
 
 const headers = {
-  'User-Agent': navigator.userAgent,
   'Accept': 'application/json',
   'x-api-realm': 'edusp',
   'x-api-platform': 'webclient',
@@ -159,7 +158,6 @@ function fetchUserRooms(token) {
   const proxyUrl = '/api/server';
 
   const headers = {
-    'User-Agent': navigator.userAgent,
     'x-api-key': token
   };
 
@@ -211,7 +209,6 @@ function fetchTasks(token, room) {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'User-Agent': navigator.userAgent,
         'x-api-key': token
       }
     })
