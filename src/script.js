@@ -350,7 +350,7 @@ function loadTasks(data, token, room, tipo) {
         trava = false;
       });
   });
-
+}
 
 function delay(ms) {  
   return new Promise(resolve => setTimeout(resolve, ms));
