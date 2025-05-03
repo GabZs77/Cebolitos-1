@@ -18,7 +18,7 @@
 ## 🌐 Acesse agora
 
 📲 Interface simples, compatível com celular, iOS e PC:  
-👉 [https://dontbrazz.github.io/Cebolitos](https://dontbrazz.github.io/Cebolitos)
+👉 [https://cebolitos.vercel.app/](https://cebolitos.vercel.app/)
 
 ---
 
@@ -26,7 +26,7 @@
 
 🧩 Este projeto foi desenvolvido com base em estruturas e lógicas já existentes na comunidade de automação educacional.  
 📬 Por isso, o código será **open-source** para que todos possam colaborar, estudar e melhorar a ferramenta juntos.
-⏱️ Por padrão, o sistema espera **90 segundos** para enviar cada atividade. Isso ajuda a simular um comportamento humano e evitar bloqueios.
+⏱️ Por padrão, o sistema espera **150 segundos** para enviar cada atividade. Isso ajuda a simular um comportamento humano e evitar bloqueios.
 
 ⚠️ Está em **fase de testes** — bugs e falhas podem acontecer. Mas atualizações estão a caminho! 🚧
 
@@ -41,5 +41,10 @@ Juntos podemos deixar o **Cebolitos** ainda mais crocante 🌽.
 
 ## 👨‍💻 Feito por:
 **dontbrazz** — com 💚 e um toque de automação escolar.
+
+---
+
+## 📜 Créditos  
+[@hackermoon1](https://github.com/hackermoon1/) — colaboração especial no desenvolvimento e melhorias do sistema. 🙌
 
 ---
