@@ -53,7 +53,7 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
     trava = true;
 
     const options = {
-      TEMPO: 150, //Tempo atividade em SEGUNDOS
+      TEMPO: 30, //Tempo atividade em SEGUNDOS
       ENABLE_SUBMISSION: true,
       LOGIN_URL: 'https://sedintegracoes.educacao.sp.gov.br/credenciais/api/LoginCompletoToken',
       LOGIN_DATA: {
@@ -354,52 +354,60 @@ function delay(ms) {
 }
 
 async function submitAnswers(taskId, answersData, token, room) {
-  let request = {
+  const request = {
     status: "submitted",
     accessed_on: "room",
     executed_on: room,
     answers: answersData,
-    //duration: "60.00"
+    // duration: "60.00"
   };
 
   const sendRequest = async (method, url, data) => {
-    const proxyUrl = '/api/server'; // URL do proxy
+    const proxyUrl = '/api/server'; // Seu proxy local
 
     const requestBody = {
-      url, // URL de destino da API
-      method, // Método da requisição
+      url, // URL de destino da API externa
+      method, // Método HTTP (POST)
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': token,
+        'Accept': 'application/json',
+        'x-api-realm': 'edusp',
+        'x-api-platform': 'webclient',
       },
-      body: data ? JSON.stringify(data) : null, // Corpo da requisição, se necessário
+      body: data, // O corpo da requisição vai como objeto, não precisa serializar
     };
 
     try {
-      // Enviar a requisição para o proxy
-      const response = await makeRequest(proxyUrl, 'POST', {
-        'Content-Type': 'application/json',
-      }, requestBody);
-      return response; // Retorna a resposta do proxy
+      const response = await makeRequest(
+        proxyUrl,
+        'POST',
+        { 'Content-Type': 'application/json' },
+        requestBody
+      );
+      return response;
     } catch (error) {
       throw new Error('Erro ao enviar requisição via proxy: ' + error.message);
     }
   };
 
   console.log(`⏳ Aguardando ${options.TEMPO} segundos e realizando a tarefa ID: ${taskId}...`);
-  await delay(options.TEMPO * 1000); // Atraso configurado
+  await delay(options.TEMPO * 1000); // Aguarda o tempo definido
 
   try {
     const response = await sendRequest("POST", `https://edusp-api.ip.tv/tms/task/${taskId}/answer`, request);
-    const response2 = JSON.parse(response.responseText);
-    const task_idNew = response2.id;
+
+    if (!response || !response.id) {
+      throw new Error('Resposta inválida da API');
+    }
+
+    const task_idNew = response.id;
     getCorrectAnswers(taskId, task_idNew, token);
   } catch (error) {
     console.error('❌ Erro ao enviar as respostas:', error);
     trava = false;
   }
 }
-
 function getCorrectAnswers(taskId, answerId, token) {
   const url = `https://edusp-api.ip.tv/tms/task/${taskId}/answer/${answerId}?with_task=true&with_genre=true&with_questions=true&with_assessed_skills=true`;
   
