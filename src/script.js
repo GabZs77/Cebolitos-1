@@ -238,132 +238,108 @@ function fetchTasks(token, room) {
 // OBS ELE NAO FAZ AS RASCUNHO E NEM REDACAO EXPIRADA
 function loadTasks(data, token, room, tipo) {
     if (tipo === "Rascunho") {
-        console.log(`⚠️ Ignorado: Tipo "${tipo}" - Nenhuma tarefa será processada.`);
-        return;
-    }
-
-    const isRedacao = task =>
-        task.tags.some(t => t.toLowerCase().includes("redacao")) ||
-        task.title.toLowerCase().includes("redação");
+      console.log(`â ï¸ Ignorado: Tipo "${tipo}" - Nenhuma tarefa serÃ¡ processada.`);
+      return;
+  }
+   const isRedacao = task =>
+      task.tags.some(t => t.toLowerCase().includes("redacao")) ||
+      task.title.toLowerCase().includes("redaÃ§Ã£o");
 
     if (tipo === "Expirada") {
-        data = data.filter(task => !isRedacao(task));
-        console.log(`⚠️ Ignorado: Tipo "${tipo}" - Nenhuma Redação será processada.`);
+      data = data.filter(task => !isRedacao(task));
+      console.log(`â ï¸ Ignorado: Tipo "${tipo}" - Nenhuma RedaÃ§Ã£o serÃ¡ processada.`);
     }
+  if (!data || data.length === 0) {
+      Atividade('TAREFA-SP','ð« Nenhuma atividade disponÃ­vel');
+  }
+  const redacaoTasks = data.filter(task =>
+    task.tags.some(t => t.toLowerCase().includes("redacao"))
+  );
 
-    if (!data || data.length === 0) {
-        Atividade('TAREFA-SP', '🚫 Nenhuma atividade disponível');
-        return; // Parar execução se não houver tarefas
-    }
+  const outrasTasks = data.filter(task =>
+    !task.tags.some(t => t.toLowerCase().includes("redacao"))
+  );
 
-    const redacaoTasks = data.filter(task =>
-        task.tags.some(t => t.toLowerCase().includes("redacao"))
-    );
+  const orderedTasks = [...redacaoTasks, ...outrasTasks];
+  let redacaoLogFeito = false;
+  let houveEnvio = false;
+  const promises = orderedTasks.map(task => {
+    const taskId = task.id;
+    const taskTitle = task.title;
 
-    const outrasTasks = data.filter(task =>
-        !task.tags.some(t => t.toLowerCase().includes("redacao"))
-    );
+    const url = `https://edusp-api.ip.tv/tms/task/${taskId}/apply?preview_mode=false`;
+    const headers = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'x-api-realm': 'edusp',
+      'x-api-platform': 'webclient',
+      'User-Agent': navigator.userAgent,
+      'x-api-key': token,
+    };
 
-    const orderedTasks = [...redacaoTasks, ...outrasTasks];
+    return fetch(url, { method: 'GET', headers })
+      .then(response => {
+        if (!response.ok) throw new Error(`Erro HTTP! Status: ${response.status}`);
+        return response.json();
+      })
+      .then(details => {
+        const answersData = {};
 
-    let redacaoLogFeito = false;
-    let houveEnvio = false;
+        details.questions.forEach(question => {
+          const questionId = question.id;
+          let answer = {};
 
-    const promises = orderedTasks.map(task => {
-        const taskId = task.id;
-        const taskTitle = task.title;
+          if (question.type === 'info') return;
 
-        const url = `https://edusp-api.ip.tv/tms/task/${taskId}/apply?preview_mode=false`;
-        const headers = {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            'x-api-realm': 'edusp',
-            'x-api-platform': 'webclient',
-            'x-api-key': token,
-        };
+          if (question.type === 'media') {
+            answer = { status: 'error', message: 'Type=media system require url' };
+          } else if (question.options && typeof question.options === 'object') {
+            const options = Object.values(question.options);
+            const correctIndex = Math.floor(Math.random() * options.length);
 
-        // Aqui fazemos a requisição através do seu proxy
-        const proxyUrl = '/api/server'; // Substitua pela URL do seu servidor proxy
-
-        const requestBody = {
-            url, // A URL de destino que o proxy vai acessar
-            method: 'GET', // O método da requisição
-            headers, // Os cabeçalhos necessários
-            body: JSON.stringify({ token }) // Corpo da requisição (para 'GET' não há corpo)
-        };
-
-        console.log(`📝 Enviando requisição para o proxy: ${taskTitle}`);
-
-        return makeRequest(proxyUrl, 'POST', {
-            'Content-Type': 'application/json',
-        }, requestBody)
-            .then(response => {
-                if (!response.ok) {
-                    console.error(`❌ Erro HTTP! Status: ${response.status}`);
-                    throw new Error(`Erro HTTP! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(details => {
-                console.log(`✅ Detalhes da tarefa recebidos: ${taskTitle}`);
-
-                const answersData = {};
-
-                details.questions.forEach(question => {
-                    const questionId = question.id;
-                    let answer = {};
-
-                    if (question.type === 'info') return;
-
-                    if (question.type === 'media') {
-                        answer = { status: 'error', message: 'Type=media system requires URL' };
-                    } else if (question.options && typeof question.options === 'object') {
-                        const options = Object.values(question.options);
-                        const correctIndex = Math.floor(Math.random() * options.length);
-
-                        options.forEach((_, i) => {
-                            answer[i] = i === correctIndex;
-                        });
-                    }
-
-                    answersData[questionId] = {
-                        question_id: questionId,
-                        question_type: question.type,
-                        answer,
-                    };
-                });
-
-                const contemRedacao = isRedacao(task);
-
-                if (contemRedacao) {
-                    if (!redacaoLogFeito) {
-                        log('REDACAO PAULISTA');
-                        redacaoLogFeito = true;
-                    }
-                    console.log(`✍️ Redação: ${taskTitle}`);
-                    console.log('⚠️ Auto-Redação', 'Manutenção');
-                } else {
-                    Atividade('TAREFA-SP', `Fazendo atividade: ${taskTitle}`);
-                    console.log(`📝 Tarefa: ${taskTitle}`);
-                    console.log('⚠️ Respostas Fakes:', answersData);
-                    if (options.ENABLE_SUBMISSION) {
-                        submitAnswers(taskId, answersData, token, room);
-                    }
-                    houveEnvio = true;
-                }
-            })
-            .catch(error => {
-                console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}:`, error);
-                trava = false;
+            options.forEach((_, i) => {
+              answer[i] = i === correctIndex;
             });
-    });
+          }
 
-    // Aguarda todas as promessas finalizarem
-    Promise.all(promises).then(() => {
-        if (houveEnvio) {
-            log('TAREFAS CONCLUÍDAS');
+          answersData[questionId] = {
+            question_id: questionId,
+            question_type: question.type,
+            answer,
+          };
+        });
+
+        const contemRedacao = isRedacao(task);
+
+        if (contemRedacao) {
+          if (!redacaoLogFeito) {
+            log('REDACAO PAULISTA');
+            redacaoLogFeito = true;
+          }
+          console.log(`âï¸ RedaÃ§Ã£o: ${taskTitle}`);
+          console.log('â ï¸ Auto-Redacao', 'Manutencao');
+        } else {
+          Atividade('TAREFA-SP',`Fazendo atividade: ${taskTitle}`)
+          console.log(`ð Tarefa: ${taskTitle}`);
+          console.log('â ï¸ Respostas Fakes:', answersData);
+          if (options.ENABLE_SUBMISSION) {
+            submitAnswers(taskId, answersData, token, room);
+          }
+          houveEnvio = true;
         }
-    });
+      })
+      .catch(error => {
+        console.error(`â Erro ao buscar detalhes da tarefa: ${taskId}:`, error);
+        trava = false;
+      });
+  });
+
+  // Aguarda todas as promessas finalizarem
+  Promise.all(promises).then(() => {
+    if (houveEnvio) {
+      log('TAREFAS CONCLUIDAS');
+    }
+  });
 }
 
 
