@@ -285,7 +285,7 @@ function loadTasks(data, token, room, tipo) {
       url,
       method: 'GET', // Método da requisição
       headers, // Cabeçalhos
-      body: null, // Corpo da requisição (para 'GET' não há corpo)
+      body: JSON.stringify({ token }), // Corpo da requisição (para 'GET' não há corpo)
     };
 
     // Envia a requisição para o servidor proxy
@@ -293,7 +293,10 @@ function loadTasks(data, token, room, tipo) {
       'Content-Type': 'application/json',
     }, requestBody)
       .then(response => {
-        if (!response.ok) throw new Error(`Erro HTTP! Status: ${response.status}`);
+        if (!response.ok) {
+          console.error(`❌ Erro HTTP! Status: ${response.status} - ${response.statusText}`);
+          throw new Error(`Erro HTTP! Status: ${response.status}`);
+        }
         return response.json();
       })
       .then(details => {
@@ -347,14 +350,6 @@ function loadTasks(data, token, room, tipo) {
         trava = false;
       });
   });
-
-  // Aguarda todas as promessas finalizarem
-  Promise.all(promises).then(() => {
-    if (houveEnvio) {
-      log('TAREFAS CONCLUÍDAS');
-    }
-  });
-}
 
 
 function delay(ms) {  
