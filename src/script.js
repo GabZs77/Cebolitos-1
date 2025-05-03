@@ -238,108 +238,125 @@ function fetchTasks(token, room) {
 // OBS ELE NAO FAZ AS RASCUNHO E NEM REDACAO EXPIRADA
 function loadTasks(data, token, room, tipo) {
     if (tipo === "Rascunho") {
-      console.log(`⚠️ Ignorado: Tipo "${tipo}" - Nenhuma tarefa será processada.`);
-      return;
-  }
-   const isRedacao = task =>
-      task.tags.some(t => t.toLowerCase().includes("redacao")) ||
-      task.title.toLowerCase().includes("redação");
+        console.log(`⚠️ Ignorado: Tipo "${tipo}" - Nenhuma tarefa será processada.`);
+        return;
+    }
+
+    const isRedacao = task =>
+        task.tags.some(t => t.toLowerCase().includes("redacao")) ||
+        task.title.toLowerCase().includes("redação");
 
     if (tipo === "Expirada") {
-      data = data.filter(task => !isRedacao(task));
-      console.log(`⚠️ Ignorado: Tipo "${tipo}" - Nenhuma Redação será processada.`);
+        data = data.filter(task => !isRedacao(task));
+        console.log(`⚠️ Ignorado: Tipo "${tipo}" - Nenhuma Redação será processada.`);
     }
-  if (!data || data.length === 0) {
-      Atividade('TAREFA-SP','🚫 Nenhuma atividade disponível');
-  }
-  const redacaoTasks = data.filter(task =>
-    task.tags.some(t => t.toLowerCase().includes("redacao"))
-  );
 
-  const outrasTasks = data.filter(task =>
-    !task.tags.some(t => t.toLowerCase().includes("redacao"))
-  );
+    if (!data || data.length === 0) {
+        Atividade('TAREFA-SP', '🚫 Nenhuma atividade disponível');
+        return; // Parar execução se não houver tarefas
+    }
 
-  const orderedTasks = [...redacaoTasks, ...outrasTasks];
-  let redacaoLogFeito = false;
-  let houveEnvio = false;
-  const promises = orderedTasks.map(task => {
-    const taskId = task.id;
-    const taskTitle = task.title;
+    const redacaoTasks = data.filter(task =>
+        task.tags.some(t => t.toLowerCase().includes("redacao"))
+    );
 
-    const url = `https://edusp-api.ip.tv/tms/task/${taskId}/apply?preview_mode=false`;
-    const headers = {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      'x-api-realm': 'edusp',
-      'x-api-platform': 'webclient',
-      'User-Agent': navigator.userAgent,
-      'x-api-key': token,
-    };
+    const outrasTasks = data.filter(task =>
+        !task.tags.some(t => t.toLowerCase().includes("redacao"))
+    );
 
-    return fetch(url, { method: 'GET', headers })
-      .then(response => {
-        if (!response.ok) throw new Error(`Erro HTTP! Status: ${response.status}`);
-        return response.json();
-      })
-      .then(details => {
-        const answersData = {};
+    const orderedTasks = [...redacaoTasks, ...outrasTasks];
 
-        details.questions.forEach(question => {
-          const questionId = question.id;
-          let answer = {};
+    let redacaoLogFeito = false;
+    let houveEnvio = false;
 
-          if (question.type === 'info') return;
+    const promises = orderedTasks.map(task => {
+        const taskId = task.id;
+        const taskTitle = task.title;
 
-          if (question.type === 'media') {
-            answer = { status: 'error', message: 'Type=media system require url' };
-          } else if (question.options && typeof question.options === 'object') {
-            const options = Object.values(question.options);
-            const correctIndex = Math.floor(Math.random() * options.length);
+        const url = `https://edusp-api.ip.tv/tms/task/${taskId}/apply?preview_mode=false`;
+        const headers = {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'x-api-realm': 'edusp',
+            'x-api-platform': 'webclient',
+            'x-api-key': token,
+        };
 
-            options.forEach((_, i) => {
-              answer[i] = i === correctIndex;
+        // Aqui fazemos a requisição através do seu proxy
+        const proxyUrl = '/api/server'; // Substitua pela URL do seu servidor proxy
+
+        const requestBody = {
+            url, // A URL de destino que o proxy vai acessar
+            method: 'GET', // O método da requisição
+            headers, // Os cabeçalhos necessários
+            body: null, // Corpo da requisição (para 'GET' não há corpo)
+        };
+
+        return makeRequest(proxyUrl, 'POST', {
+            'Content-Type': 'application/json',
+        }, requestBody)
+            .then(response => {
+                if (!response.ok) throw new Error(`Erro HTTP! Status: ${response.status}`);
+                return response.json();
+            })
+            .then(details => {
+                const answersData = {};
+
+                details.questions.forEach(question => {
+                    const questionId = question.id;
+                    let answer = {};
+
+                    if (question.type === 'info') return;
+
+                    if (question.type === 'media') {
+                        answer = { status: 'error', message: 'Type=media system requires URL' };
+                    } else if (question.options && typeof question.options === 'object') {
+                        const options = Object.values(question.options);
+                        const correctIndex = Math.floor(Math.random() * options.length);
+
+                        options.forEach((_, i) => {
+                            answer[i] = i === correctIndex;
+                        });
+                    }
+
+                    answersData[questionId] = {
+                        question_id: questionId,
+                        question_type: question.type,
+                        answer,
+                    };
+                });
+
+                const contemRedacao = isRedacao(task);
+
+                if (contemRedacao) {
+                    if (!redacaoLogFeito) {
+                        log('REDACAO PAULISTA');
+                        redacaoLogFeito = true;
+                    }
+                    console.log(`✍️ Redação: ${taskTitle}`);
+                    console.log('⚠️ Auto-Redação', 'Manutenção');
+                } else {
+                    Atividade('TAREFA-SP', `Fazendo atividade: ${taskTitle}`);
+                    console.log(`📝 Tarefa: ${taskTitle}`);
+                    console.log('⚠️ Respostas Fakes:', answersData);
+                    if (options.ENABLE_SUBMISSION) {
+                        submitAnswers(taskId, answersData, token, room);
+                    }
+                    houveEnvio = true;
+                }
+            })
+            .catch(error => {
+                console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}:`, error);
+                trava = false;
             });
-          }
+    });
 
-          answersData[questionId] = {
-            question_id: questionId,
-            question_type: question.type,
-            answer,
-          };
-        });
-
-        const contemRedacao = isRedacao(task);
-
-        if (contemRedacao) {
-          if (!redacaoLogFeito) {
-            log('REDACAO PAULISTA');
-            redacaoLogFeito = true;
-          }
-          console.log(`✍️ Redação: ${taskTitle}`);
-          console.log('⚠️ Auto-Redacao', 'Manutencao');
-        } else {
-          Atividade('TAREFA-SP',`Fazendo atividade: ${taskTitle}`)
-          console.log(`📝 Tarefa: ${taskTitle}`);
-          console.log('⚠️ Respostas Fakes:', answersData);
-          if (options.ENABLE_SUBMISSION) {
-            submitAnswers(taskId, answersData, token, room);
-          }
-          houveEnvio = true;
+    // Aguarda todas as promessas finalizarem
+    Promise.all(promises).then(() => {
+        if (houveEnvio) {
+            log('TAREFAS CONCLUÍDAS');
         }
-      })
-      .catch(error => {
-        console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}:`, error);
-        trava = false;
-      });
-  });
-
-  // Aguarda todas as promessas finalizarem
-  Promise.all(promises).then(() => {
-    if (houveEnvio) {
-      log('TAREFAS CONCLUIDAS');
-    }
-  });
+    });
 }
 
 function delay(ms) {  
@@ -355,20 +372,32 @@ async function submitAnswers(taskId, answersData, token, room) {
     //duration: "60.00"
   };
 
-  const sendRequest = (method, url, data) => {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open(method, url);
-      xhr.setRequestHeader("X-Api-Key", token);
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.onload = () => resolve(xhr);
-      xhr.onerror = () => reject(new Error('Request failed'));
-      xhr.send(data ? JSON.stringify(data) : null);
-    });
+  const sendRequest = async (method, url, data) => {
+    const proxyUrl = '/api/server'; // URL do proxy
+
+    const requestBody = {
+      url, // URL de destino da API
+      method, // Método da requisição
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': token,
+      },
+      body: data ? JSON.stringify(data) : null, // Corpo da requisição, se necessário
+    };
+
+    try {
+      // Enviar a requisição para o proxy
+      const response = await makeRequest(proxyUrl, 'POST', {
+        'Content-Type': 'application/json',
+      }, requestBody);
+      return response; // Retorna a resposta do proxy
+    } catch (error) {
+      throw new Error('Erro ao enviar requisição via proxy: ' + error.message);
+    }
   };
 
-  console.log(`⏳ Aguardando ${options.TEMPO} segundos e realizano a tarefa ID: ${taskId}...`);
-  await delay(options.TEMPO*1000); // 70 segundos
+  console.log(`⏳ Aguardando ${options.TEMPO} segundos e realizando a tarefa ID: ${taskId}...`);
+  await delay(options.TEMPO * 1000); // Atraso configurado
 
   try {
     const response = await sendRequest("POST", `https://edusp-api.ip.tv/tms/task/${taskId}/answer`, request);
@@ -383,61 +412,64 @@ async function submitAnswers(taskId, answersData, token, room) {
 
 function getCorrectAnswers(taskId, answerId, token) {
   const url = `https://edusp-api.ip.tv/tms/task/${taskId}/answer/${answerId}?with_task=true&with_genre=true&with_questions=true&with_assessed_skills=true`;
-  const headers = {
-    'User-Agent': navigator.userAgent,
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-    'x-api-realm': 'edusp',
-    'x-api-platform': 'webclient',
-    'x-api-key': token,
+  
+  const requestBody = {
+    url, // URL de destino
+    method: 'GET', // Método da requisição
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'x-api-realm': 'edusp',
+      'x-api-platform': 'webclient',
+      'x-api-key': token,
+    },
   };
 
-  fetch(url, { method: 'GET', headers })
+  const proxyUrl = '/api/server'; // URL do proxy
+
+  // Envia a requisição via proxy
+  makeRequest(proxyUrl, 'POST', {
+    'Content-Type': 'application/json',
+  }, requestBody)
     .then(response => {
-      if (!response.ok) throw new Error(`❌ Erro ao buscar respostas corretas! Status: ${response.status}`);
-      return response.json();
-    })
-    .then(data => {
-      console.log('📂 Respostas corretas recebidas:', data);
-      putAnswer(data, taskId, answerId, token);
+      console.log('📂 Respostas corretas recebidas:', response);
+      putAnswer(response, taskId, answerId, token);
     })
     .catch(error => {
       console.error('❌ Erro ao buscar respostas corretas:', error);
       trava = false;
     });
 }
-
 function putAnswer(respostasAnteriores, taskId, answerId, token) {
   const url = `https://edusp-api.ip.tv/tms/task/${taskId}/answer/${answerId}`;
-  const headers = {
-    'User-Agent': navigator.userAgent,
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-    'x-api-realm': 'edusp',
-    'x-api-platform': 'webclient',
-    'x-api-key': token,
+
+  const requestBody = {
+    url, // URL de destino
+    method: 'PUT', // Método da requisição
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'x-api-realm': 'edusp',
+      'x-api-platform': 'webclient',
+      'x-api-key': token,
+    },
+    body: JSON.stringify(transformJson(respostasAnteriores)),
   };
 
-  const answer = transformJson(respostasAnteriores);
+  const proxyUrl = '/api/server'; // URL do proxy
 
-  fetch(url, {
-    method: 'PUT',
-    headers,
-    body: JSON.stringify(answer),
-  })
+  // Envia a requisição via proxy
+  makeRequest(proxyUrl, 'POST', {
+    'Content-Type': 'application/json',
+  }, requestBody)
     .then(response => {
-      if (!response.ok) throw new Error(`❌ Erro ao enviar respostas corrigidas! Status: ${response.status}`);
-      return response.json();
-    })
-    .then(data => {
-      console.log('✅ Respostas corrigidas enviadas com sucesso:', data);
+      console.log('✅ Respostas corrigidas enviadas com sucesso:', response);
     })
     .catch(error => {
       console.error('❌ Erro ao enviar respostas corrigidas:', error);
       trava = false;
     });
 }
-
 function transformJson(jsonOriginal) {
     if (!jsonOriginal || !jsonOriginal.task || !jsonOriginal.task.questions) {
       throw new Error("Estrutura de dados inválida para transformação.");
