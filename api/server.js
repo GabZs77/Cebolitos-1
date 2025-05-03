@@ -4,7 +4,7 @@ module.exports = async (req, res) => {
   const { url } = req.query;
 
   if (!url) {
-    return res.status(400).json({ error: 'Missing "url" query parameter' });
+    return res.status(400).json({ error: 'Missing "urls" query parameter' });
   }
 
   const excludedHeaders = ['host', 'connection', 'content-length'];
