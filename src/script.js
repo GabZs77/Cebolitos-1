@@ -108,6 +108,7 @@ function loginRequest() {
 function sendRequest(token) {
   const url = 'https://edusp-api.ip.tv/registration/edusp/token';
   const headers = {
+      'User-Agent': navigator.userAgent,
     Accept: 'application/json',
     'x-api-realm': 'edusp',
     'x-api-platform': 'webclient',
