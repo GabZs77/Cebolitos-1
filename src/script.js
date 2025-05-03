@@ -54,7 +54,7 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
 
     const options = {
       TEMPO: 150, //Tempo atividade em SEGUNDOS
-      ENABLE_SUBMISSION: true,
+      ENABLE_SUBMISSION: false,
       LOGIN_URL: 'https://sedintegracoes.educacao.sp.gov.br/credenciais/api/LoginCompletoToken',
       LOGIN_DATA: {
         user: document.getElementById('ra').value, 
