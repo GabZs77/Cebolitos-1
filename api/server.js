@@ -1,6 +1,14 @@
 import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
+
+  res.setHeader('Access-Control-Allow-Origin', '*'); // ou restrinja para seu domínio real
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end(); // resposta rápida para preflight
+  }
   const { url, method = 'GET', headers = {}, body = null } = req.body;
 
   // Verifica se a URL foi fornecida
@@ -42,9 +50,4 @@ export default async function handler(req, res) {
     // Retorna erro 500 com a mensagem de erro
     res.status(500).json({ error: 'Erro interno no proxy', details: error.message });
   }
-
-  // Adiciona cabeçalhos CORS para permitir requisições do frontend
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 }
