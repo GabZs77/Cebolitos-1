@@ -289,7 +289,7 @@ function loadTasks(data, token, room, tipo) {
             url, // A URL de destino que o proxy vai acessar
             method: 'GET', // O método da requisição
             headers, // Os cabeçalhos necessários
-            body: null, // Corpo da requisição (para 'GET' não há corpo)
+            body: JSON.stringify({ token }) // Corpo da requisição (para 'GET' não há corpo)
         };
 
         console.log(`📝 Enviando requisição para o proxy: ${taskTitle}`);
