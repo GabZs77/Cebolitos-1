@@ -94,7 +94,7 @@ function loginRequest() {
       Atividade('SALA-DO-FUTURO','Logado com sucesso!');
       Atividade('Cebolitos','Atenção: o script não faz redações e atividades em rascunho!');
       Atividade('Cebolitos', 'O script vem como padrão o tempo de 150 Segundos para fazer as atividades!');
-      sendRequest(data.token);
+      sendRequestNew(data.token);
     })
     .catch(error => {
       Atividade('SALA-DO-FUTURO','Nao foi possivel logar!')
@@ -123,6 +123,27 @@ function sendRequest(token) {
       console.error('❌ Erro na requisição:', error)
       trava = false;
     });
+}
+
+function sendRequestNew(token) {
+    const backendUrl = '/api/server'; // A URL do endpoint do proxy (não precisa de domínio completo, apenas o caminho relativo)
+
+    const dataToSend = { token: token };
+
+    fetch(backendUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataToSend),
+    })
+      .then(res => res.json()) // Recebe a resposta do backend
+      .then(data => {
+        console.log('✅ Dados recebidos da API externa:', data);
+      })
+      .catch(err => {
+        console.error('❌ Erro:', err);
+      });
 }
 function fetchUserRooms(token) {
   const url = 'https://edusp-api.ip.tv/room/user?list_all=true&with_cards=true';
