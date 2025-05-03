@@ -8,9 +8,20 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'Missing "url" query parameter' });
   }
 
+  const excludedHeaders = ['host', 'connection', 'content-length'];
+
+  // Filtrar e copiar headers do cliente
+  const forwardedHeaders = {};
+  for (const [key, value] of Object.entries(req.headers)) {
+    if (!excludedHeaders.includes(key.toLowerCase())) {
+      forwardedHeaders[key] = value;
+    }
+  }
+
   try {
-    // Fazer a requisição para o site de destino
-    const response = await axios.get(url);
+    const response = await axios.get(url, {
+      headers: forwardedHeaders
+    });
 
     // Definir cabeçalhos CORS para permitir o acesso ao recurso
     res.setHeader('Access-Control-Allow-Origin', '*');
