@@ -1,4 +1,3 @@
-// api/proxy.js
 const axios = require('axios');
 
 module.exports = async (req, res) => {
@@ -19,19 +18,22 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const response = await axios.get(url, {
-      headers: forwardedHeaders
-    });
+    const axiosOptions = {
+      method: req.method,
+      url,
+      headers: forwardedHeaders,
+      data: req.body, // Repassa o corpo (necessário para POST/PUT)
+    };
 
-    // Definir cabeçalhos CORS para permitir o acesso ao recurso
+    const response = await axios(axiosOptions);
+
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-api-realm, x-api-platform');
 
-    // Retornar a resposta do proxy para o cliente
     res.status(response.status).send(response.data);
   } catch (error) {
-    console.error('Error fetching the requested URL:', error);
-    res.status(500).json({ error: 'Error fetching the requested URL' });
+    console.error('Error fetching the requested URL:', error.message);
+    res.status(500).json({ error: 'Erro ao fazer proxy da requisição', detalhe: error.message });
   }
 };
