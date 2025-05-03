@@ -8,11 +8,15 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch(url, {
-      method: method.toUpperCase(),
-      headers,
-      body: ['GET', 'HEAD'].includes(method.toUpperCase()) ? undefined : JSON.stringify(body)
-    });
+  headers['Content-Type'] = 'application/json'; // força o tipo
+
+  const response = await fetch(url, {
+    method: method.toUpperCase(),
+    headers,
+    body: ['GET', 'HEAD'].includes(method.toUpperCase())
+      ? undefined
+      : (typeof body === 'string' ? body : JSON.stringify(body))
+  });
 
     const contentType = response.headers.get('content-type') || '';
     const isJson = contentType.includes('application/json');
