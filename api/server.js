@@ -14,6 +14,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
         'x-api-realm': 'edusp',
         'x-api-platform': 'webclient',
         'Host': 'edusp-api.ip.tv', // Cabeçalho Host
