@@ -33,19 +33,20 @@ async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
     headers['Content-Type'] = 'application/json';
 
     // Configura o timeout para 5 segundos
-    const timeout = 5000; // 5 segundos
-// Função de retry com 3 tentativas e delay de 1s
-// Faz a requisição com a URL fornecida e o timeout
-const response = await Promise.race([
-  fetchWithRetry(url, {
-    method: method.toUpperCase(),
-    headers,
-    body: ['GET', 'HEAD'].includes(method.toUpperCase()) ? undefined : (typeof body === 'string' ? body : JSON.stringify(body)),
-  }, 3, 1000),
-  new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('Requisição excedeu o tempo limite')), timeout)
-  ),
-]);
+      const timeout = 7000; // 7 segundos
+
+    const response = await Promise.race([
+      fetchWithRetry(url, {
+        method: method.toUpperCase(),
+        headers,
+        body: ['GET', 'HEAD'].includes(method.toUpperCase()) ? undefined : (typeof body === 'string' ? body : JSON.stringify(body)),
+      }),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Requisição excedeu o tempo limite')), timeout)
+      ),
+    ]);
+
+  
 
     // Verifica o tipo de conteúdo da resposta
     const contentType = response.headers.get('content-type') || '';
