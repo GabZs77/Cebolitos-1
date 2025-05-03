@@ -106,7 +106,8 @@ function loginRequest() {
 }
 
 function sendRequest(token) {
-  const url = 'https://cebolitos.vercel.app/api/server?url=api-registration';
+  const url = 'https://edusp-api.ip.tv/registration/edusp/token';
+    const proxy = 'https://cebolitos.vercel.app/api/server?url='+encodeURIComponent(url);
   const headers = {
     'x-api-realm': 'edusp',
     'x-api-platform': 'webclient',
@@ -114,7 +115,7 @@ function sendRequest(token) {
     Host: 'edusp-api.ip.tv',
   };
 
-  makeRequest(url, 'POST', headers, { token })
+  makeRequest(proxy, 'POST', headers, { token })
     .then(data => {
       console.log('✅ Informações do Aluno:', data);
       fetchUserRooms(data.auth_token);
