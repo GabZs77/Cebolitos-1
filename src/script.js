@@ -285,7 +285,7 @@ function loadTasks(data, token, room, tipo) {
       url,
       method: 'GET', // Método da requisição
       headers, // Cabeçalhos
-      body: JSON.stringify({ token }), // Corpo da requisição (para 'GET' não há corpo)
+      body: null, // Corpo da requisição (para 'GET' não há corpo)
     };
 
     // Envia a requisição para o servidor proxy
