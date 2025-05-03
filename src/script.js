@@ -319,6 +319,9 @@ function loadTasks(data, token, room, tipo) {
           if (!redacaoLogFeito) {
             log('REDACAO PAULISTA');
             redacaoLogFeito = true;
+          }
+          console.log(`✍️ Redação: ${taskTitle}`);
+          console.log('⚠️ Auto-Redacao', 'Manutencao');
           console.log(`✍️ Redação: ${taskTitle}`);
           console.log('⚠️ Auto-Redacao', 'Manutencao');
         } else {
