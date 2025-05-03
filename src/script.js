@@ -142,7 +142,7 @@ makeRequest(proxyUrl, 'POST', {
   url,
   method: 'POST',
   headers,
-  body: { token }
+  body: JSON.stringify({ token })
 })
   .then(data => {
     console.log('✅ Informações do Aluno:', data);
