@@ -272,34 +272,31 @@ function loadTasks(data, token, room, tipo) {
     const taskId = task.id;
     const taskTitle = task.title;
 
-    const url = `https://edusp-api.ip.tv/tms/task/${taskId}/apply?preview_mode=false`;
-    const headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'x-api-realm': 'edusp',
-      'x-api-platform': 'webclient',
-      'x-api-key': token,
+    const proxyUrl = '/api/server';
+    const apiUrl = `https://edusp-api.ip.tv/tms/task/${taskId}/apply?preview_mode=false`;
+
+    const proxyPayload = {
+      url: apiUrl,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'x-api-realm': 'edusp',
+        'x-api-platform': 'webclient',
+        'x-api-key': token
+      }
     };
 
-    const requestBody = {
-      url,
-      method: 'GET', // Método da requisição
-      headers, // Cabeçalhos
-      body: null, // Corpo da requisição (para 'GET' não há corpo)
-    };
-
-    // Envia a requisição para o servidor proxy
-    return makeRequest('/api/server', 'POST', {
-      'Content-Type': 'application/json',
-    }, requestBody)
+    return fetch(proxyUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(proxyPayload)
+    })
       .then(response => {
-        if (!response.ok) {
-          console.error(`❌ Erro HTTP! Status: ${response.status} - ${response.statusText}`);
-          throw new Error(`Erro HTTP! Status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Erro HTTP! Status: ${response.status}`);
         return response.json();
       })
-      .then(details => {
+      .then(details =>  {
         const answersData = {};
 
         details.questions.forEach(question => {
