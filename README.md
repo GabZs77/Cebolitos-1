@@ -51,6 +51,7 @@ Juntos podemos deixar o **Cebolitos** ainda mais crocante 🌽.
 
 ## 📄 Licença
 
-Este projeto está licenciado sob os termos da [Licença MIT](./LICENSE).
+Este projeto é **fechado**.  
+**Todos os direitos reservados**. Nenhuma parte do código ou conteúdo pode ser copiada, modificada ou distribuída sem permissão do autor.
 
 ---
