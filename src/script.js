@@ -237,25 +237,25 @@ function fetchTasks(token, room) {
 
 // OBS ELE NAO FAZ AS RASCUNHO E NEM REDACAO EXPIRADA
 function loadTasks(data, token, room, tipo) {
- if (tipo === 'Rascunho') {
-    console.log(
-      `⚠️ Ignorado: Tipo "${tipo}" - Nenhuma tarefa será processada.`
-    );
+  if (tipo === 'Rascunho') {
+    console.log(`⚠️ Ignorado: Tipo "${tipo}" - Nenhuma tarefa será processada.`);
     return;
   }
+
   const isRedacao = task =>
     task.tags.some(t => t.toLowerCase().includes('redacao')) ||
     task.title.toLowerCase().includes('redação');
 
   if (tipo === 'Expirada') {
     data = data.filter(task => !isRedacao(task));
-    console.log(
-      `⚠️ Ignorado: Tipo "${tipo}" - Nenhuma Redação será processada.`
-    );
+    console.log(`⚠️ Ignorado: Tipo "${tipo}" - Nenhuma Redação será processada.`);
   }
+
   if (!data || data.length === 0) {
-      Atividade('TAREFA-SP',' Nenhuma atividade disponÃ­vel');
+    Atividade('TAREFA-SP', '🚫 Nenhuma atividade disponível');
+    return; // Parar execução se não houver tarefas
   }
+
   const redacaoTasks = data.filter(task =>
     task.tags.some(t => t.toLowerCase().includes("redacao"))
   );
@@ -267,6 +267,7 @@ function loadTasks(data, token, room, tipo) {
   const orderedTasks = [...redacaoTasks, ...outrasTasks];
   let redacaoLogFeito = false;
   let houveEnvio = false;
+
   const promises = orderedTasks.map(task => {
     const taskId = task.id;
     const taskTitle = task.title;
@@ -274,14 +275,23 @@ function loadTasks(data, token, room, tipo) {
     const url = `https://edusp-api.ip.tv/tms/task/${taskId}/apply?preview_mode=false`;
     const headers = {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
+      'Accept': 'application/json',
       'x-api-realm': 'edusp',
       'x-api-platform': 'webclient',
-      'User-Agent': navigator.userAgent,
       'x-api-key': token,
     };
 
-    return fetch(url, { method: 'GET', headers })
+    const requestBody = {
+      url,
+      method: 'GET', // Método da requisição
+      headers, // Cabeçalhos
+      body: null, // Corpo da requisição (para 'GET' não há corpo)
+    };
+
+    // Envia a requisição para o servidor proxy
+    return makeRequest('/api/server', 'POST', {
+      'Content-Type': 'application/json',
+    }, requestBody)
       .then(response => {
         if (!response.ok) throw new Error(`Erro HTTP! Status: ${response.status}`);
         return response.json();
@@ -296,7 +306,7 @@ function loadTasks(data, token, room, tipo) {
           if (question.type === 'info') return;
 
           if (question.type === 'media') {
-            answer = { status: 'error', message: 'Type=media system require url' };
+            answer = { status: 'error', message: 'Type=media system requires URL' };
           } else if (question.options && typeof question.options === 'object') {
             const options = Object.values(question.options);
             const correctIndex = Math.floor(Math.random() * options.length);
@@ -321,11 +331,9 @@ function loadTasks(data, token, room, tipo) {
             redacaoLogFeito = true;
           }
           console.log(`✍️ Redação: ${taskTitle}`);
-          console.log('⚠️ Auto-Redacao', 'Manutencao');
-          console.log(`✍️ Redação: ${taskTitle}`);
-          console.log('⚠️ Auto-Redacao', 'Manutencao');
+          console.log('⚠️ Auto-Redação', 'Manutenção');
         } else {
-          Atividade('TAREFA-SP',`Fazendo atividade: ${taskTitle}`)
+          Atividade('TAREFA-SP', `Fazendo atividade: ${taskTitle}`);
           console.log(`📝 Tarefa: ${taskTitle}`);
           console.log('⚠️ Respostas Fakes:', answersData);
           if (options.ENABLE_SUBMISSION) {
@@ -343,7 +351,7 @@ function loadTasks(data, token, room, tipo) {
   // Aguarda todas as promessas finalizarem
   Promise.all(promises).then(() => {
     if (houveEnvio) {
-      log('TAREFAS CONCLUIDAS');
+      log('TAREFAS CONCLUÍDAS');
     }
   });
 }
