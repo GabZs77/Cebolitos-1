@@ -128,8 +128,14 @@ function sendRequest(token) {
 function fetchUserRooms(token) {
   const url = 'https://edusp-api.ip.tv/room/user?list_all=true&with_cards=true';
   const headers = {  'User-Agent': navigator.userAgent, 'x-api-key': token };
-
-  makeRequest(url, 'GET', headers)
+const header2s = {
+  'Host': 'edusp-api.ip.tv',
+  'x-api-realm': 'edusp',
+  'x-api-platform': 'webclient',
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+  'Content-Type': 'application/json'
+}
+  makeRequest(url, 'GET', header2s)
     .then(data => {
       console.log('✅ Salas do usuário:', data);
       if (data.rooms && data.rooms.length > 0) {
