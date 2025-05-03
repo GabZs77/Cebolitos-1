@@ -1,16 +1,8 @@
-// Não precisa da parte da porta aqui
-const express = require('express');
-const cors = require('cors');
-const fetch = require('node-fetch');
-
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-app.all('/proxy', async (req, res) => {
+export default async function handler(req, res) {
   const targetUrl = req.query.url;
+
   if (!targetUrl) {
-    return res.status(400).json({ error: 'Parâmetro ?url= é obrigatório' });
+    return res.status(400).json({ error: 'Parâmetro ?url= obrigatório' });
   }
 
   try {
@@ -29,7 +21,8 @@ app.all('/proxy', async (req, res) => {
 
     const response = await fetch(targetUrl, fetchOptions);
     const contentType = response.headers.get('content-type') || 'text/plain';
-    res.set('Content-Type', contentType);
+
+    res.setHeader('Content-Type', contentType);
     res.status(response.status);
 
     const buffer = await response.arrayBuffer();
@@ -37,4 +30,4 @@ app.all('/proxy', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Erro ao fazer proxy', message: err.message });
   }
-});
+}
