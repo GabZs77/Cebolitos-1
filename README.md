@@ -48,3 +48,9 @@ Juntos podemos deixar o **Cebolitos** ainda mais crocante 🌽.
 [@hackermoon1](https://github.com/hackermoon1/) — colaboração especial no desenvolvimento e melhorias do sistema. 🙌
 
 ---
+
+## 📄 Licença
+
+Este projeto está licenciado sob os termos da [Licença MIT](./LICENSE).
+
+---
