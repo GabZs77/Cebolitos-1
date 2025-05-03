@@ -6,7 +6,16 @@ module.exports = async (req, res) => {
   const { url: targetUrl } = req.query;
 
   if (!targetUrl) {
-    return res.status(400).json({ error: 'Missing "url" query parameter' });
+    res.setHeader('Content-Type', 'application/json');
+    return res.status(400).end(JSON.stringify({ error: 'Missing "url" query parameter' }));
+  }
+
+  // CORS pré-flight
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-api-realm, x-api-platform');
+    return res.status(200).end();
   }
 
   const parsedUrl = new URL(targetUrl);
@@ -27,17 +36,18 @@ module.exports = async (req, res) => {
     method: req.method,
     headers: {
       ...req.headers,
-      host: parsedUrl.hostname, // <- Aqui forçamos o Host manualmente
+      host: parsedUrl.hostname, // Força Host correto
       'Content-Length': Buffer.byteLength(rawBody),
     },
   };
 
   const proxyReq = client.request(proxyReqOptions, proxyRes => {
+    // Evita conflito de headers + adiciona CORS
     res.writeHead(proxyRes.statusCode, {
-      ...proxyRes.headers,
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-api-realm, x-api-platform'
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-api-realm, x-api-platform',
+      'Content-Type': proxyRes.headers['content-type'] || 'application/json',
     });
 
     proxyRes.pipe(res);
@@ -45,7 +55,8 @@ module.exports = async (req, res) => {
 
   proxyReq.on('error', err => {
     console.error('Erro no proxy:', err.message);
-    res.status(500).json({ error: 'Erro ao fazer proxy da requisição', detalhe: err.message });
+    res.setHeader('Content-Type', 'application/json');
+    res.status(500).end(JSON.stringify({ error: 'Erro ao fazer proxy da requisição', detalhe: err.message }));
   });
 
   proxyReq.write(rawBody);
