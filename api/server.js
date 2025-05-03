@@ -16,24 +16,37 @@ module.exports = async (req, res) => {
       forwardedHeaders[key] = value;
     }
   }
-
   try {
+    // Lê o corpo da requisição manualmente
+    let body = '';
+    await new Promise((resolve) => {
+      req.on('data', (chunk) => {
+        body += chunk;
+      });
+      req.on('end', resolve);
+    });
+
+    const parsedBody = body ? JSON.parse(body) : undefined;
+
     const axiosOptions = {
       method: req.method,
       url,
       headers: forwardedHeaders,
-      data: req.body, // Repassa o corpo (necessário para POST/PUT)
+      data: parsedBody,
     };
 
     const response = await axios(axiosOptions);
 
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-api-realm, x-api-platform');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Content-Type, Authorization, x-api-realm, x-api-platform'
+    );
 
     res.status(response.status).send(response.data);
   } catch (error) {
-    console.error('Error fetching the requested URL:', error.message);
-    res.status(500).json({ error: 'Erro ao fazer proxy da requisição', detalhe: error.message });
+    console.error('Erro no proxy:', error.message);
+    res.status(500).json({ error: 'Erro ao fazer proxy', detalhe: error.message });
   }
 };
