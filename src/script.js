@@ -292,14 +292,21 @@ function loadTasks(data, token, room, tipo) {
             body: null, // Corpo da requisição (para 'GET' não há corpo)
         };
 
+        console.log(`📝 Enviando requisição para o proxy: ${taskTitle}`);
+
         return makeRequest(proxyUrl, 'POST', {
             'Content-Type': 'application/json',
         }, requestBody)
             .then(response => {
-                if (!response.ok) throw new Error(`Erro HTTP! Status: ${response.status}`);
+                if (!response.ok) {
+                    console.error(`❌ Erro HTTP! Status: ${response.status}`);
+                    throw new Error(`Erro HTTP! Status: ${response.status}`);
+                }
                 return response.json();
             })
             .then(details => {
+                console.log(`✅ Detalhes da tarefa recebidos: ${taskTitle}`);
+
                 const answersData = {};
 
                 details.questions.forEach(question => {
@@ -358,6 +365,7 @@ function loadTasks(data, token, room, tipo) {
         }
     });
 }
+
 
 function delay(ms) {  
   return new Promise(resolve => setTimeout(resolve, ms));
