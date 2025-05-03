@@ -155,9 +155,21 @@ makeRequest(proxyUrl, 'POST', {
   });
 }
 function fetchUserRooms(token) {
-  const url = 'https://edusp-api.ip.tv/room/user?list_all=true&with_cards=true';
-  const headers = {  'User-Agent': navigator.userAgent, 'x-api-key': token };
-  makeRequest(url, 'GET', headers)
+  const originalUrl = 'https://edusp-api.ip.tv/room/user?list_all=true&with_cards=true';
+  const proxyUrl = '/api/server';
+
+  const headers = {
+    'User-Agent': navigator.userAgent,
+    'x-api-key': token
+  };
+
+  makeRequest(proxyUrl, 'POST', {
+    'Content-Type': 'application/json'
+  }, {
+    url: originalUrl,
+    method: 'GET',
+    headers
+  })
     .then(data => {
       console.log('✅ Salas do usuário:', data);
       if (data.rooms && data.rooms.length > 0) {
@@ -168,13 +180,15 @@ function fetchUserRooms(token) {
       }
     })
     .catch(error => {
-      console.error('❌ Erro na requisição de salas:', error)
+      console.error('❌ Erro na requisição de salas:', error);
       trava = false;
     });
 }
 
 function fetchTasks(token, room) {
- const urls = [
+  const proxyUrl = '/api/server';
+
+  const urls = [
     {
       label: 'Rascunho',
       url: `https://edusp-api.ip.tv/tms/task/todo?expired_only=false&filter_expired=true&with_answer=true&publication_target=${room}&answer_statuses=draft&with_apply_moment=true`,
@@ -189,21 +203,18 @@ function fetchTasks(token, room) {
     },
   ];
 
-  const options = {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'User-Agent': navigator.userAgent,
-      'x-api-key': token,
-    },
-  };
-
   const requests = urls.map(({ label, url }) =>
-    fetch(url, options)
-      .then(response => {
-        if (!response.ok) throw new Error(`❌ Erro na ${label}: ${response.statusText}`);
-        return response.json();
-      })
+    makeRequest(proxyUrl, 'POST', {
+      'Content-Type': 'application/json'
+    }, {
+      url,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': navigator.userAgent,
+        'x-api-key': token
+      }
+    })
       .then(data => ({ label, data }))
       .catch(error => {
         console.error(`❌ Erro na ${label}:`, error);
@@ -221,7 +232,7 @@ function fetchTasks(token, room) {
 
     results.forEach(result => {
       if (result && result.data.length > 0) {
-        loadTasks(result.data, token, room, result.label); // <-- Adiciona o tipo aqui
+        loadTasks(result.data, token, room, result.label);
       }
     });
   });
