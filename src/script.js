@@ -237,20 +237,24 @@ function fetchTasks(token, room) {
 
 // OBS ELE NAO FAZ AS RASCUNHO E NEM REDACAO EXPIRADA
 function loadTasks(data, token, room, tipo) {
-    if (tipo === "Rascunho") {
-      console.log(`â ï¸ Ignorado: Tipo "${tipo}" - Nenhuma tarefa serÃ¡ processada.`);
-      return;
+ if (tipo === 'Rascunho') {
+    console.log(
+      `⚠️ Ignorado: Tipo "${tipo}" - Nenhuma tarefa será processada.`
+    );
+    return;
   }
-   const isRedacao = task =>
-      task.tags.some(t => t.toLowerCase().includes("redacao")) ||
-      task.title.toLowerCase().includes("redaÃ§Ã£o");
+  const isRedacao = task =>
+    task.tags.some(t => t.toLowerCase().includes('redacao')) ||
+    task.title.toLowerCase().includes('redação');
 
-    if (tipo === "Expirada") {
-      data = data.filter(task => !isRedacao(task));
-      console.log(`â ï¸ Ignorado: Tipo "${tipo}" - Nenhuma RedaÃ§Ã£o serÃ¡ processada.`);
-    }
+  if (tipo === 'Expirada') {
+    data = data.filter(task => !isRedacao(task));
+    console.log(
+      `⚠️ Ignorado: Tipo "${tipo}" - Nenhuma Redação será processada.`
+    );
+  }
   if (!data || data.length === 0) {
-      Atividade('TAREFA-SP','ð« Nenhuma atividade disponÃ­vel');
+      Atividade('TAREFA-SP',' Nenhuma atividade disponÃ­vel');
   }
   const redacaoTasks = data.filter(task =>
     task.tags.some(t => t.toLowerCase().includes("redacao"))
@@ -315,13 +319,12 @@ function loadTasks(data, token, room, tipo) {
           if (!redacaoLogFeito) {
             log('REDACAO PAULISTA');
             redacaoLogFeito = true;
-          }
-          console.log(`âï¸ RedaÃ§Ã£o: ${taskTitle}`);
-          console.log('â ï¸ Auto-Redacao', 'Manutencao');
+          console.log(`✍️ Redação: ${taskTitle}`);
+          console.log('⚠️ Auto-Redacao', 'Manutencao');
         } else {
           Atividade('TAREFA-SP',`Fazendo atividade: ${taskTitle}`)
-          console.log(`ð Tarefa: ${taskTitle}`);
-          console.log('â ï¸ Respostas Fakes:', answersData);
+          console.log(`📝 Tarefa: ${taskTitle}`);
+          console.log('⚠️ Respostas Fakes:', answersData);
           if (options.ENABLE_SUBMISSION) {
             submitAnswers(taskId, answersData, token, room);
           }
@@ -329,7 +332,7 @@ function loadTasks(data, token, room, tipo) {
         }
       })
       .catch(error => {
-        console.error(`â Erro ao buscar detalhes da tarefa: ${taskId}:`, error);
+        console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}:`, error);
         trava = false;
       });
   });
