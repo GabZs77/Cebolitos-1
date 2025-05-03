@@ -107,8 +107,14 @@ function loginRequest() {
 
 function sendRequest(token) {
   const url = 'https://edusp-api.ip.tv/registration/edusp/token';
-  const headers = {  'User-Agent': navigator.userAgent, 'x-api-key': token };
-
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+    'x-api-realm': 'edusp',
+    'x-api-platform': 'webclient',
+    Host: 'edusp-api.ip.tv',
+    'User-Agent': navigator.userAgent
+  };
   makeRequest(url, 'POST', headers, { token })
     .then(data => {
       console.log('✅ Informações do Aluno:', data);
