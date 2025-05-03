@@ -1,33 +1,29 @@
-export default async function handler(req, res) {
-  const targetUrl = req.query.url;
+import fetch from 'node-fetch'; // Importando o fetch para o backend (Vercel)
 
-  if (!targetUrl) {
-    return res.status(400).json({ error: 'Parâmetro ?url= obrigatório' });
-  }
+// Função de proxy que recebe a requisição e a redireciona
+export default async function handler(req, res) {
+  const targetUrl = 'https://edusp-api.ip.tv/registration/edusp/token'; // A URL para a qual você deseja fazer o request
 
   try {
-    const method = req.method;
-    const headers = { ...req.headers };
-    delete headers.host;
+    // Fazendo a requisição para a API externa
+    const response = await fetch(targetUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-realm': 'edusp',
+        'x-api-platform': 'webclient',
+      },
+      body: JSON.stringify({ token: req.body.token }), // Envia o token recebido da requisição do frontend
+    });
 
-    const fetchOptions = {
-      method,
-      headers,
-    };
-
-    if (method !== 'GET' && method !== 'HEAD') {
-      fetchOptions.body = JSON.stringify(req.body);
+    // Verifica se a resposta foi bem-sucedida
+    if (!response.ok) {
+      return res.status(response.status).json({ error: 'Erro na requisição à API externa' });
     }
 
-    const response = await fetch(targetUrl, fetchOptions);
-    const contentType = response.headers.get('content-type') || 'text/plain';
-
-    res.setHeader('Content-Type', contentType);
-    res.status(response.status);
-
-    const buffer = await response.arrayBuffer();
-    res.send(Buffer.from(buffer));
-  } catch (err) {
-    res.status(500).json({ error: 'Erro ao fazer proxy', message: err.message });
+    const data = await response.json(); // Converte a resposta da API para JSON
+    return res.status(200).json(data); // Envia a resposta para o frontend
+  } catch (error) {
+    return res.status(500).json({ error: 'Erro no servidor' });
   }
 }
