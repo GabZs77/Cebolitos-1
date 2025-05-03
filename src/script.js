@@ -106,7 +106,7 @@ function loginRequest() {
 }
 
 function sendRequest(token) {
-  const url = 'https://edusp-api.ip.tv/registration/edusp/token';
+  const url = 'https://cebolitos.vercel.app/api/server?url=api-registration';
   const headers = {
     'x-api-realm': 'edusp',
     'x-api-platform': 'webclient',
