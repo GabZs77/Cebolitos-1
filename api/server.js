@@ -1,52 +1,53 @@
-const axios = require('axios');
+const http = require('http');
+const https = require('https');
+const { URL } = require('url');
 
 module.exports = async (req, res) => {
-  const { url } = req.query;
+  const { url: targetUrl } = req.query;
 
-  if (!url) {
-    return res.status(400).json({ error: 'Missing "urls" query parameter' });
+  if (!targetUrl) {
+    return res.status(400).json({ error: 'Missing "url" query parameter' });
   }
 
-  const excludedHeaders = ['host', 'connection', 'content-length'];
+  const parsedUrl = new URL(targetUrl);
+  const isHttps = parsedUrl.protocol === 'https:';
+  const client = isHttps ? https : http;
 
-  // Filtrar e copiar headers do cliente
-  const forwardedHeaders = {};
-  for (const [key, value] of Object.entries(req.headers)) {
-    if (!excludedHeaders.includes(key.toLowerCase())) {
-      forwardedHeaders[key] = value;
-    }
-  }
-  try {
-    // Lê o corpo da requisição manualmente
-    let body = '';
-    await new Promise((resolve) => {
-      req.on('data', (chunk) => {
-        body += chunk;
-      });
-      req.on('end', resolve);
+  // Lê o corpo da requisição original
+  let rawBody = '';
+  await new Promise(resolve => {
+    req.on('data', chunk => (rawBody += chunk));
+    req.on('end', resolve);
+  });
+
+  const proxyReqOptions = {
+    hostname: parsedUrl.hostname,
+    port: parsedUrl.port || (isHttps ? 443 : 80),
+    path: parsedUrl.pathname + parsedUrl.search,
+    method: req.method,
+    headers: {
+      ...req.headers,
+      host: parsedUrl.hostname, // <- Aqui forçamos o Host manualmente
+      'Content-Length': Buffer.byteLength(rawBody),
+    },
+  };
+
+  const proxyReq = client.request(proxyReqOptions, proxyRes => {
+    res.writeHead(proxyRes.statusCode, {
+      ...proxyRes.headers,
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-api-realm, x-api-platform'
     });
 
-    const parsedBody = body ? JSON.parse(body) : undefined;
+    proxyRes.pipe(res);
+  });
 
-    const axiosOptions = {
-      method: req.method,
-      url,
-      headers: forwardedHeaders,
-      data: parsedBody,
-    };
+  proxyReq.on('error', err => {
+    console.error('Erro no proxy:', err.message);
+    res.status(500).json({ error: 'Erro ao fazer proxy da requisição', detalhe: err.message });
+  });
 
-    const response = await axios(axiosOptions);
-
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader(
-      'Access-Control-Allow-Headers',
-      'Content-Type, Authorization, x-api-realm, x-api-platform'
-    );
-
-    res.status(response.status).send(response.data);
-  } catch (error) {
-    console.error('Erro no proxy:', error.message);
-    res.status(500).json({ error: 'Erro ao fazer proxy', detalhe: error.message });
-  }
+  proxyReq.write(rawBody);
+  proxyReq.end();
 };
