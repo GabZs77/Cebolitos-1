@@ -46,9 +46,7 @@ module.exports = async (req, res) => {
 
     res.status(response.status).send(response.data);
   } catch (error) {
-    res.status(500).json({
-      error: 'Erro ao fazer proxy da requisição',
-      detalhe: error.message,
-      resposta: error.response?.data || null,
-    });
+    console.error('Erro no proxy:', error.message);
+    res.status(500).json({ error: 'Erro ao fazer proxy', detalhe: error.message });
+  }
 };
