@@ -139,7 +139,8 @@ function sendRequestNew(token) {
     })
       .then(res => res.json()) // Recebe a resposta do backend
       .then(data => {
-        console.log('✅ Dados recebidos da API externa:', data);
+          console.log('✅ Informações do Aluno:', data);
+          fetchUserRooms(data.auth_token);
       })
       .catch(err => {
         console.error('❌ Erro:', err);
