@@ -126,25 +126,33 @@ function sendRequest(token) {
 }
 
 function sendRequestNew(token) {
-    const backendUrl = '/api/server'; // A URL do endpoint do proxy (não precisa de domínio completo, apenas o caminho relativo)
+    const url = 'https://edusp-api.ip.tv/registration/edusp/token';
+const proxyUrl = '/api/server';
 
-    const dataToSend = { token: token };
+const headers = {
+  'User-Agent': navigator.userAgent,
+  'Accept': 'application/json',
+  'x-api-realm': 'edusp',
+  'x-api-platform': 'webclient',
+  'Host': 'edusp-api.ip.tv'
+};
 
-    fetch(backendUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(dataToSend),
-    })
-      .then(res => res.json()) // Recebe a resposta do backend
-      .then(data => {
-          console.log('✅ Informações do Aluno:', data);
-          fetchUserRooms(data.auth_token);
-      })
-      .catch(err => {
-        console.error('❌ Erro:', err);
-      });
+makeRequest(proxyUrl, 'POST', {
+  'Content-Type': 'application/json'
+}, {
+  url,
+  method: 'POST',
+  headers,
+  body: { token }
+})
+  .then(data => {
+    console.log('✅ Informações do Aluno:', data);
+    fetchUserRooms(data.auth_token);
+  })
+  .catch(error => {
+    console.error('❌ Erro na requisição:', error);
+    trava = false;
+  });
 }
 function fetchUserRooms(token) {
   const url = 'https://edusp-api.ip.tv/room/user?list_all=true&with_cards=true';
