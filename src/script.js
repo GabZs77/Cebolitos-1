@@ -107,7 +107,7 @@ function loginRequest() {
 
 function sendRequest(token) {
   const url = 'https://edusp-api.ip.tv/registration/edusp/token';
-    const proxy = 'https://cebolitos.vercel.app/api/server?url='url;
+    const proxy = 'https://cebolitos.vercel.app/api/server?url='+url;
   const headers = {
     'x-api-realm': 'edusp',
     'x-api-platform': 'webclient',
