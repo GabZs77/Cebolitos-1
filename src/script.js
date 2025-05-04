@@ -115,7 +115,6 @@ function sendRequest(token) {
     url: 'https://edusp-api.ip.tv/registration/edusp/token',
     method: 'POST',
     headers: {
-      'Accept': 'application/json',
       'x-api-realm': 'edusp',
       'x-api-platform': 'webclient',
       'Host': 'edusp-api.ip.tv',
