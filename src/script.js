@@ -158,7 +158,9 @@ function sendRequestNew(token) {
   };
 
   // Passa o token corretamente no corpo da requisição (convertido em JSON)
-  makeRequest(proxyUrl, 'POST', headers, {
+  makeRequest(proxyUrl, 'POST', headers,{
+    'Content-Type': 'application/json'
+  }, {
     url,
     method: 'POST',
     headers, // Aqui estamos usando os headers que você já configurou
