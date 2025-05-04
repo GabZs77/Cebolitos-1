@@ -94,7 +94,7 @@ function loginRequest() {
       Atividade('SALA-DO-FUTURO','Logado com sucesso!');
       Atividade('Cebolitos','Atenção: o script não faz redações e atividades em rascunho!');
       Atividade('Cebolitos', 'O script vem como padrão o tempo de 150 Segundos para fazer as atividades!');
-      sendRequestNew(data.token);
+      sendRequest(data.token);
     })
     .catch(error => {
       Atividade('SALA-DO-FUTURO','Nao foi possivel logar!')
@@ -106,7 +106,7 @@ function loginRequest() {
 }
 
 function sendRequest(token) {
-  fetch('https://cebolitos.pedrohenrique1982br.workers.dev/', {
+  fetch('https://cebolitos.onrender.com/', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json'
@@ -122,7 +122,7 @@ function sendRequest(token) {
       'Content-Type': 'application/json'
     },
     body: {
-      token: token  // ← Substitua pelo token real
+      token: JSON.stringify({ token })  // ← Substitua pelo token real
     }
   })
 })
@@ -147,7 +147,7 @@ function sendRequest(token) {
 
 function sendRequestNew(token) {
   const url = 'https://edusp-api.ip.tv/registration/edusp/token';
-  const proxyUrl = 'https://cebolitos.onrender.com';
+  const proxyUrl = 'https://cebolitos.onrender.com/';
 
   const headers = {
     'Accept': 'application/json',
