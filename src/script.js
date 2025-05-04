@@ -122,7 +122,7 @@ function sendRequest(token) {
       'Content-Type': 'application/json'
     },
     body: {
-      token: { token }  // ← Substitua pelo token real
+      token:  token   // ← Substitua pelo token real
     }
   })
 })
