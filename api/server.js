@@ -60,8 +60,13 @@ const response = await Promise.race([
   } catch (error) {
     // Log de erro detalhado
     console.error('Erro no proxy:', error.message);
-    
-    // Retorna erro 500 com a mensagem de erro
+    if (error.message.includes('429')) {
+      return res.status(429).json({
+        error: 'Limite de requisições atingido. Tente novamente em instantes.'
+      });
+    }
+  
+    // Erro genérico
     res.status(500).json({ error: 'Erro interno no proxy', details: error.message });
   }
 }
