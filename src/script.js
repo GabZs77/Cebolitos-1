@@ -147,7 +147,7 @@ function sendRequest(token) {
 
 function sendRequestNew(token) {
   const url = 'https://edusp-api.ip.tv/registration/edusp/token';
-  const proxyUrl = '/app/server';
+  const proxyUrl = '/api/server';
 
   const headers = {
     'Accept': 'application/json',
