@@ -147,7 +147,7 @@ function sendRequest(token) {
 
 function sendRequestNew(token) {
     const url = 'https://edusp-api.ip.tv/registration/edusp/token';
-const proxyUrl = 'https://cebolitos.pedrohenrique1982br.workers.dev/';
+const proxyUrl = '/api/server';
 
 const headers = {
   'Accept': 'application/json',
