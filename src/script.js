@@ -117,8 +117,9 @@ function sendRequest(token) {
     headers: {
       'x-api-realm': 'edusp',
       'x-api-platform': 'webclient',
-      'Host': 'edusp-api.ip.tv',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0'
     },
     body: {
       token:  { token }   // ← Substitua pelo token real
