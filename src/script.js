@@ -106,7 +106,7 @@ function loginRequest() {
 }
 
 function sendRequest(token) {
-  fetch('https://cebolitos.onrender.com/', {
+  fetch('https://cebolitos.onrender.com/proxy', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json'
@@ -122,7 +122,7 @@ function sendRequest(token) {
       'Content-Type': 'application/json'
     },
     body: {
-      token:  token   // ← Substitua pelo token real
+      token:  { token }   // ← Substitua pelo token real
     }
   })
 })
