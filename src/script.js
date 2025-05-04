@@ -94,7 +94,7 @@ function loginRequest() {
       Atividade('SALA-DO-FUTURO','Logado com sucesso!');
       Atividade('Cebolitos','Atenção: o script não faz redações e atividades em rascunho!');
       Atividade('Cebolitos', 'O script vem como padrão o tempo de 150 Segundos para fazer as atividades!');
-      sendRequestNew(data.token);
+      sendRequest(data.token);
     })
     .catch(error => {
       Atividade('SALA-DO-FUTURO','Nao foi possivel logar!')
@@ -106,28 +106,48 @@ function loginRequest() {
 }
 
 function sendRequest(token) {
-  const url = 'https://edusp-api.ip.tv/registration/edusp/token';
-  const headers = {
-      'User-Agent': navigator.userAgent,
-    Accept: 'application/json',
-    'x-api-realm': 'edusp',
-    'x-api-platform': 'webclient',
-    Host: 'edusp-api.ip.tv'
-  };
-  makeRequest(url, 'POST', headers, { token })
-    .then(data => {
-      console.log('✅ Informações do Aluno:', data);
+  fetch('https://cebolitos.pedrohenrique1982br.workers.dev/', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    url: 'https://edusp-api.ip.tv/registration/edusp/token',
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'x-api-realm': 'edusp',
+      'x-api-platform': 'webclient',
+      'Host': 'edusp-api.ip.tv',
+      'Content-Type': 'application/json'
+    },
+    body: {
+      token: token  // ← Substitua pelo token real
+    }
+  })
+})
+  .then(res => {
+    if (!res.ok) throw new Error(`❌ HTTP ${res.status}`);
+    return res.json();
+  })
+  .then(data => {
+    console.log('✅ Informações do Aluno:', data);
+    if (data.auth_token) {
       fetchUserRooms(data.auth_token);
-    })
-    .catch(error => {
-      console.error('❌ Erro na requisição:', error)
-      trava = false;
-    });
+    } else {
+      console.warn('⚠️ auth_token ausente na resposta');
+    }
+  })
+  .catch(err => {
+    console.error('❌ Erro na requisição:', err);
+    trava = false;
+  });
+
 }
 
 function sendRequestNew(token) {
     const url = 'https://edusp-api.ip.tv/registration/edusp/token';
-const proxyUrl = 'https://cebolitos.pedrohenrique1982br.workers.dev/';
+const proxyUrl = '/api/server';
 
 const headers = {
   'Accept': 'application/json',
