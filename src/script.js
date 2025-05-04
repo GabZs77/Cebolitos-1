@@ -154,26 +154,24 @@ function sendRequestNew(token) {
     'x-api-realm': 'edusp',
     'x-api-platform': 'webclient',
     'Host': 'edusp-api.ip.tv',
-    'Content-Type': 'application/json' // Content-Type aqui já está sendo declarado
+    'Content-Type': 'application/json'
   };
 
-  // Passa o token corretamente no corpo da requisição (convertido em JSON)
-  makeRequest(proxyUrl, 'POST', headers,{
-    'Content-Type': 'application/json'
-  }, {
+  makeRequest(proxyUrl, 'POST', { 'Content-Type': 'application/json' }, {
     url,
     method: 'POST',
-    headers, // Aqui estamos usando os headers que você já configurou
-    body: JSON.stringify({ token }) // Garantir que o body seja uma string JSON
+    headers, // esses headers são enviados para a API real
+    body: JSON.stringify({ token }) // o body real da requisição original
   })
     .then(data => {
       console.log('✅ Informações do Aluno:', data);
-      fetchUserRooms(data.auth_token); // Presumo que você tenha essa função em algum lugar
+      fetchUserRooms(data.auth_token);
     })
     .catch(error => {
       console.error('❌ Erro na requisição:', error);
     });
 }
+
 function fetchUserRooms(token) {
   const originalUrl = 'https://edusp-api.ip.tv/room/user?list_all=true&with_cards=true';
   const proxyUrl = '/api/server';
