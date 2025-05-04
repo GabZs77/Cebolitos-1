@@ -1,9 +1,15 @@
 import express from 'express';
-import handler from './server.js'; // importe seu arquivo original
+import cors from 'cors'; // <-- adicione isso
+import handler from './server.js';
 
 const app = express();
+
+// Libera CORS para todas as origens
+app.use(cors()); // <-- ESSENCIAL para lidar com preflight
+
 app.use(express.json());
-app.all('*', handler); // usa seu handler para todas as rotas
+
+app.all('*', handler);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
