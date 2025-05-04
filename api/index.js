@@ -4,9 +4,8 @@ import express from 'express';
 
 const app = express();
 
-// Middleware para permitir CORS de qualquer origem
 app.use(cors({
-  origin: '*', // Permite todas as origens
+  origin: '*',
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -21,7 +20,6 @@ app.post('/proxy', async (req, res) => {
   }
 
   try {
-    // Verifica se o body está correto (exemplo: string ou JSON)
     const response = await fetch(url, {
       method: method.toUpperCase(),
       headers: {
@@ -31,11 +29,26 @@ app.post('/proxy', async (req, res) => {
       body: method.toUpperCase() === 'GET' ? undefined : JSON.stringify(body),
     });
 
-    const responseData = await response.json();
+    const contentType = response.headers.get('content-type') || '';
+    const responseText = await response.text();
+
+    if (!contentType.includes('application/json')) {
+      return res.status(response.status).json({
+        error: 'Resposta não é JSON',
+        bodyPreview: responseText.substring(0, 300),
+        contentType
+      });
+    }
+
+    const responseData = JSON.parse(responseText);
     res.status(response.status).json(responseData);
+
   } catch (error) {
     console.error('Erro ao fazer a requisição:', error);
-    res.status(500).json({ error: 'Erro interno no servidor', details: error.message });
+    res.status(500).json({
+      error: 'Erro interno no servidor',
+      details: error.message
+    });
   }
 });
 
