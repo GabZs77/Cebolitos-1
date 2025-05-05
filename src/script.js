@@ -104,40 +104,31 @@ function loginRequest() {
 
     });
 }
-
 function sendRequest(token) {
-  const proxyUrl = 'https://cebolitos.vercel.app/api/server';
-  const targetUrl = 'https://edusp-api.ip.tv/registration/edusp/token';
-
-  const requestPayload = {
-    url: targetUrl,
+  fetch('https://cebolitos.vercel.app/api/server2', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      'x-api-realm': 'edusp',
-      'x-api-platform': 'webclient',
-      Host: 'edusp-api.ip.tv'
-    },
-    body: { token } // O proxy já converte pra string se necessário
-  };
-
-  fetch(proxyUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(requestPayload)
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      url: 'https://edusp-api.ip.tv/registration/edusp/token',
+      method: 'POST',
+      headers: {
+        'x-api-realm': 'edusp',
+        'x-api-platform': 'webclient',
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: { token }
+    })
   })
-    .then(response => {
-      if (!response.ok) throw new Error(`❌ Erro HTTP Status: ${response.status}`);
-      return response.json();
+    .then(res => {
+      if (!res.ok) throw new Error(`❌ Erro HTTP Status: ${res.status}`);
+      return res.json();
     })
     .then(data => {
       console.log('✅ Informações do Aluno:', data);
-      fetchUserRooms(data.auth_token); // Verifique se essa função existe
+      fetchUserRooms(data.auth_token);
     })
-    .catch(error => console.error('❌ Erro na requisição:', error));
+    .catch(err => console.error('❌ Erro na requisição:', err));
 }
 
 
