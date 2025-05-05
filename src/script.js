@@ -107,20 +107,18 @@ function loginRequest() {
     });
 }
 function sendRequest(token) {
-  fetch('https://cebolitos.vercel.app/api/server2', {
+  const apiKey = 'CMMC9J1S2HI01RQRDP1D82KW22WSN22VN7PCXC5ZELVI0JLP1489DZ3Y8VHLOCSCOYFZIF9SABHGI8U8';
+  const targetUrl = 'https://edusp-api.ip.tv/registration/edusp/token';
+
+  fetch(`https://api.scraperapi.com/?api_key=${apiKey}&url=${encodeURIComponent(targetUrl)}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      url: 'https://edusp-api.ip.tv/registration/edusp/token',
-      method: 'POST',
-      headers: {
-        'x-api-realm': 'edusp',
-        'x-api-platform': 'webclient',
-        'Content-Type': 'application/json',
-        Accept: 'application/json'
-      },
-      body: { token }
-    })
+    headers: {
+      'x-api-realm': 'edusp',
+      'x-api-platform': 'webclient',
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    },
+    body: JSON.stringify({ token })
   })
     .then(res => {
       if (!res.ok) throw new Error(`❌ Erro HTTP Status: ${res.status}`);
