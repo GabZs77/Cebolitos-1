@@ -18,7 +18,9 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
 
   let bodyData;
   try {
@@ -33,7 +35,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing "url" in request body' });
   }
 
-  const timeout = 5000;
+  const timeout = 7000;
 
   const fakeBrowserHeaders = {
     "Origin": "https://edusp.ip.tv",
@@ -54,11 +56,15 @@ export default async function handler(req, res) {
         method: method.toUpperCase(),
         headers: {
           ...fakeBrowserHeaders,
-          ...headers,
+          ...headers
         },
-        body: ['GET', 'HEAD'].includes(method.toUpperCase()) ? undefined : JSON.stringify(body),
+        body: ['GET', 'HEAD'].includes(method.toUpperCase())
+          ? undefined
+          : (typeof body === 'string' ? body : JSON.stringify(body)),
       }),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), timeout))
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timed out')), timeout)
+      )
     ]);
 
     const contentType = response.headers.get('content-type') || '';
@@ -69,10 +75,16 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('Proxy error:', error.message);
 
-    if (error.message.includes('429')) {
-      return res.status(429).json({ error: 'Rate limit exceeded' });
+    if (error.message.includes('403')) {
+      return res.status(403).json({
+        error: 'Request was forbidden by the target server (403)',
+        hint: 'Check if all required headers are being sent and valid'
+      });
     }
 
-    res.status(500).json({ error: 'Internal proxy error', details: error.message });
+    res.status(500).json({
+      error: 'Proxy internal error',
+      details: error.message
+    });
   }
 }
