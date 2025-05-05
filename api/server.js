@@ -31,7 +31,17 @@ async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
   try {
     // Adiciona 'Content-Type' como 'application/json' nos cabeçalhos
     headers['Content-Type'] = 'application/json';
-
+const fakeBrowserHeaders = {
+  "Origin": "https://edusp.ip.tv",
+  "Referer": "https://edusp.ip.tv/",
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  "Accept": "application/json, text/plain, */*",
+  "Accept-Language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+  "Connection": "keep-alive",
+  "Sec-Fetch-Site": "same-origin",
+  "Sec-Fetch-Mode": "cors",
+  "Sec-Fetch-Dest": "empty"
+};
     // Configura o timeout para 5 segundos
       const timeout = 5000; // 5 segundos
 // Função de retry com 3 tentativas e delay de 1s
