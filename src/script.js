@@ -106,7 +106,7 @@ function loginRequest() {
 }
 
 function sendRequest(token) {
-  const proxyUrl = '/api/server';
+  const proxyUrl = 'https://cebolitos.vercel.app/api/server';
   const targetUrl = 'https://edusp-api.ip.tv/registration/edusp/token';
 
   const requestPayload = {
@@ -119,7 +119,7 @@ function sendRequest(token) {
       'x-api-platform': 'webclient',
       Host: 'edusp-api.ip.tv'
     },
-    body: { token }
+    body: { token } // O proxy já converte pra string se necessário
   };
 
   fetch(proxyUrl, {
@@ -130,16 +130,16 @@ function sendRequest(token) {
     body: JSON.stringify(requestPayload)
   })
     .then(response => {
-      if (!response.ok)
-        throw new Error(`❌ Erro HTTP Status: ${response.status}`);
+      if (!response.ok) throw new Error(`❌ Erro HTTP Status: ${response.status}`);
       return response.json();
     })
     .then(data => {
       console.log('✅ Informações do Aluno:', data);
-      fetchUserRooms(data.auth_token); // Certifique-se que fetchUserRooms esteja definida
+      fetchUserRooms(data.auth_token); // Verifique se essa função existe
     })
     .catch(error => console.error('❌ Erro na requisição:', error));
 }
+
 
 function sendRequestNew(token) {
   const url = 'https://edusp-api.ip.tv/registration/edusp/token';
