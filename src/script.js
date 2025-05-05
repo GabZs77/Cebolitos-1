@@ -88,7 +88,7 @@ function loginRequest() {
     'Ocp-Apim-Subscription-Key': '2b03c1db3884488795f79c37c069381a',
   };
 
-  makeRequest(options.LOGIN_URL, 'POST', headers, options.LOGIN_DATA)
+  makeRequest(options.LOGIN_URL, 'POST', headers, JSON.stringify(options.LOGIN_DATA))
     .then(data => {
       console.log('✅ Login bem-sucedido:', data);
       Atividade('SALA-DO-FUTURO','Logado com sucesso!');
