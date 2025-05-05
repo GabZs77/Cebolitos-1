@@ -72,7 +72,7 @@ function makeRequest(url, method = 'GET', headers = {}, body = null) {
     },
   };
   if (body) {
-    options.body = JSON.stringify(body);
+    options.body = body; // já está como string no sendRequestNew
   }
 
   return fetch(url, options)
