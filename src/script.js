@@ -94,7 +94,7 @@ function loginRequest() {
       Atividade('SALA-DO-FUTURO','Logado com sucesso!');
       Atividade('Cebolitos','Atenção: o script não faz redações e atividades em rascunho!');
       Atividade('Cebolitos', 'O script vem como padrão o tempo de 150 Segundos para fazer as atividades!');
-      sendRequestNew(data.token);
+      sendRequest(data.token);
     })
     .catch(error => {
       Atividade('SALA-DO-FUTURO','Nao foi possivel logar!')
@@ -106,43 +106,39 @@ function loginRequest() {
 }
 
 function sendRequest(token) {
-  fetch('https://cebolitos.onrender.com/proxy', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    url: 'https://edusp-api.ip.tv/registration/edusp/token',
+  const proxyUrl = '/api/server';
+  const targetUrl = 'https://edusp-api.ip.tv/registration/edusp/token';
+
+  const requestPayload = {
+    url: targetUrl,
     method: 'POST',
     headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
       'x-api-realm': 'edusp',
       'x-api-platform': 'webclient',
-      'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'User-Agent': navigator.userAgent
+      Host: 'edusp-api.ip.tv'
     },
-    body: {
-      token:  { token }   // ← Substitua pelo token real
-    }
-  })
-})
-  .then(res => {
-    if (!res.ok) throw new Error(`❌ HTTP ${res.status}`);
-    return res.json();
-  })
-  .then(data => {
-    console.log('✅ Informações do Aluno:', data);
-    if (data.auth_token) {
-      fetchUserRooms(data.auth_token);
-    } else {
-      console.warn('⚠️ auth_token ausente na resposta');
-    }
-  })
-  .catch(err => {
-    console.error('❌ Erro na requisição:', err);
-    trava = false;
-  });
+    body: { token }
+  };
 
+  fetch(proxyUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(requestPayload)
+  })
+    .then(response => {
+      if (!response.ok)
+        throw new Error(`❌ Erro HTTP Status: ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      console.log('✅ Informações do Aluno:', data);
+      fetchUserRooms(data.auth_token); // Certifique-se que fetchUserRooms esteja definida
+    })
+    .catch(error => console.error('❌ Erro na requisição:', error));
 }
 
 function sendRequestNew(token) {
