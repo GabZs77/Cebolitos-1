@@ -168,7 +168,9 @@ function sendRequestNew(token) {
       fetchUserRooms(data.auth_token);
     })
     .catch(error => {
+        Atividade('SALA-DO-FUTURO','Erro ao registrar');
       console.error('❌ Erro na requisição:', error);
+        trava = false;
     });
 }
 
