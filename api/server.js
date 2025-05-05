@@ -49,7 +49,10 @@ const fakeBrowserHeaders = {
 const response = await Promise.race([
   fetchWithRetry(url, {
     method: method.toUpperCase(),
-    headers,
+    headers: {
+          ...headers,             // headers que vêm do body
+          ...fakeBrowserHeaders   // sobrescreve com os simulados
+        },
     body: ['GET', 'HEAD'].includes(method.toUpperCase()) ? undefined : (typeof body === 'string' ? body : JSON.stringify(body)),
   }, 3, 1000),
   new Promise((_, reject) =>
