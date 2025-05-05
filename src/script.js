@@ -55,7 +55,7 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
 
     const options = {
       TEMPO: 120, //Tempo atividade em SEGUNDOS
-      ENABLE_SUBMISSION: false,
+      ENABLE_SUBMISSION: true,
       LOGIN_URL: 'https://sedintegracoes.educacao.sp.gov.br/credenciais/api/LoginCompletoToken',
       LOGIN_DATA: {
         user: document.getElementById('ra').value, 
@@ -191,8 +191,10 @@ function fetchUserRooms(token) {
     .then(data => {
       console.log('✅ Salas do usuário:', data);
       if (data.rooms && data.rooms.length > 0) {
-        const roomName = data.rooms[0].name;
-        fetchTasks(token, roomName);
+        Atividade('TAREFA-SP','Procurando atividades...');
+        data.rooms.forEach(PORRA => {
+          fetchTasks(token,PORRA.name, PORRA.topic);
+        });
       } else {
         console.warn('⚠️ Nenhuma sala encontrada..');
       }
@@ -200,7 +202,7 @@ function fetchUserRooms(token) {
     .catch(error => console.error('❌ Erro na requisição de salas:', error));
 }
 
-function fetchTasks(token, room) {
+function fetchTasks(token, room, name) {
 const urls = [
     {
       label: 'Rascunho',
@@ -247,7 +249,7 @@ const urls = [
     results.forEach(result => {
       if (result) {
         console.log(
-          `✅ ${result.label} - Atividades encontradas:`,
+          `✅ ${result.label} - Sala: ${name} - Atividades encontradas:`,
           result.data
         );
       }
