@@ -201,7 +201,7 @@ function fetchUserRooms(token) {
 }
 
 function fetchTasks(token, room) {
-  const urls = [
+const urls = [
     {
       label: 'Rascunho',
       url: `https://edusp-api.ip.tv/tms/task/todo?expired_only=false&filter_expired=true&with_answer=true&publication_target=${room}&answer_statuses=draft&with_apply_moment=true`,
