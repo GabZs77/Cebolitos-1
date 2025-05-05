@@ -55,7 +55,7 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
 
     const options = {
       TEMPO: 120, //Tempo atividade em SEGUNDOS
-      ENABLE_SUBMISSION: true,
+      ENABLE_SUBMISSION: false,
       LOGIN_URL: 'https://sedintegracoes.educacao.sp.gov.br/credenciais/api/LoginCompletoToken',
       LOGIN_DATA: {
         user: document.getElementById('ra').value, 
@@ -166,22 +166,28 @@ function sendRequestNew(token) {
         trava = false;
     });
 }
-
 function fetchUserRooms(token) {
-  const originalUrl = 'https://edusp-api.ip.tv/room/user?list_all=true&with_cards=true';
-  const proxyUrl = '/api/server';
-
-  const headers = {
-    'x-api-key': token
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': token,
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+      "Connection": "keep-alive",
+      "Sec-Fetch-Site": "same-origin",
+      "Sec-Fetch-Mode": "cors",
+      "Sec-Fetch-Dest": "empty",       
+    },
   };
 
-  makeRequest(proxyUrl, 'POST', {
-    'Content-Type': 'application/json'
-  }, {
-    url: originalUrl,
-    method: 'GET',
-    headers
-  })
+  fetch(
+    'https://edusp-api.ip.tv/room/user?list_all=true&with_cards=true',
+    options
+  )
+    .then(response => {
+      if (!response.ok) throw new Error(`❌ Erro: ${response.statusText}`);
+      return response.json();
+    })
     .then(data => {
       console.log('✅ Salas do usuário:', data);
       if (data.rooms && data.rooms.length > 0) {
@@ -191,15 +197,10 @@ function fetchUserRooms(token) {
         console.warn('⚠️ Nenhuma sala encontrada..');
       }
     })
-    .catch(error => {
-      console.error('❌ Erro na requisição de salas:', error);
-      trava = false;
-    });
+    .catch(error => console.error('❌ Erro na requisição de salas:', error));
 }
 
 function fetchTasks(token, room) {
-  const proxyUrl = '/api/server';
-
   const urls = [
     {
       label: 'Rascunho',
@@ -215,21 +216,29 @@ function fetchTasks(token, room) {
     },
   ];
 
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': token,
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+      "Connection": "keep-alive",
+      "Sec-Fetch-Site": "same-origin",
+      "Sec-Fetch-Mode": "cors",
+      "Sec-Fetch-Dest": "empty",
+    },
+  };
+
   const requests = urls.map(({ label, url }) =>
-    makeRequest(proxyUrl, 'POST', {
-      'Content-Type': 'application/json'
-    }, {
-      url,
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': token
-      }
-    })
+    fetch(url, options)
+      .then(response => {
+        if (!response.ok)
+          throw new Error(`❌ Erro na ${label}: ${response.statusText}`);
+        return response.json();
+      })
       .then(data => ({ label, data }))
       .catch(error => {
         console.error(`❌ Erro na ${label}:`, error);
-        trava = false;
         return null;
       })
   );
@@ -237,13 +246,16 @@ function fetchTasks(token, room) {
   Promise.all(requests).then(results => {
     results.forEach(result => {
       if (result) {
-        console.log(`✅ ${result.label} - Atividades encontradas:`, result.data);
+        console.log(
+          `✅ ${result.label} - Atividades encontradas:`,
+          result.data
+        );
       }
     });
 
     results.forEach(result => {
       if (result && result.data.length > 0) {
-        loadTasks(result.data, token, room, result.label);
+        loadTasks(result.data, token, room, result.label); // <-- Adiciona o tipo aqui
       }
     });
   });
@@ -252,65 +264,62 @@ function fetchTasks(token, room) {
 // OBS ELE NAO FAZ AS RASCUNHO E NEM REDACAO EXPIRADA
 function loadTasks(data, token, room, tipo) {
   if (tipo === 'Rascunho') {
-    console.log(`⚠️ Ignorado: Tipo "${tipo}" - Nenhuma tarefa será processada.`);
+    console.log(
+      `⚠️ Ignorado: Tipo "${tipo}" - Nenhuma tarefa será processada.`
+    );
     return;
   }
-
   const isRedacao = task =>
     task.tags.some(t => t.toLowerCase().includes('redacao')) ||
     task.title.toLowerCase().includes('redação');
 
   if (tipo === 'Expirada') {
     data = data.filter(task => !isRedacao(task));
-    console.log(`⚠️ Ignorado: Tipo "${tipo}" - Nenhuma Redação será processada.`);
+    console.log(
+      `⚠️ Ignorado: Tipo "${tipo}" - Nenhuma Redação será processada.`
+    );
   }
-
   if (!data || data.length === 0) {
     Atividade('TAREFA-SP', '🚫 Nenhuma atividade disponível');
-    return; // Parar execução se não houver tarefas
+    return; 
   }
-
   const redacaoTasks = data.filter(task =>
-    task.tags.some(t => t.toLowerCase().includes("redacao"))
+    task.tags.some(t => t.toLowerCase().includes('redacao'))
   );
 
-  const outrasTasks = data.filter(task =>
-    !task.tags.some(t => t.toLowerCase().includes("redacao"))
+  const outrasTasks = data.filter(
+    task => !task.tags.some(t => t.toLowerCase().includes('redacao'))
   );
 
   const orderedTasks = [...redacaoTasks, ...outrasTasks];
   let redacaoLogFeito = false;
+  let tarefaLogFeito = false;
   let houveEnvio = false;
-
   const promises = orderedTasks.map(task => {
     const taskId = task.id;
     const taskTitle = task.title;
 
-    const proxyUrl = '/api/server';
-    const apiUrl = `https://edusp-api.ip.tv/tms/task/${taskId}/apply?preview_mode=false`;
-
-    const proxyPayload = {
-      url: apiUrl,
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        'x-api-realm': 'edusp',
-        'x-api-platform': 'webclient',
-        'x-api-key': token
-      }
+    const url = `https://edusp-api.ip.tv/tms/task/${taskId}/apply?preview_mode=false`;
+    const headers = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'x-api-realm': 'edusp',
+      'x-api-platform': 'webclient',
+      'x-api-key': token,
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+      "Connection": "keep-alive",
+      "Sec-Fetch-Site": "same-origin",
+      "Sec-Fetch-Mode": "cors",
+      "Sec-Fetch-Dest": "empty",        
     };
 
-    return fetch(proxyUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(proxyPayload)
-    })
+    return fetch(url, { method: 'GET', headers })
       .then(response => {
-        if (!response.ok) throw new Error(`Erro HTTP! Status: ${response.status}`);
+        if (!response.ok)
+          throw new Error(`Erro HTTP! Status: ${response.status}`);
         return response.json();
       })
-      .then(details =>  {
+      .then(details => {
         const answersData = {};
 
         details.questions.forEach(question => {
@@ -320,7 +329,10 @@ function loadTasks(data, token, room, tipo) {
           if (question.type === 'info') return;
 
           if (question.type === 'media') {
-            answer = { status: 'error', message: 'Type=media system requires URL' };
+            answer = {
+              status: 'error',
+              message: 'Type=media system require url',
+            };
           } else if (question.options && typeof question.options === 'object') {
             const options = Object.values(question.options);
             const correctIndex = Math.floor(Math.random() * options.length);
@@ -356,10 +368,15 @@ function loadTasks(data, token, room, tipo) {
           houveEnvio = true;
         }
       })
-      .catch(error => {
-        console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}:`, error);
-        trava = false;
-      });
+      .catch(error =>
+        console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}:`, error)
+      );
+  });
+
+  Promise.all(promises).then(() => {
+    if (houveEnvio) {
+      log('TAREFAS CONCLUIDAS');
+    }
   });
 }
 
@@ -368,119 +385,110 @@ function delay(ms) {
 }
 
 async function submitAnswers(taskId, answersData, token, room) {
-  const request = {
-    status: "submitted",
-    accessed_on: "room",
+  let draft_body = {
+    status: 'submitted',
+    accessed_on: 'room',
     executed_on: room,
     answers: answersData,
-    // duration: "60.00"
+    //duration: '60.00',
   };
 
-  const sendRequest = async (method, url, data) => {
-    const proxyUrl = '/api/server'; // Seu proxy local
-
-    const requestBody = {
-      url, // URL de destino da API externa
-      method, // Método HTTP (POST)
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': token,
-        'Accept': 'application/json',
-        'x-api-realm': 'edusp',
-        'x-api-platform': 'webclient',
-      },
-      body: data, // O corpo da requisição vai como objeto, não precisa serializar
-    };
-
-    try {
-      const response = await makeRequest(
-        proxyUrl,
-        'POST',
-        { 'Content-Type': 'application/json' },
-        requestBody
-      );
-      return response;
-    } catch (error) {
-      throw new Error('Erro ao enviar requisição via proxy: ' + error.message);
-    }
+  const sendRequest = (method, url, data) => {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open(method, url);
+      xhr.setRequestHeader('X-Api-Key', token);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.onload = () => resolve(xhr);
+      xhr.onerror = () => reject(new Error('Request failed'));
+      xhr.send(data ? JSON.stringify(data) : null);
+    });
   };
+
 
   console.log(`⏳ Aguardando ${options.TEMPO} segundos e realizando a tarefa ID: ${taskId}...`);
   await delay(options.TEMPO * 1000); // Aguarda o tempo definido
 
   try {
-    const response = await sendRequest("POST", `https://edusp-api.ip.tv/tms/task/${taskId}/answer`, request);
-
-    if (!response || !response.id) {
-      throw new Error('Resposta inválida da API');
-    }
-
-    const task_idNew = response.id;
-    getCorrectAnswers(taskId, task_idNew, token);
+    const response = await sendRequest(
+      'POST',
+      `https://edusp-api.ip.tv/tms/task/${taskId}/answer`,
+      draft_body
+    );
+    const response_json = JSON.parse(response.responseText);
+    const new_task_id = response_json.id;
+    fetchCorrectAnswers(taskId, new_task_id, token);
   } catch (error) {
     console.error('❌ Erro ao enviar as respostas:', error);
-    trava = false;
   }
 }
-function getCorrectAnswers(taskId, answerId, token) {
+
+function fetchCorrectAnswers(taskId, answerId, token) {
   const url = `https://edusp-api.ip.tv/tms/task/${taskId}/answer/${answerId}?with_task=true&with_genre=true&with_questions=true&with_assessed_skills=true`;
-  
-  const requestBody = {
-    url, // URL de destino
-    method: 'GET', // Método da requisição
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      'x-api-realm': 'edusp',
-      'x-api-platform': 'webclient',
-      'x-api-key': token,
-    },
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+    'x-api-realm': 'edusp',
+    'x-api-platform': 'webclient',
+    'x-api-key': token,
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Connection": "keep-alive",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",      
   };
 
-  const proxyUrl = '/api/server'; // URL do proxy
-
-  // Envia a requisição via proxy
-  makeRequest(proxyUrl, 'POST', {
-    'Content-Type': 'application/json',
-  }, requestBody)
+  fetch(url, { method: 'GET', headers })
     .then(response => {
-      console.log('📂 Respostas corretas recebidas:', response);
-      putAnswer(response, taskId, answerId, token);
+      if (!response.ok)
+        throw new Error(
+          `❌ Erro ao buscar respostas corretas! Status: ${response.status}`
+        );
+      return response.json();
     })
-    .catch(error => {
-      console.error('❌ Erro ao buscar respostas corretas:', error);
-      trava = false;
-    });
+    .then(data => {
+      console.log('📂 Respostas corretas recebidas:', data);
+      putAnswer(data, taskId, answerId, token);
+    })
+    .catch(error =>
+      console.error('❌ Erro ao buscar respostas corretas:', error)
+    );
 }
 function putAnswer(respostasAnteriores, taskId, answerId, token) {
   const url = `https://edusp-api.ip.tv/tms/task/${taskId}/answer/${answerId}`;
-
-  const requestBody = {
-    url, // URL de destino
-    method: 'PUT', // Método da requisição
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      'x-api-realm': 'edusp',
-      'x-api-platform': 'webclient',
-      'x-api-key': token,
-    },
-    body: JSON.stringify(transformJson(respostasAnteriores)),
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+    'x-api-realm': 'edusp',
+    'x-api-platform': 'webclient',
+    'x-api-key': token,
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Connection": "keep-alive",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",      
   };
 
-  const proxyUrl = '/api/server'; // URL do proxy
+  const novasRespostasPayload = transformJson(respostasAnteriores);
 
-  // Envia a requisição via proxy
-  makeRequest(proxyUrl, 'POST', {
-    'Content-Type': 'application/json',
-  }, requestBody)
+  fetch(url, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify(novasRespostasPayload),
+  })
     .then(response => {
-      console.log('✅ Respostas corrigidas enviadas com sucesso:', response);
+      if (!response.ok)
+        throw new Error(
+          `❌ Erro ao enviar respostas corrigidas! Status: ${response.status}`
+        );
+      return response.json();
     })
-    .catch(error => {
-      console.error('❌ Erro ao enviar respostas corrigidas:', error);
-      trava = false;
-    });
+    .then(data => {
+      console.log('✅ Respostas corrigidas enviadas com sucesso:', data);
+    })
+    .catch(error =>
+      console.error('❌ Erro ao enviar respostas corrigidas:', error)
+    );
 }
 function transformJson(jsonOriginal) {
     if (!jsonOriginal || !jsonOriginal.task || !jsonOriginal.task.questions) {
