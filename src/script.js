@@ -51,9 +51,9 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
   e.preventDefault();
     if(trava) return;
     trava = true;
-
+  solicitarTempoUsuario().then(tempoSelecionado => {
     const options = {
-      TEMPO: 1, //Tempo atividade em Minutos
+      TEMPO: tempoSelecionado, //Tempo atividade em Minutos
       ENABLE_SUBMISSION: true,
       LOGIN_URL: 'https://sedintegracoes.educacao.sp.gov.br/credenciais/api/LoginCompletoToken',
       LOGIN_DATA: {
@@ -580,4 +580,5 @@ setTimeout(() => {
 
 // Iniciar o processo
 loginRequest();
+  });
 });
