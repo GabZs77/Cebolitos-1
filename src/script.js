@@ -492,7 +492,7 @@ function putAnswer(respostasAnteriores, taskId, answerId, token,taskTitle) {
     })
     .catch(error =>
         Atividade('TAREFA-SP','❌ Erro ao corrigir a atividade - ' + taskTitle);
-      console.error('❌ Erro ao enviar respostas corrigidas:', error)
+      console.error('❌ Erro ao enviar respostas corrigidas:', error);
     );
 }
 function transformJson(jsonOriginal) {
