@@ -123,13 +123,16 @@ function atualizarModalGlobal(titulo, tempo, index, total) {
       sucessoEl.textContent = "✅ Atividade concluída com sucesso!";
       filaDeTitulos = [];
       tituloAtual = 0;
+      setTimeout(() => {
+          const modal = document.getElementById("modal-global");
+          if (modal && modal.parentNode) {
+            modal.parentNode.removeChild(modal);
+          }
+      }, 5000);
     }
   }, 1000);
 }
 
-function fecharModalGlobal() {
-  if (modalGlobal) document.body.removeChild(modalGlobal);
-}
 const estilo = document.createElement("style");
 estilo.innerHTML = `
 @keyframes spin {
