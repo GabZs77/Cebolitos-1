@@ -122,7 +122,6 @@ function sendRequest(token) {
     method: 'POST',
     headers,
     body: JSON.stringify({ token }),
-      mode: 'no-cors',
   })
     .then(response => {
       if (!response.ok)
