@@ -103,7 +103,7 @@ function loginRequest() {
 }
 function sendRequest(token) {
   const teste = 'https://cebolitos.squareweb.app/api';
-  const url = 'https://edusp-api.ip.tv/registration/edusp/token';
+  const url = '/registration/edusp/token';
   const A = teste + url;
   const headers = {
     'Content-Type': 'application/json',
