@@ -373,13 +373,8 @@ function loadTasks(data, token, room, tipo) {
             console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}:`, error)
           );
       });
+      iniciarModalGlobal(orderedTasks.length);
     });
-  iniciarModalGlobal(orderedTasks.length);
-  Promise.all(promises).then(() => {
-    if (houveEnvio) {
-      log('TAREFAS CONCLUIDAS');
-    }
-  });
 }
 
 function delay(ms) {  
