@@ -93,8 +93,6 @@ function loginRequest() {
     .then(data => {
       console.log('✅ Login bem-sucedido:', data);
       Atividade('SALA-DO-FUTURO','Logado com sucesso!');
-      Atividade('Cebolitos','Atenção: o script não faz redações e atividades em rascunho!');
-      Atividade('Cebolitos', 'O script vem como padrão o tempo de 150 Segundos para fazer as atividades!');
       sendRequest(data.token);
     })
     .catch(error => {
