@@ -38,7 +38,7 @@ function solicitarTempoUsuario() {
     input.type = 'text';
     input.placeholder = '1 a 5 minutos';
     input.style.padding = '10px 12px';
-    input.style.width = '160px';
+    input.style.width = '200px';
     input.style.border = '1px solid #444';
     input.style.borderRadius = '10px';
     input.style.marginBottom = '12px';
