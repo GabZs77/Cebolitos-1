@@ -55,7 +55,7 @@ function abrirModal(titulo, tempoTotal) {
     const descricaoEl = document.createElement("p");
     descricaoEl.innerHTML = `
         Aguardando tempo para a atividade:<br>
-        <strong>${titulo}</strong>. Tempo: <strong>${tempoTotal}</strong><br>
+        Tempo: <strong>${tempoTotal}</strong><br>
         Por favor, <strong>não feche esta página</strong>.
     `;
     descricaoEl.style.fontSize = "15px";
