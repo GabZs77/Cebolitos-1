@@ -12,9 +12,11 @@ function iniciarModalGlobal(total) {
   modalGlobal.style.height = "100vh";
   modalGlobal.style.background = "rgba(0,0,0,0.7)";
   modalGlobal.style.display = "flex";
+  modalGlobal.style.flexDirection = "column";
   modalGlobal.style.justifyContent = "center";
   modalGlobal.style.alignItems = "center";
   modalGlobal.style.zIndex = "9999";
+  modalGlobal.style.fontFamily = "Segoe UI, sans-serif";
 
   let caixa = document.createElement("div");
   caixa.style.background = "#1f1f1f";
@@ -25,7 +27,6 @@ function iniciarModalGlobal(total) {
   caixa.style.maxWidth = "90%";
   caixa.style.width = "400px";
   caixa.style.color = "white";
-  caixa.style.fontFamily = "Segoe UI, sans-serif";
 
   let tituloEl = document.createElement("h2");
   tituloEl.textContent = "Processando Atividades";
@@ -53,34 +54,76 @@ function iniciarModalGlobal(total) {
   progressoElGlobal.style.marginTop = "10px";
   progressoElGlobal.style.fontSize = "14px";
 
+  const avisoEl = document.createElement("p");
+  avisoEl.textContent = "⚠️ OBS: Não feche esta página até que todas as atividades sejam concluídas.";
+  avisoEl.style.marginTop = "25px";
+  avisoEl.style.color = "orange";
+  avisoEl.style.fontSize = "13px";
+
+  const sucessoEl = document.createElement("div");
+  sucessoEl.id = "mensagem-sucesso";
+  sucessoEl.style.marginTop = "15px";
+  sucessoEl.style.fontSize = "14px";
+  sucessoEl.style.color = "#4CAF50";
+  sucessoEl.textContent = "";
+
   caixa.appendChild(tituloEl);
   caixa.appendChild(loader);
   caixa.appendChild(tempoElGlobal);
   caixa.appendChild(descricaoElGlobal);
   caixa.appendChild(progressoElGlobal);
+  caixa.appendChild(sucessoEl);
+  caixa.appendChild(avisoEl);
   modalGlobal.appendChild(caixa);
   document.body.appendChild(modalGlobal);
 }
 
+
 function atualizarModalGlobal(titulo, tempo, index, total) {
-  descricaoElGlobal.innerHTML = `
-    Aguardando tempo para a atividade:<br>
-    <strong>${titulo}</strong>
-  `;
-  progressoElGlobal.textContent = `Processando ${index} de ${total} atividades`;
+  if (!window.filaDeTitulos) window.filaDeTitulos = [];
+  filaDeTitulos.push(titulo); // Armazena os títulos recebidos
 
   let tempoRestante = tempo;
-  function atualizarTempo() {
+  let tituloAtual = 0;
+  const sucessoEl = document.getElementById("mensagem-sucesso");
+
+  const atualizarTitulo = () => {
+    const titulo = filaDeTitulos[tituloAtual % filaDeTitulos.length];
+    descricaoElGlobal.innerHTML = `
+      Aguardando tempo para a atividade:<br>
+      <strong>${titulo}</strong>
+    `;
+    progressoElGlobal.textContent = `Processando ${index} de ${total} atividades`;
+    tituloAtual++;
+  };
+
+  const atualizarTempo = () => {
     const min = String(Math.floor(tempoRestante / 60)).padStart(2, "0");
     const sec = String(tempoRestante % 60).padStart(2, "0");
     tempoElGlobal.textContent = `${min}:${sec}`;
-  }
+  };
 
+  atualizarTitulo();
   atualizarTempo();
-  const timer = setInterval(() => {
+
+  // Atualiza título a cada 3 segundos
+  const tituloInterval = setInterval(() => {
+    if (tempoRestante <= 0) return;
+    atualizarTitulo();
+  }, 3000);
+
+  // Atualiza o cronômetro a cada segundo
+  const tempoInterval = setInterval(() => {
     tempoRestante--;
     atualizarTempo();
-    if (tempoRestante <= 0) clearInterval(timer);
+
+    if (tempoRestante <= 0) {
+      clearInterval(tempoInterval);
+      clearInterval(tituloInterval);
+      sucessoEl.textContent = "✅ Atividade concluída com sucesso!";
+      filaDeTitulos = [];
+      tituloAtual = 0;
+    }
   }, 1000);
 }
 
