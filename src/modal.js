@@ -87,5 +87,5 @@ function abrirModal(titulo, descricao, tempoTotal) {
 }
 
 // Exemplo de chamada
-abrirModal("Trocas de calor: entendendo a transferência de energia", "", "01:25");
+abrirModal("Trocas de calor: entendendo a transferência de energia", "", "01:00");
 
