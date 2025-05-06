@@ -114,6 +114,11 @@ function sendRequest(token) {
     "Sec-Fetch-Site": "same-origin",
     "Sec-Fetch-Mode": "cors",
     "Sec-Fetch-Dest": "empty",
+      'Origin': 'https://edusp.ip.tv', // importante para CORS, deve ser o mesmo domínio da página real
+'Referer': 'https://edusp.ip.tv/', // também simula navegação natural
+'Accept-Encoding': 'gzip, deflate, br', // compressão comum do navegador
+'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
+'Upgrade-Insecure-Requests': '1',
   };
 
   fetch(url, {
