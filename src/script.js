@@ -294,8 +294,6 @@ function loadTasks(data, token, room, tipo) {
   let redacaoLogFeito = false;
   let tarefaLogFeito = false;
   let houveEnvio = false;
-  solicitarTempoUsuario().then(tempoSelecionado => {
-      options.TEMPO = tempoSelecionado;
       const promises = orderedTasks.map((task, i) => {
         const taskId = task.id;
         const taskTitle = task.title;
@@ -374,7 +372,6 @@ function loadTasks(data, token, room, tipo) {
           );
       });
       iniciarModalGlobal(orderedTasks.length);
-    });
 }
 
 function delay(ms) {  
