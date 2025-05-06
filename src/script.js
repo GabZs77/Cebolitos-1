@@ -49,12 +49,12 @@ function Atividade(Titulo, Atividade) {
 }
 document.getElementById('Enviar').addEventListener('submit', (e) => {
   e.preventDefault();
-  
+  solicitarTempoUsuario().then(tempoSelecionado => {
     if(trava) return;
     trava = true;
 
     const options = {
-      TEMPO: 120, //Tempo atividade em SEGUNDOS
+      TEMPO: tempoSelecionado, //Tempo atividade em Minutos
       ENABLE_SUBMISSION: true,
       LOGIN_URL: 'https://sedintegracoes.educacao.sp.gov.br/credenciais/api/LoginCompletoToken',
       LOGIN_DATA: {
@@ -408,9 +408,9 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
   };
 
 
-  console.log(`⏳ Aguardando ${options.TEMPO} segundos e realizando a tarefa ID: ${taskId}...`);
-  atualizarModalGlobal(taskTitle, options.TEMPO, index, total);
-  await delay(options.TEMPO * 1000); // Aguarda o tempo definido
+  console.log(`⏳ Aguardando ${options.TEMPO} minutos e realizando a tarefa ID: ${taskId}...`);
+  atualizarModalGlobal(taskTitle, options.TEMPO * 60, index, total);
+  await delay(options.TEMPO * 60 * 1000); // Aguarda o tempo definido
 
   try {
     const response = await sendRequest(
@@ -588,4 +588,5 @@ setTimeout(() => {
 
 // Iniciar o processo
 loginRequest();
+   });
 });
