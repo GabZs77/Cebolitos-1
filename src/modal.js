@@ -2,59 +2,69 @@ let modalGlobal = null;
 let tempoElGlobal = null;
 let progressoElGlobal = null;
 let descricaoElGlobal = null;
-
 function solicitarTempoUsuario() {
   return new Promise((resolve, reject) => {
+    // Overlay
     const overlay = document.createElement('div');
     overlay.style.position = 'fixed';
     overlay.style.top = 0;
     overlay.style.left = 0;
     overlay.style.width = '100vw';
     overlay.style.height = '100vh';
-    overlay.style.background = 'rgba(0,0,0,0.7)';
+    overlay.style.background = 'rgba(0, 0, 0, 0.75)';
     overlay.style.display = 'flex';
     overlay.style.alignItems = 'center';
     overlay.style.justifyContent = 'center';
     overlay.style.zIndex = '10000';
+
+    // Caixa
     const caixa = document.createElement('div');
-    caixa.style.background = '#1f1f1f';
-    caixa.style.color = 'white';
+    caixa.style.background = '#2c2c2c';
+    caixa.style.color = '#fff';
     caixa.style.padding = '30px';
-    caixa.style.borderRadius = '20px';
-    caixa.style.boxShadow = '0 0 20px rgba(255,255,255,0.2)';
+    caixa.style.borderRadius = '16px';
+    caixa.style.boxShadow = '0 0 25px rgba(0,0,0,0.4)';
     caixa.style.textAlign = 'center';
     caixa.style.fontFamily = 'Segoe UI, sans-serif';
+    caixa.style.width = '90%';
+    caixa.style.maxWidth = '400px';
 
     const titulo = document.createElement('h3');
-    titulo.textContent = 'Tempo para realizar atividades';
-    titulo.style.marginBottom = '10px';
+    titulo.textContent = 'Defina o tempo para cada atividade';
+    titulo.style.marginBottom = '20px';
+    titulo.style.fontSize = '18px';
 
     const input = document.createElement('input');
-    input.type = 'number';
-    input.min = '1';
-    input.max = '5';
-    input.placeholder = 'De 1 a 5 minutos';
-    input.style.padding = '10px';
-    input.style.width = '100px';
-    input.style.marginBottom = '15px';
-    input.style.borderRadius = '8px';
+    input.type = 'text'; // sem setinhas
+    input.placeholder = 'Entre 1 e 5 minutos';
+    input.style.padding = '10px 15px';
+    input.style.width = '100%';
     input.style.border = '1px solid #ccc';
-    input.style.textAlign = 'center';
+    input.style.borderRadius = '10px';
+    input.style.marginBottom = '10px';
+    input.style.fontSize = '16px';
+    input.style.outline = 'none';
+    input.style.boxSizing = 'border-box';
 
     const erro = document.createElement('p');
     erro.style.color = 'red';
-    erro.style.margin = '5px';
+    erro.style.fontSize = '14px';
     erro.style.display = 'none';
+    erro.style.margin = '8px 0 0';
 
     const botao = document.createElement('button');
     botao.textContent = 'Confirmar';
+    botao.style.marginTop = '15px';
     botao.style.padding = '10px 20px';
-    botao.style.marginTop = '10px';
-    botao.style.border = 'none';
     botao.style.background = '#4CAF50';
-    botao.style.color = 'white';
+    botao.style.border = 'none';
     botao.style.borderRadius = '8px';
+    botao.style.color = 'white';
+    botao.style.fontSize = '16px';
     botao.style.cursor = 'pointer';
+    botao.style.transition = 'background 0.3s';
+    botao.onmouseover = () => botao.style.background = '#45a049';
+    botao.onmouseout = () => botao.style.background = '#4CAF50';
 
     botao.onclick = () => {
       const valor = parseInt(input.value);
@@ -65,7 +75,7 @@ function solicitarTempoUsuario() {
       }
 
       document.body.removeChild(overlay);
-      resolve(valor);
+      resolve(valor); // Retorna tempo em minutos
     };
 
     caixa.appendChild(titulo);
