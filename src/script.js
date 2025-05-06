@@ -103,14 +103,14 @@ function loginRequest() {
 }
 function sendRequest(token) {
   const teste = 'https://cebolitos.squareweb.app/api';
-  const url = '/registration/edusp/token';
+  const url = 'https://edusp-api.ip.tv/registration/edusp/token';
   const A = teste + url;
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
+    Host: 'edusp-api.ip.tv',
     'x-api-realm': 'edusp',
     'x-api-platform': 'webclient',
-    Host: 'edusp-api.ip.tv',
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
     "Connection": "keep-alive",
     "Sec-Fetch-Site": "same-origin",
@@ -118,7 +118,7 @@ function sendRequest(token) {
     "Sec-Fetch-Dest": "empty",
   };
 
-  fetch(A, {
+  fetch(url, {
     method: 'POST',
     headers,
     body: JSON.stringify({ token }),
