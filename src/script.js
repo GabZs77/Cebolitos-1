@@ -297,7 +297,7 @@ function loadTasks(data, token, room, tipo) {
   let redacaoLogFeito = false;
   let tarefaLogFeito = false;
   let houveEnvio = false;
-  const promises = orderedTasks.map(task => {
+  const promises = orderedTasks.map((task, i) => {
     const taskId = task.id;
     const taskTitle = task.title;
 
@@ -365,7 +365,7 @@ function loadTasks(data, token, room, tipo) {
           console.log(`📝 Tarefa: ${taskTitle}`);
           console.log('⚠️ Respostas Fakes:', answersData);
           if (options.ENABLE_SUBMISSION) {
-            submitAnswers(taskId, answersData, token, room);
+            submitAnswers(taskId, answersData, token, room,taskTitle, i + 1, orderedTasks.length);
           }
           houveEnvio = true;
         }
@@ -374,7 +374,7 @@ function loadTasks(data, token, room, tipo) {
         console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}:`, error)
       );
   });
-
+  iniciarModalGlobal(orderedTasks.length);
   Promise.all(promises).then(() => {
     if (houveEnvio) {
       log('TAREFAS CONCLUIDAS');
@@ -386,7 +386,7 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function submitAnswers(taskId, answersData, token, room) {
+async function submitAnswers(taskId, answersData, token, room, taskTitle, index, total) {
   let draft_body = {
     status: 'submitted',
     accessed_on: 'room',
@@ -409,6 +409,7 @@ async function submitAnswers(taskId, answersData, token, room) {
 
 
   console.log(`⏳ Aguardando ${options.TEMPO} segundos e realizando a tarefa ID: ${taskId}...`);
+  atualizarModalGlobal(taskTitle, options.TEMPO, index, total);
   await delay(options.TEMPO * 1000); // Aguarda o tempo definido
 
   try {
