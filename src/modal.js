@@ -121,14 +121,15 @@ function atualizarModalGlobal(titulo, tempo, index, total) {
       clearInterval(tempoInterval);
       clearInterval(tituloInterval);
       sucessoEl.textContent = "✅ Atividade concluída com sucesso!";
-      filaDeTitulos = [];
-      tituloAtual = 0;
       setTimeout(() => {
           const modal = document.getElementById("modal-global");
+          modal.style.display = "none";
+          filaDeTitulos = [];
+          tituloAtual = 0;
           if (modal && modal.parentNode) {
             modal.parentNode.removeChild(modal);
           }
-      }, 5000);
+      }, 3000);
     }
   }, 1000);
 }
