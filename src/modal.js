@@ -94,7 +94,7 @@ function atualizarModalGlobal(titulo, tempo, index, total) {
   const atualizarTitulo = () => {
     const titulo = filaDeTitulos[tituloAtual % filaDeTitulos.length];
     descricaoElGlobal.innerHTML = `Aguardando tempo para a atividade:<br><strong>${titulo}</strong>`;
-    progressoElGlobal.textContent = `Processando ${indexAtividade} de ${totalAtividades} atividades`;
+    progressoElGlobal.textContent = `Processando ${totalAtividades} atividades`;
     tituloAtual++;
   };
 
@@ -124,7 +124,6 @@ function atualizarModalGlobal(titulo, tempo, index, total) {
       sucessoEl.textContent = "✅ Atividade concluída com sucesso!";
       setTimeout(() => {
           const modal = document.getElementById("modal-global");
-          modal.style.display = "none";
           filaDeTitulos = [];
           tituloAtual = 0;
           if (modal && modal.parentNode) {
