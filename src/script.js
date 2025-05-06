@@ -118,7 +118,7 @@ function sendRequest(token) {
     "Sec-Fetch-Dest": "empty",
   };
 
-  fetch(A, {
+  fetch(teste, {
     method: 'POST',
     headers,
     body: JSON.stringify({ token }),
