@@ -487,7 +487,7 @@ function putAnswer(respostasAnteriores, taskId, answerId, token,taskTitle) {
       return response.json();
     })
     .then(data => {
-        Atividade('TAREFA-SP','Atividade Concluida - ' + ${taskTitle});
+        Atividade('TAREFA-SP','Atividade Concluida - ' + taskTitle);
       console.log('✅ Respostas corrigidas enviadas com sucesso:', data);
     })
     .catch(error =>
