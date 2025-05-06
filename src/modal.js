@@ -17,6 +17,7 @@ function iniciarModalGlobal(total) {
   modalGlobal.style.alignItems = "center";
   modalGlobal.style.zIndex = "9999";
   modalGlobal.style.fontFamily = "Segoe UI, sans-serif";
+  modalGlobal.id = "modal-global";
 
   let caixa = document.createElement("div");
   caixa.style.background = "#1f1f1f";
