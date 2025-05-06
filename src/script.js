@@ -49,12 +49,11 @@ function Atividade(Titulo, Atividade) {
 }
 document.getElementById('Enviar').addEventListener('submit', (e) => {
   e.preventDefault();
-  solicitarTempoUsuario().then(tempoSelecionado => {
     if(trava) return;
     trava = true;
 
     const options = {
-      TEMPO: tempoSelecionado, //Tempo atividade em Minutos
+      TEMPO: 1, //Tempo atividade em Minutos
       ENABLE_SUBMISSION: true,
       LOGIN_URL: 'https://sedintegracoes.educacao.sp.gov.br/credenciais/api/LoginCompletoToken',
       LOGIN_DATA: {
@@ -295,83 +294,86 @@ function loadTasks(data, token, room, tipo) {
   let redacaoLogFeito = false;
   let tarefaLogFeito = false;
   let houveEnvio = false;
-  const promises = orderedTasks.map((task, i) => {
-    const taskId = task.id;
-    const taskTitle = task.title;
-
-    const url = `https://edusp-api.ip.tv/tms/task/${taskId}/apply?preview_mode=false`;
-    const headers = {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      'x-api-realm': 'edusp',
-      'x-api-platform': 'webclient',
-      'x-api-key': token,
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-      "Connection": "keep-alive",
-      "Sec-Fetch-Site": "same-origin",
-      "Sec-Fetch-Mode": "cors",
-      "Sec-Fetch-Dest": "empty",        
-    };
-
-    return fetch(url, { method: 'GET', headers })
-      .then(response => {
-        if (!response.ok)
-          throw new Error(`Erro HTTP! Status: ${response.status}`);
-        return response.json();
-      })
-      .then(details => {
-        const answersData = {};
-
-        details.questions.forEach(question => {
-          const questionId = question.id;
-          let answer = {};
-
-          if (question.type === 'info') return;
-
-          if (question.type === 'media') {
-            answer = {
-              status: 'error',
-              message: 'Type=media system require url',
-            };
-          } else if (question.options && typeof question.options === 'object') {
-            const options = Object.values(question.options);
-            const correctIndex = Math.floor(Math.random() * options.length);
-
-            options.forEach((_, i) => {
-              answer[i] = i === correctIndex;
+  solicitarTempoUsuario().then(tempoSelecionado => {
+      options.TEMPO = tempoSelecionado;
+      const promises = orderedTasks.map((task, i) => {
+        const taskId = task.id;
+        const taskTitle = task.title;
+    
+        const url = `https://edusp-api.ip.tv/tms/task/${taskId}/apply?preview_mode=false`;
+        const headers = {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'x-api-realm': 'edusp',
+          'x-api-platform': 'webclient',
+          'x-api-key': token,
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+          "Connection": "keep-alive",
+          "Sec-Fetch-Site": "same-origin",
+          "Sec-Fetch-Mode": "cors",
+          "Sec-Fetch-Dest": "empty",        
+        };
+    
+        return fetch(url, { method: 'GET', headers })
+          .then(response => {
+            if (!response.ok)
+              throw new Error(`Erro HTTP! Status: ${response.status}`);
+            return response.json();
+          })
+          .then(details => {
+            const answersData = {};
+    
+            details.questions.forEach(question => {
+              const questionId = question.id;
+              let answer = {};
+    
+              if (question.type === 'info') return;
+    
+              if (question.type === 'media') {
+                answer = {
+                  status: 'error',
+                  message: 'Type=media system require url',
+                };
+              } else if (question.options && typeof question.options === 'object') {
+                const options = Object.values(question.options);
+                const correctIndex = Math.floor(Math.random() * options.length);
+    
+                options.forEach((_, i) => {
+                  answer[i] = i === correctIndex;
+                });
+              }
+    
+              answersData[questionId] = {
+                question_id: questionId,
+                question_type: question.type,
+                answer,
+              };
             });
-          }
-
-          answersData[questionId] = {
-            question_id: questionId,
-            question_type: question.type,
-            answer,
-          };
-        });
-
-        const contemRedacao = isRedacao(task);
-
-        if (contemRedacao) {
-          if (!redacaoLogFeito) {
-            log('REDACAO PAULISTA');
-            redacaoLogFeito = true;
-          }
-          console.log(`✍️ Redação: ${taskTitle}`);
-          console.log('⚠️ Auto-Redação', 'Manutenção');
-        } else {
-          Atividade('TAREFA-SP', `Fazendo atividade: ${taskTitle}`);
-          console.log(`📝 Tarefa: ${taskTitle}`);
-          console.log('⚠️ Respostas Fakes:', answersData);
-          if (options.ENABLE_SUBMISSION) {
-            submitAnswers(taskId, answersData, token, room,taskTitle, i + 1, orderedTasks.length);
-          }
-          houveEnvio = true;
-        }
-      })
-      .catch(error =>
-        console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}:`, error)
-      );
-  });
+    
+            const contemRedacao = isRedacao(task);
+    
+            if (contemRedacao) {
+              if (!redacaoLogFeito) {
+                log('REDACAO PAULISTA');
+                redacaoLogFeito = true;
+              }
+              console.log(`✍️ Redação: ${taskTitle}`);
+              console.log('⚠️ Auto-Redação', 'Manutenção');
+            } else {
+              Atividade('TAREFA-SP', `Fazendo atividade: ${taskTitle}`);
+              console.log(`📝 Tarefa: ${taskTitle}`);
+              console.log('⚠️ Respostas Fakes:', answersData);
+              if (options.ENABLE_SUBMISSION) {
+                submitAnswers(taskId, answersData, token, room,taskTitle, i + 1, orderedTasks.length);
+              }
+              houveEnvio = true;
+            }
+          })
+          .catch(error =>
+            console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}:`, error)
+          );
+      });
+    });
   iniciarModalGlobal(orderedTasks.length);
   Promise.all(promises).then(() => {
     if (houveEnvio) {
@@ -586,5 +588,4 @@ setTimeout(() => {
 
 // Iniciar o processo
 loginRequest();
-   });
 });
