@@ -81,19 +81,19 @@ function iniciarModalGlobal(total) {
 
 function atualizarModalGlobal(titulo, tempo, index, total) {
   if (!window.filaDeTitulos) window.filaDeTitulos = [];
-  filaDeTitulos.push(titulo); // Armazena os títulos recebidos
+  filaDeTitulos.push(titulo); 
 
   let tempoRestante = tempo;
   let tituloAtual = 0;
   const sucessoEl = document.getElementById("mensagem-sucesso");
 
+  const totalAtividades = total;
+  const indexAtividade = index;
+
   const atualizarTitulo = () => {
     const titulo = filaDeTitulos[tituloAtual % filaDeTitulos.length];
-    descricaoElGlobal.innerHTML = `
-      Aguardando tempo para a atividade:<br>
-      <strong>${titulo}</strong>
-    `;
-    progressoElGlobal.textContent = `Processando ${index} de ${total} atividades`;
+    descricaoElGlobal.innerHTML = `Aguardando tempo para a atividade:<br><strong>${titulo}</strong>`;
+    progressoElGlobal.textContent = `Processando ${indexAtividade} de ${totalAtividades} atividades`;
     tituloAtual++;
   };
 
@@ -133,6 +133,7 @@ function atualizarModalGlobal(titulo, tempo, index, total) {
     }
   }, 1000);
 }
+
 
 const estilo = document.createElement("style");
 estilo.innerHTML = `
