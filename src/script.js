@@ -420,13 +420,13 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
     );
     const response_json = JSON.parse(response.responseText);
     const new_task_id = response_json.id;
-    fetchCorrectAnswers(taskId, new_task_id, token);
+    fetchCorrectAnswers(taskId, new_task_id, token,taskTitle);
   } catch (error) {
     console.error('❌ Erro ao enviar as respostas:', error);
   }
 }
 
-function fetchCorrectAnswers(taskId, answerId, token) {
+function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
   const url = `https://edusp-api.ip.tv/tms/task/${taskId}/answer/${answerId}?with_task=true&with_genre=true&with_questions=true&with_assessed_skills=true`;
   const headers = {
     'Content-Type': 'application/json',
@@ -451,13 +451,13 @@ function fetchCorrectAnswers(taskId, answerId, token) {
     })
     .then(data => {
       console.log('📂 Respostas corretas recebidas:', data);
-      putAnswer(data, taskId, answerId, token);
+      putAnswer(data, taskId, answerId, token,taskTitle);
     })
     .catch(error =>
       console.error('❌ Erro ao buscar respostas corretas:', error)
     );
 }
-function putAnswer(respostasAnteriores, taskId, answerId, token) {
+function putAnswer(respostasAnteriores, taskId, answerId, token,taskTitle) {
   const url = `https://edusp-api.ip.tv/tms/task/${taskId}/answer/${answerId}`;
   const headers = {
     'Content-Type': 'application/json',
@@ -487,6 +487,7 @@ function putAnswer(respostasAnteriores, taskId, answerId, token) {
       return response.json();
     })
     .then(data => {
+        Atividade('TAREFA-SP','Atividade Concluida - ' + ${taskTitle});
       console.log('✅ Respostas corrigidas enviadas com sucesso:', data);
     })
     .catch(error =>
