@@ -3,6 +3,81 @@ let tempoElGlobal = null;
 let progressoElGlobal = null;
 let descricaoElGlobal = null;
 
+function solicitarTempoUsuario() {
+  return new Promise((resolve, reject) => {
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = 0;
+    overlay.style.left = 0;
+    overlay.style.width = '100vw';
+    overlay.style.height = '100vh';
+    overlay.style.background = 'rgba(0,0,0,0.7)';
+    overlay.style.display = 'flex';
+    overlay.style.alignItems = 'center';
+    overlay.style.justifyContent = 'center';
+    overlay.style.zIndex = '10000';
+    const caixa = document.createElement('div');
+    caixa.style.background = '#1f1f1f';
+    caixa.style.color = 'white';
+    caixa.style.padding = '30px';
+    caixa.style.borderRadius = '20px';
+    caixa.style.boxShadow = '0 0 20px rgba(255,255,255,0.2)';
+    caixa.style.textAlign = 'center';
+    caixa.style.fontFamily = 'Segoe UI, sans-serif';
+
+    const titulo = document.createElement('h3');
+    titulo.textContent = 'Tempo para realizar atividades';
+    titulo.style.marginBottom = '10px';
+
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.min = '1';
+    input.max = '5';
+    input.placeholder = 'De 1 a 5 minutos';
+    input.style.padding = '10px';
+    input.style.width = '100px';
+    input.style.marginBottom = '15px';
+    input.style.borderRadius = '8px';
+    input.style.border = '1px solid #ccc';
+    input.style.textAlign = 'center';
+
+    const erro = document.createElement('p');
+    erro.style.color = 'red';
+    erro.style.margin = '5px';
+    erro.style.display = 'none';
+
+    const botao = document.createElement('button');
+    botao.textContent = 'Confirmar';
+    botao.style.padding = '10px 20px';
+    botao.style.marginTop = '10px';
+    botao.style.border = 'none';
+    botao.style.background = '#4CAF50';
+    botao.style.color = 'white';
+    botao.style.borderRadius = '8px';
+    botao.style.cursor = 'pointer';
+
+    botao.onclick = () => {
+      const valor = parseInt(input.value);
+      if (isNaN(valor) || valor < 1 || valor > 5) {
+        erro.textContent = 'Digite um número entre 1 e 5.';
+        erro.style.display = 'block';
+        return;
+      }
+
+      document.body.removeChild(overlay);
+      resolve(valor);
+    };
+
+    caixa.appendChild(titulo);
+    caixa.appendChild(input);
+    caixa.appendChild(erro);
+    caixa.appendChild(botao);
+    overlay.appendChild(caixa);
+    document.body.appendChild(overlay);
+  });
+}
+
+
 function iniciarModalGlobal(total) {
   modalGlobal = document.createElement("div");
   modalGlobal.style.position = "fixed";
