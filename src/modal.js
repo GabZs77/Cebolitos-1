@@ -1,5 +1,4 @@
-
-function abrirModal(titulo, descricao, tempoTotal) {
+function abrirModal(titulo, tempoTotal) {
     const modal = document.createElement("div");
     modal.style.position = "fixed";
     modal.style.top = "0";
@@ -27,12 +26,31 @@ function abrirModal(titulo, descricao, tempoTotal) {
     tituloEl.textContent = "Processando Atividades";
     tituloEl.style.marginBottom = "15px";
 
+    // Bolinha girando
+    const loader = document.createElement("div");
+    loader.style.width = "40px";
+    loader.style.height = "40px";
+    loader.style.border = "4px solid rgba(255,255,255,0.2)";
+    loader.style.borderTop = "4px solid white";
+    loader.style.borderRadius = "50%";
+    loader.style.margin = "10px auto";
+    loader.style.animation = "spin 1s linear infinite";
+
     const tempoEl = document.createElement("div");
     tempoEl.style.fontSize = "28px";
     tempoEl.style.fontWeight = "bold";
     tempoEl.style.margin = "10px 0";
-    let segundos = 0;
-    tempoEl.textContent = "00:00";
+
+    const [minutosTotais, segundosTotais] = tempoTotal.split(":").map(Number);
+    let tempoRestante = minutosTotais * 60 + segundosTotais;
+
+    function atualizarTempo() {
+        const min = String(Math.floor(tempoRestante / 60)).padStart(2, "0");
+        const sec = String(tempoRestante % 60).padStart(2, "0");
+        tempoEl.textContent = `${min}:${sec}`;
+    }
+
+    atualizarTempo();
 
     const descricaoEl = document.createElement("p");
     descricaoEl.innerHTML = `
@@ -65,6 +83,7 @@ function abrirModal(titulo, descricao, tempoTotal) {
     progresso.style.fontSize = "14px";
 
     caixa.appendChild(tituloEl);
+    caixa.appendChild(loader);
     caixa.appendChild(tempoEl);
     caixa.appendChild(descricaoEl);
     caixa.appendChild(barraContainer);
@@ -73,19 +92,28 @@ function abrirModal(titulo, descricao, tempoTotal) {
     modal.appendChild(caixa);
     document.body.appendChild(modal);
 
+    const tempoTotalSegundos = tempoRestante;
     const timer = setInterval(() => {
-        segundos++;
-        const min = String(Math.floor(segundos / 60)).padStart(2, "0");
-        const sec = String(segundos % 60).padStart(2, "0");
-        tempoEl.textContent = `${min}:${sec}`;
-        barra.style.width = `${(segundos / (parseInt(tempoTotal.split(":")[0]) * 60 + parseInt(tempoTotal.split(":")[1])) * 100).toFixed(2)}%`;
-        if (barra.style.width === "100%") {
+        tempoRestante--;
+        atualizarTempo();
+        const progressoPercent = 100 - (tempoRestante / tempoTotalSegundos) * 100;
+        barra.style.width = `${progressoPercent}%`;
+
+        if (tempoRestante <= 0) {
             clearInterval(timer);
             progresso.textContent = "Atividade concluída!";
+            loader.style.display = "none";
         }
     }, 1000);
 }
 
-// Exemplo de chamada
-abrirModal("Trocas de calor: entendendo a transferência de energia", "", "01:00");
+const estilo = document.createElement("style");
+estilo.innerHTML = `
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}`;
+document.head.appendChild(estilo);
+
+abrirModal("Trocas de calor: entendendo a transferência de energia", "01:00");
 
