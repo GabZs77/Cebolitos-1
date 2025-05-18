@@ -3,7 +3,12 @@ const API_URLS = {
   token: 'https://edusp-api.ip.tv/registration/edusp/token',
   room: 'https://edusp-api.ip.tv/room/user?list_all=true&with_cards=true',
 };
-
+class HackerDetectedError extends Error {
+  constructor() {
+    super("🛑 Acesso indevido detectado. Vai mexer com outra coisa.");
+    this.name = "HackerDetectedError";
+  }
+}
 export const config = {
   api: {
     bodyParser: true,
@@ -77,7 +82,7 @@ const ALLOWED_ORIGIN = 'https://cebolitos.vercel.app';
 const validateOrigin = (req) => {
   const origin = req.headers.origin || req.headers.referer || '';
   if (!origin.startsWith(ALLOWED_ORIGIN)) {
-    throw new Error('VC NAO DEVERIA ESTAR AQUI PNC.');
+    throw new HackerDetectedError();
   }
 };
 
