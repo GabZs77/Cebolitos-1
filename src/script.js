@@ -112,40 +112,6 @@ function sendRequest(token) {
   fetch(teste, {
     method: 'POST',
     headers,
-    body: JSON.stringify({ token }), // Verifique se esse é o formato esperado
-  })
-    .then(response => {
-      if (!response.ok)
-        throw new Error(`❌ Erro HTTP Status: ${response.status}`);
-      return response.json();
-    })
-    .then(data => {
-      console.log('✅ Informações do Aluno:', data);
-      fetchUserRooms(data.auth_token);
-    })
-    .catch(error => console.error('❌ Erro na requisição:', error));
-}
-
-function sendRequest2(token) {
-  const teste = 'https://cebolitos.vercel.app/api/server?type=token';
-  const url = 'https://edusp-api.ip.tv/registration/edusp/token';
-  const A = teste;
-  const headers = {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-    Host: 'edusp-api.ip.tv',
-    'x-api-realm': 'edusp',
-    'x-api-platform': 'webclient',
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-    "Connection": "keep-alive",
-    "Sec-Fetch-Site": "same-origin",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Dest": "empty",
-  };
-
-  fetch(teste, {
-    method: 'POST',
-    headers,
     body: JSON.stringify({ token }),
   })
     .then(response => {
@@ -160,35 +126,6 @@ function sendRequest2(token) {
     .catch(error => console.error('❌ Erro na requisição:', error));
 }
 
-
-function sendRequestNew(token) {
-  const url = 'https://edusp-api.ip.tv/registration/edusp/token';
-  const proxyUrl = '/api/server';
-
-  const headers = {
-    'Accept': 'application/json',
-    'x-api-realm': 'edusp',
-    'x-api-platform': 'webclient',
-    'Host': 'edusp-api.ip.tv',
-    'Content-Type': 'application/json'
-  };
-
-  makeRequest(proxyUrl, 'POST', { 'Content-Type': 'application/json' }, {
-    url,
-    method: 'POST',
-    headers, // esses headers são enviados para a API real
-    body: JSON.stringify({ token }) // o body real da requisição original
-  })
-    .then(data => {
-      console.log('✅ Informações do Aluno:', data);
-      fetchUserRooms(data.auth_token);
-    })
-    .catch(error => {
-        Atividade('SALA-DO-FUTURO','Erro ao registrar');
-      console.error('❌ Erro na requisição:', error);
-        trava = false;
-    });
-}
 function fetchUserRooms(token) {
   const headers = {
     'Content-Type': 'application/json',
@@ -198,7 +135,7 @@ function fetchUserRooms(token) {
   fetch('https://cebolitos.vercel.app/api/server?type=room', {
     method: 'POST',
     headers,
-    body: JSON.stringify({ 'apiKey': token }), // Verifique se esse é o formato esperado
+    body: JSON.stringify({ 'apiKey': token }),
   })
     .then(response => {
       if (!response.ok)
@@ -220,64 +157,25 @@ function fetchUserRooms(token) {
 }
 
 function fetchTasks(token, room, name) {
-const urls = [
-    {
-      label: 'Rascunho',
-      url: `https://edusp-api.ip.tv/tms/task/todo?expired_only=false&filter_expired=true&with_answer=true&publication_target=${room}&answer_statuses=draft&with_apply_moment=true`,
-    },
-    {
-      label: 'Expirada',
-      url: `https://edusp-api.ip.tv/tms/task/todo?expired_only=true&filter_expired=false&with_answer=true&publication_target=${room}&answer_statuses=pending&with_apply_moment=true`,
-    },
-    {
-      label: 'Normal',
-      url: `https://edusp-api.ip.tv/tms/task/todo?expired_only=false&filter_expired=true&with_answer=true&publication_target=${room}&answer_statuses=pending&with_apply_moment=false`,
-    },
-  ];
-
-  const options = {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': token,
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-      "Connection": "keep-alive",
-      "Sec-Fetch-Site": "same-origin",
-      "Sec-Fetch-Mode": "cors",
-      "Sec-Fetch-Dest": "empty",
-    },
+const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
   };
 
-  const requests = urls.map(({ label, url }) =>
-    fetch(url, options)
-      .then(response => {
-        if (!response.ok)
-          throw new Error(`❌ Erro na ${label}: ${response.statusText}`);
-        return response.json();
-      })
-      .then(data => ({ label, data }))
-      .catch(error => {
-        console.error(`❌ Erro na ${label}:`, error);
-        return null;
-      })
-  );
-
-  Promise.all(requests).then(results => {
-    results.forEach(result => {
-      if (result) {
-        console.log(
-          `✅ ${result.label} - Sala: ${name} - Atividades encontradas:`,
-          result.data
-        );
-      }
-    });
-
-    results.forEach(result => {
-      if (result && result.data.length > 0) {
-        loadTasks(result.data, token, room, result.label); // <-- Adiciona o tipo aqui
-      }
-    });
-  });
+  fetch('https://cebolitos.vercel.app/api/server?type=tasks', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ token,room }),
+  })
+    .then(response => {
+      if (!response.ok)
+        throw new Error(`❌ Erro HTTP Status: ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+        console.log('Resultado das tasks:', data.results);
+    })
+    .catch(error => console.error('❌ Erro na requisição:', error));
 }
 
 // OBS ELE NAO FAZ AS RASCUNHO E NEM REDACAO EXPIRADA
