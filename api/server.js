@@ -49,6 +49,8 @@ export default async function handler(req, res) {
     const { type } = req.query;
     const targetUrl = API_URLS[type];
     const options = buildFetchOptions(req);
+    console.log("🔍 Enviando para:", targetUrl);
+    console.log("🧾 Opções:", options);
 
     const response = await fetch(targetUrl, options);
     const data = await response.json();
