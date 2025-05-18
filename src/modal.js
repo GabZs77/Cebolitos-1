@@ -219,7 +219,7 @@ function atualizarModalGlobal(titulo, tempo, index, total) {
           if (modal && modal.parentNode) {
             modal.parentNode.removeChild(modal);
           }
-      }, 1500);
+      }, 1200);
     }
   }, 1000);
 }
