@@ -1,17 +1,8 @@
-import fetch from 'node-fetch';
-//"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdXBlcnZpc2VlcyI6W10sInNrZXkiOiJhdXRoX3Rva2VuOmVkdXNwOm1hcmlhZmVybmFuMDk4OTI4NjM1LXNwIiwibmljayI6Im1hcmlhZmVybmFuMDk4OTI4NjM1LXNwIiwicm9sZSI6IjAwMDYiLCJyZWFsbSI6ImVkdXNwIiwiaWF0IjoxNzQ2OTgyMzA3LCJhdWQiOiJ3ZWJjbGllbnQifQ.5G-y9s0orygQ_R1m8_VOG6WbPCGOY_i0ieJ4WDdLzJM"
-async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
-  for (let i = 0; i < retries; i++) {
-    try {
-      const response = await fetch(url, options);
-      if (!response.ok) throw new Error(`Status: ${response.status}`);
-      return response;
-    } catch (err) {
-      if (i === retries - 1) throw err;
-      await new Promise(res => setTimeout(res, delay));
-    }
-  }
-}
+export const config = {
+  api: {
+    bodyParser: true, // Aceita JSON por padrão (isso já é true por padrão)
+  },
+};
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -19,61 +10,44 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
-    return res.status(200).end(); // resposta rápida para preflight
+    return res.status(200).end();
   }
 
-  const { url, method = 'GET', headers = {}, body = null } = req.body;
+  const { type } = req.query;
 
-  if (!url) {
-    return res.status(400).json({ error: 'URL de destino não fornecida' });
+  if (!type) {
+    return res.status(400).json({ error: 'Missing "type" query parameter' });
   }
-
-  const timeout = 5000; // 5 segundos
-
-  const fakeBrowserHeaders = {
-    "Origin": "https://edusp.ip.tv",
-    "Referer": "https://edusp.ip.tv/",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-    "Accept": "application/json, text/plain, */*",
-    "Accept-Language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
-    "Connection": "keep-alive",
-    "Sec-Fetch-Site": "same-origin",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Dest": "empty",
-    "Content-Type": "application/json"
-  };
 
   try {
-    const response = await Promise.race([
-      fetchWithRetry(url, {
-        method: method.toUpperCase(),
-        headers: {
-          ...headers,
-          ...fakeBrowserHeaders
-        },
-        body: ['GET', 'HEAD'].includes(method.toUpperCase())
-          ? undefined
-          : (typeof body === 'string' ? body : JSON.stringify(body)),
-      }, 3, 1000),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Requisição excedeu o tempo limite')), timeout)
-      )
-    ]);
+    let targetUrl = '';
+    let options = {
+      method: req.method,
+      headers: {
+        ...req.headers,
+        host: undefined, // Remover headers que causam erro
+      },
+    };
 
-    const contentType = response.headers.get('content-type') || '';
-    const isJson = contentType.includes('application/json');
-    const responseData = isJson ? await response.json() : await response.text();
-
-    res.status(response.status).send(responseData);
-  } catch (error) {
-    console.error('Erro no proxy:', error.message);
-
-    if (error.message.includes('429')) {
-      return res.status(429).json({
-        error: 'Limite de requisições atingido. Tente novamente em instantes.'
-      });
+    // Apenas incluir body se não for GET
+    if (req.method !== 'GET') {
+      options.body = JSON.stringify(req.body);
+      options.headers['Content-Type'] = 'application/json';
     }
 
-    res.status(500).json({ error: 'Erro interno no proxy', details: error.message });
+    if (type === 'login') {
+      targetUrl = 'https://exemplo.com/api/login';
+    } else if (type === 'token') {
+      targetUrl = 'https://exemplo.com/api/token';
+    } else {
+      return res.status(400).json({ error: 'Invalid type' });
+    }
+
+    const response = await fetch(targetUrl, options);
+    const data = await response.json();
+
+    return res.status(response.status).json(data);
+  } catch (err) {
+    return res.status(500).json({ error: 'Erro ao fazer fetch', details: err.message });
   }
 }
