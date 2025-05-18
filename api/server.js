@@ -18,7 +18,7 @@ const validateQueryParams = (query) => {
   }
 };
 
-const buildFetchOptions = (req) => {
+const buildFetchOptions = (req,type) => {
   const bodyData = { ...req.body };
   const headers = {
       'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ export default async function handler(req, res) {
     validateQueryParams(req.query);
     const { type } = req.query;
     const targetUrl = API_URLS[type];
-    const options = buildFetchOptions(req);
+    const options = buildFetchOptions(req,type);
     console.log("Enviando essa porra:", targetUrl);
     console.log("opcoes desse carai", options);
 
