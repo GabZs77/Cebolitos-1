@@ -58,6 +58,15 @@ const fetchWithRetry = async (url, options, maxAttempts = 3) => {
   }
 };
 
+const ALLOWED_ORIGIN = 'https://cebolitos.vercel.app';
+
+const validateOrigin = (req) => {
+  const origin = req.headers.origin || req.headers.referer || '';
+  if (!origin.startsWith(ALLOWED_ORIGIN)) {
+    throw new Error('Origem não autorizada');
+  }
+};
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -68,6 +77,7 @@ export default async function handler(req, res) {
   }
 
   try {
+    validateOrigin(req);
     validateQueryParams(req.query);
     const { type } = req.query;
     const targetUrl = API_URLS[type];
