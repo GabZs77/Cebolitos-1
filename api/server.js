@@ -33,7 +33,7 @@ const buildFetchOptions = (req,type) => {
       delete bodyData.apiKey;
     }
 
-    const method = null;
+    let method;
 
     if (type == 'room') {
       method = 'GET';
