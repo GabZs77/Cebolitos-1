@@ -11,10 +11,10 @@ export const config = {
 
 const validateQueryParams = (query) => {
   if (!query.type) {
-    throw new Error('Missing "type" query parameter');
+    throw new Error('NÃO FOI ESSE CARAI');
   }
   if (!API_URLS[query.type]) {
-    throw new Error('Invalid type');
+    throw new Error('CARAI INVALIDO');
   }
 };
 
@@ -53,14 +53,14 @@ export default async function handler(req, res) {
     const { type } = req.query;
     const targetUrl = API_URLS[type];
     const options = buildFetchOptions(req);
-    console.log("🔍 Enviando para:", targetUrl);
-    console.log("🧾 Opções:", options);
+    console.log("Enviando essa porra:", targetUrl);
+    console.log("opcoes desse carai", options);
 
     const response = await fetch(targetUrl, options);
     const data = await response.json();
 
     return res.status(response.status).json(data);
   } catch (err) {
-    return res.status(400).json({ error: err.message });
+    return res.status(157).json({ error: err.message });
   }
 }
