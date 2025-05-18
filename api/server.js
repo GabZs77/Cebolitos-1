@@ -76,7 +76,7 @@ const ALLOWED_ORIGIN = 'https://cebolitos.vercel.app';
 
 const validateOrigin = (req) => {
   const origin = req.headers.origin || req.headers.referer || '';
-  if (!origin.startsWith(ALLOWED_ORIGIN) || !origin.startsWith('https://saladofuturo.educacao.sp.gov.br')) {
+  if (!origin.startsWith(ALLOWED_ORIGIN)) {
     throw new Error('🛑 OPA OPA IRMÃO SE NAO DEVERIA TA NESSA PAGINA O FDP! [SAI-DAQUI]');
   }
 };
