@@ -35,7 +35,7 @@ const buildFetchOptions = (req,type) => {
 
     let method;
 
-    if (type == 'room') {
+    if (type == 'room' || type == 'previewTask') {
       method = 'GET';
     } else {
       method = req.method;
@@ -45,7 +45,7 @@ const buildFetchOptions = (req,type) => {
       method: method,
       headers,
     };
-    if (req.method !== 'GET' && type !== 'room') {
+    if (req.method !== 'GET' || type !== 'room' || type !== 'previewTask') {
       options.body = JSON.stringify(req.body);
       options.headers['Content-Type'] = 'application/json';
     }
@@ -95,8 +95,6 @@ export default async function handler(req, res) {
     const { type } = req.query;
     if (type === 'tasks') {
       const { room, token } = req.body;
-      console.log(room);
-      console.log(token);
       const urls = [
         {
           label: 'Rascunho',
@@ -139,7 +137,21 @@ export default async function handler(req, res) {
 
       return res.status(200).json({ results });
     }
-
+    if (type === 'previewTask') {
+      const { taskId, token } = req.body;
+      const options = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': token,
+          Accept: 'application/json',
+        },
+      };
+      const url = `https://edusp-api.ip.tv/tms/task/${encodeURIComponent(taskId)}/apply?preview_mode=false`;
+      const response = await fetchWithRetry(url,options);
+      const data = await response.json();
+      return res.status(response.status).json(data);
+    }
     validateQueryParams(req.query);
     if (API_URLS[type]) {
       const targetUrl = API_URLS[type];
