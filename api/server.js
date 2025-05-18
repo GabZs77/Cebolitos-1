@@ -92,9 +92,8 @@ export default async function handler(req, res) {
 
   try {
     validateOrigin(req);
-    validateQueryParams(req.query);
     const { type } = req.query;
-    if (type == 'tasks') {
+    if (type === 'tasks') {
       const { room, token } = req.body;
       console.log(room);
       console.log(token);
@@ -140,6 +139,8 @@ export default async function handler(req, res) {
 
       return res.status(200).json({ results });
     }
+
+    validateQueryParams(req.query);
     if (API_URLS[type]) {
       const targetUrl = API_URLS[type];
       const options = buildFetchOptions(req,type);
