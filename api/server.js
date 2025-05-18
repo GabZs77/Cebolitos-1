@@ -152,6 +152,23 @@ export default async function handler(req, res) {
       const data = await response.json();
       return res.status(response.status).json(data);
     }
+    if (type === 'submit') {
+      const { taskId, token, ...bodyWithoutTaskIdAndToken } = req.body;
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': token,
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(bodyWithoutTaskIdAndToken),
+      };
+      console.log(options);
+      const url = `https://edusp-api.ip.tv/tms/task/${encodeURIComponent(taskId)}/answer`;
+      const response = await fetchWithRetry(url,options);
+      const data = await response.json();
+      return res.status(response.status).json(data);      
+    }
     validateQueryParams(req.query);
     if (API_URLS[type]) {
       const targetUrl = API_URLS[type];
