@@ -98,10 +98,6 @@ export default async function handler(req, res) {
       const { room, token } = req.body;
       console.log(room);
       console.log(token);
-      if (!room || !token) {
-        return res.status(400).json({ error: 'Faltando room ou token no body' });
-      }
-
       const urls = [
         {
           label: 'Rascunho',
@@ -127,7 +123,7 @@ export default async function handler(req, res) {
       };
 
       const requests = urls.map(({ label, url }) =>
-        fetchWithRetry(url, options)
+        fetch(url, options)
           .then((response) => {
             if (!response.ok)
               throw new Error(`❌ Erro na ${label}: ${response.statusText}`);
