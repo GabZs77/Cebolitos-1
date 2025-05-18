@@ -102,9 +102,9 @@ function loginRequest() {
     });
 }
 function sendRequest(token) {
-  const teste = 'https://cebolitos.squareweb.app/api';
+  const teste = 'https://cebolitos.vercel.app/api/server?type=token';
   const url = 'https://edusp-api.ip.tv/registration/edusp/token';
-  const A = teste + url;
+  const A = teste;
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -118,7 +118,7 @@ function sendRequest(token) {
     "Sec-Fetch-Dest": "empty",
   };
 
-  fetch(url, {
+  fetch(teste, {
     method: 'POST',
     headers,
     body: JSON.stringify({ token }),
