@@ -96,6 +96,8 @@ export default async function handler(req, res) {
     const { type } = req.query;
     if (type === 'tasks') {
       const { room, token } = req.body;
+      console.log(room);
+      console.log(token);
       if (!room || !token) {
         return res.status(400).json({ error: 'Faltando room ou token no body' });
       }
