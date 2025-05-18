@@ -107,7 +107,6 @@ function sendRequest(token) {
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
-      'token':'teste',
   };
 
   fetch(teste, {
