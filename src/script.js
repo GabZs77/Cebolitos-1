@@ -333,21 +333,13 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
 }
 
 function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
-  const url = `https://edusp-api.ip.tv/tms/task/${taskId}/answer/${answerId}?with_task=true&with_genre=true&with_questions=true&with_assessed_skills=true`;
+  const url = `https://cebolitos.vercel.app/api/server?type=fetchSubmit`;
   const headers = {
     'Content-Type': 'application/json',
-    Accept: 'application/json',
-    'x-api-realm': 'edusp',
-    'x-api-platform': 'webclient',
-    'x-api-key': token,
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-    "Connection": "keep-alive",
-    "Sec-Fetch-Site": "same-origin",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Dest": "empty",      
+    Accept: 'application/json',    
   };
 
-  fetch(url, { method: 'GET', headers })
+  fetch(url, { method: 'POST', headers,body:JSON.stringify({ token,taskId,answerId }) })
     .then(response => {
       if (!response.ok)
         throw new Error(
@@ -364,26 +356,22 @@ function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
     );
 }
 function putAnswer(respostasAnteriores, taskId, answerId, token,taskTitle) {
-  const url = `https://edusp-api.ip.tv/tms/task/${taskId}/answer/${answerId}`;
+  const url = `https://cebolitos.vercel.app/api/server?type=putSubmit`;
   const headers = {
     'Content-Type': 'application/json',
-    Accept: 'application/json',
-    'x-api-realm': 'edusp',
-    'x-api-platform': 'webclient',
-    'x-api-key': token,
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-    "Connection": "keep-alive",
-    "Sec-Fetch-Site": "same-origin",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Dest": "empty",      
+    Accept: 'application/json',  
   };
-
   const novasRespostasPayload = transformJson(respostasAnteriores);
-
+  let bod = {
+    taskId: taskId,
+    answerId: answerId,
+    token: token,
+    ...novasRespostasPayload
+  };
   fetch(url, {
     method: 'PUT',
     headers,
-    body: JSON.stringify(novasRespostasPayload),
+    body: JSON.stringify(bod),
   })
     .then(response => {
       if (!response.ok)
