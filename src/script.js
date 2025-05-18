@@ -190,39 +190,33 @@ function sendRequestNew(token) {
     });
 }
 function fetchUserRooms(token) {
-  const options = {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': token,
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-      "Connection": "keep-alive",
-      "Sec-Fetch-Site": "same-origin",
-      "Sec-Fetch-Mode": "cors",
-      "Sec-Fetch-Dest": "empty",       
-    },
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
   };
 
-  fetch(
-    'https://edusp-api.ip.tv/room/user?list_all=true&with_cards=true',
-    options
-  )
+  fetch('https://cebolitos.vercel.app/api/server?type=room', {
+    method: 'GET',
+    headers,
+    body: JSON.stringify({ 'x-api-key': token }), // Verifique se esse é o formato esperado
+  })
     .then(response => {
-      if (!response.ok) throw new Error(`❌ Erro: ${response.statusText}`);
+      if (!response.ok)
+        throw new Error(`❌ Erro HTTP Status: ${response.status}`);
       return response.json();
     })
     .then(data => {
-      console.log('✅ Salas do usuário:', data);
-      if (data.rooms && data.rooms.length > 0) {
-        Atividade('TAREFA-SP','Procurando atividades...');
-        data.rooms.forEach(PORRA => {
-          fetchTasks(token,PORRA.name, PORRA.topic);
-        });
-      } else {
-        console.warn('⚠️ Nenhuma sala encontrada..');
-      }
+     console.log('✅ Salas do usuário:', data);
+          if (data.rooms && data.rooms.length > 0) {
+            Atividade('TAREFA-SP','Procurando atividades...');
+            data.rooms.forEach(PORRA => {
+              fetchTasks(token,PORRA.name, PORRA.topic);
+            });
+          } else {
+            console.warn('⚠️ Nenhuma sala encontrada..');
+          }
     })
-    .catch(error => console.error('❌ Erro na requisição de salas:', error));
+    .catch(error => console.error('❌ Erro na requisição:', error));
 }
 
 function fetchTasks(token, room, name) {
