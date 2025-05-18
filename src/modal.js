@@ -180,7 +180,7 @@ function atualizarModalGlobal(titulo, tempo, index, total) {
 
   const totalAtividades = total;
   const indexAtividade = index;
-
+  descricaoElGlobal.innerHTML = `Aguardando tempo para a atividade:<br><strong>TODAS AS ATIVIDADES</strong>`;
   const atualizarTitulo = () => {
     const titulo = filaDeTitulos[tituloAtual % filaDeTitulos.length];
     descricaoElGlobal.innerHTML = `Aguardando tempo para a atividade:<br><strong>${titulo}</strong>`;
@@ -194,7 +194,7 @@ function atualizarModalGlobal(titulo, tempo, index, total) {
     tempoElGlobal.textContent = `${min}:${sec}`;
   };
 
-  atualizarTitulo();
+  //atualizarTitulo();
   atualizarTempo();
 
   // Atualiza título a cada 3 segundos
@@ -219,7 +219,7 @@ function atualizarModalGlobal(titulo, tempo, index, total) {
           if (modal && modal.parentNode) {
             modal.parentNode.removeChild(modal);
           }
-      }, 3000);
+      }, 1500);
     }
   }, 1000);
 }
