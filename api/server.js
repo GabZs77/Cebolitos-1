@@ -169,6 +169,41 @@ export default async function handler(req, res) {
       const data = await response.json();
       return res.status(response.status).json(data);      
     }
+    if (type === 'fetchSubmit') {
+      const { taskId, answerId, token } = req.body;
+      const options = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-realm': 'edusp',
+          'x-api-platform': 'webclient',
+          'x-api-key': token,
+          Accept: 'application/json',
+        },
+      };
+      const url = `https://edusp-api.ip.tv/tms/task/${encodeURIComponent(taskId)}/answer/${encodeURIComponent(answerId)}?with_task=true&with_genre=true&with_questions=true&with_assessed_skills=true`;
+      const response = await fetchWithRetry(url,options);
+      const data = await response.json();
+      return res.status(response.status).json(data);
+    }
+    if (type === 'putSubmit') {
+      const { taskId, token, answerId, ...bodyWithoutTaskIdAndToken } = req.body;
+      const options = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-realm': 'edusp',
+          'x-api-platform': 'webclient',
+          'x-api-key': token,
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(bodyWithoutTaskIdAndToken),
+      };
+      const url = `https://edusp-api.ip.tv/tms/task/${encodeURIComponent(taskId)}/answer/${encodeURIComponent(answerId)}`;
+      const response = await fetchWithRetry(url,options);
+      const data = await response.json();
+      return res.status(response.status).json(data);
+    }
     validateQueryParams(req.query);
     if (API_URLS[type]) {
       const targetUrl = API_URLS[type];
