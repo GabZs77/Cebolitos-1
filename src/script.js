@@ -198,7 +198,7 @@ function fetchUserRooms(token) {
   fetch('https://cebolitos.vercel.app/api/server?type=room', {
     method: 'GET',
     headers,
-    body: JSON.stringify({ 'x-api-key': token }), // Verifique se esse é o formato esperado
+    body: JSON.stringify({ 'apiKey': token }), // Verifique se esse é o formato esperado
   })
     .then(response => {
       if (!response.ok)
