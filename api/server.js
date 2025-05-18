@@ -84,15 +84,66 @@ export default async function handler(req, res) {
     validateOrigin(req);
     validateQueryParams(req.query);
     const { type } = req.query;
-    const targetUrl = API_URLS[type];
-    const options = buildFetchOptions(req,type);
-    console.log("Enviando essa porra:", targetUrl);
-    console.log("opcoes desse carai", options);
+    if (type === 'tasks') {
+      const { room, token } = req.body;
+      if (!room || !token) {
+        return res.status(400).json({ error: 'Faltando room ou token no body' });
+      }
 
-    const response = await fetchWithRetry(targetUrl, options);
-    const data = await response.json();
+      const urls = [
+        {
+          label: 'Rascunho',
+          url: `https://edusp-api.ip.tv/tms/task/todo?expired_only=false&filter_expired=true&with_answer=true&publication_target=${encodeURIComponent(room)}&answer_statuses=draft&with_apply_moment=true`,
+        },
+        {
+          label: 'Expirada',
+          url: `https://edusp-api.ip.tv/tms/task/todo?expired_only=true&filter_expired=false&with_answer=true&publication_target=${encodeURIComponent(room)}&answer_statuses=pending&with_apply_moment=true`,
+        },
+        {
+          label: 'Normal',
+          url: `https://edusp-api.ip.tv/tms/task/todo?expired_only=false&filter_expired=true&with_answer=true&publication_target=${encodeURIComponent(room)}&answer_statuses=pending&with_apply_moment=false`,
+        },
+      ];
 
-    return res.status(response.status).json(data);
+      const options = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': token,
+          Accept: 'application/json',
+        },
+      };
+
+      const requests = urls.map(({ label, url }) =>
+        fetchWithRetry(url, options)
+          .then((response) => {
+            if (!response.ok)
+              throw new Error(`❌ Erro na ${label}: ${response.statusText}`);
+            return response.json();
+          })
+          .then((data) => ({ label, data }))
+          .catch((error) => {
+            console.error(`❌ Erro na ${label}:`, error.message);
+            return { label, error: error.message };
+          })
+      );
+
+      const results = await Promise.all(requests);
+
+      return res.status(200).json({ results });
+    }
+    if (API_URLS[type]) {
+      const targetUrl = API_URLS[type];
+      const options = buildFetchOptions(req,type);
+      console.log("Enviando essa porra:", targetUrl);
+      console.log("opcoes desse carai", options);
+  
+      const response = await fetchWithRetry(targetUrl, options);
+      const data = await response.json();
+  
+      return res.status(response.status).json(data);
+    }
+    throw new Error('Alguma porra acontenceu');
   } catch (err) {
     return res.status(400).json({ error: err.message });
   }
