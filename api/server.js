@@ -38,7 +38,7 @@ const buildFetchOptions = (req,type) => {
     if (type == 'room') {
       method = 'GET';
     } else {
-      req.method;
+      method = req.method;
     }
   
     const options = {
