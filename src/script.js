@@ -107,8 +107,6 @@ function sendRequest(token) {
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
-    'x-api-realm': 'edusp',
-    'x-api-platform': 'webclient',
   };
 
   fetch(teste, {
