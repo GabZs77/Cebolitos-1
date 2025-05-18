@@ -395,7 +395,6 @@ function transformJson(jsonOriginal) {
     }
 
     let novoJson = {
-        status: 'draft',
       accessed_on: jsonOriginal.accessed_on,
       executed_on: jsonOriginal.executed_on,
       //duration: 60.00,
