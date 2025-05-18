@@ -101,7 +101,34 @@ function loginRequest() {
 
     });
 }
+
 function sendRequest(token) {
+  const teste = 'https://cebolitos.vercel.app/api/server?type=token';
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+    'x-api-realm': 'edusp',
+    'x-api-platform': 'webclient',
+  };
+
+  fetch(teste, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ token }), // Verifique se esse é o formato esperado
+  })
+    .then(response => {
+      if (!response.ok)
+        throw new Error(`❌ Erro HTTP Status: ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      console.log('✅ Informações do Aluno:', data);
+      fetchUserRooms(data.auth_token);
+    })
+    .catch(error => console.error('❌ Erro na requisição:', error));
+}
+
+function sendRequest2(token) {
   const teste = 'https://cebolitos.vercel.app/api/server?type=token';
   const url = 'https://edusp-api.ip.tv/registration/edusp/token';
   const A = teste;
