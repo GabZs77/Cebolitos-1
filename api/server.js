@@ -106,7 +106,7 @@ export default async function handler(req, res) {
         },
         {
           label: 'Normal',
-          url: `https://edusp-api.ip.tv/tms/task/todo?expired_only=false&filter_expired=true&with_answer=true&publication_target=${encodeURIComponent(room)}&answer_statuses=pending&with_apply_moment=false`,
+          url: `https://edusp-api.ip.tv/tms/task/todo?expired_only=false&filter_expired=true&is_exam=false&is_essay=false&with_answer=true&publication_target=${encodeURIComponent(room)}&answer_statuses=pending&with_apply_moment=false`,
         },
       ];
 
