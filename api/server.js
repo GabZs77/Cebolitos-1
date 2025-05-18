@@ -77,7 +77,7 @@ const ALLOWED_ORIGIN = 'https://cebolitos.vercel.app';
 const validateOrigin = (req) => {
   const origin = req.headers.origin || req.headers.referer || '';
   if (!origin.startsWith(ALLOWED_ORIGIN)) {
-    throw new Error('Origem não autorizada');
+    throw new Error('VC NAO DEVERIA ESTAR AQUI PNC.');
   }
 };
 
