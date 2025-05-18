@@ -94,7 +94,7 @@ export default async function handler(req, res) {
     validateOrigin(req);
     validateQueryParams(req.query);
     const { type } = req.query;
-    if (type === 'tasks') {
+    if (type == 'tasks') {
       const { room, token } = req.body;
       console.log(room);
       console.log(token);
