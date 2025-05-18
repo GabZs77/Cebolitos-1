@@ -1,6 +1,6 @@
 const API_URLS = {
   login: 'https://saladofuturo.com/api/login',
-  token: 'https://saladofuturo.com/api/token',
+  token: 'https://edusp-api.ip.tv/registration/edusp/token',
 };
 
 export const config = {
