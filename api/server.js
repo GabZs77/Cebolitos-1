@@ -45,7 +45,7 @@ const buildFetchOptions = (req,type) => {
       method: method,
       headers,
     };
-    if (req.method !== 'GET' || type !== 'room' || type !== 'previewTask') {
+    if (req.method !== 'GET' && type !== 'room' && type !== 'previewTask') {
       options.body = JSON.stringify(req.body);
       options.headers['Content-Type'] = 'application/json';
     }
