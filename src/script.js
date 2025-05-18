@@ -324,7 +324,7 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
         headers,
         body: JSON.stringify(draft_body),
       });
-    const response_json = JSON.parse(response.responseText);
+    const response_json = await response.json();
     const new_task_id = response_json.id;
     fetchCorrectAnswers(taskId, new_task_id, token,taskTitle);
   } catch (error) {
