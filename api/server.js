@@ -1,7 +1,38 @@
+const API_URLS = {
+  login: 'https://saladofuturo.com/api/login',
+  token: 'https://saladofuturo.com/api/token',
+};
+
 export const config = {
   api: {
-    bodyParser: true, // Aceita JSON por padrão (isso já é true por padrão)
+    bodyParser: true,
   },
+};
+
+const validateQueryParams = (query) => {
+  if (!query.type) {
+    throw new Error('Missing "type" query parameter');
+  }
+  if (!API_URLS[query.type]) {
+    throw new Error('Invalid type');
+  }
+};
+
+const buildFetchOptions = (req) => {
+  const options = {
+    method: req.method,
+    headers: {
+      ...req.headers,
+      host: undefined,
+    },
+  };
+
+  if (req.method !== 'GET') {
+    options.body = JSON.stringify(req.body);
+    options.headers['Content-Type'] = 'application/json';
+  }
+
+  return options;
 };
 
 export default async function handler(req, res) {
@@ -13,41 +44,17 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  const { type } = req.query;
-
-  if (!type) {
-    return res.status(400).json({ error: 'Missing "type" query parameter' });
-  }
-
   try {
-    let targetUrl = '';
-    let options = {
-      method: req.method,
-      headers: {
-        ...req.headers,
-        host: undefined, // Remover headers que causam erro
-      },
-    };
-
-    // Apenas incluir body se não for GET
-    if (req.method !== 'GET') {
-      options.body = JSON.stringify(req.body);
-      options.headers['Content-Type'] = 'application/json';
-    }
-
-    if (type === 'login') {
-      targetUrl = 'https://exemplo.com/api/login';
-    } else if (type === 'token') {
-      targetUrl = 'https://exemplo.com/api/token';
-    } else {
-      return res.status(400).json({ error: 'Invalid type' });
-    }
+    validateQueryParams(req.query);
+    const { type } = req.query;
+    const targetUrl = API_URLS[type];
+    const options = buildFetchOptions(req);
 
     const response = await fetch(targetUrl, options);
     const data = await response.json();
 
     return res.status(response.status).json(data);
   } catch (err) {
-    return res.status(500).json({ error: 'Erro ao fazer fetch', details: err.message });
+    return res.status(400).json({ error: err.message });
   }
 }
