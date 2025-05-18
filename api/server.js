@@ -1,5 +1,5 @@
 const API_URLS = {
-  login: 'https://saladofuturo.com/api/login',
+  login: 'https://sedintegracoes.educacao.sp.gov.br/credenciais/api/LoginCompletoToken',
   token: 'https://edusp-api.ip.tv/registration/edusp/token',
   room: 'https://edusp-api.ip.tv/room/user?list_all=true&with_cards=true',
 };
