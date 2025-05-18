@@ -302,36 +302,28 @@ function delay(ms) {
 
 async function submitAnswers(taskId, answersData, token, room, taskTitle, index, total) {
   let draft_body = {
+    taskId: taskId,
+    token: token,
     status: 'submitted',
     accessed_on: 'room',
     executed_on: room,
     answers: answersData,
-    //duration: '60.00',
   };
-
-  const sendRequest = (method, url, data) => {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open(method, url);
-      xhr.setRequestHeader('X-Api-Key', token);
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.onload = () => resolve(xhr);
-      xhr.onerror = () => reject(new Error('Request failed'));
-      xhr.send(data ? JSON.stringify(data) : null);
-    });
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
   };
-
-
   console.log(`⏳ Aguardando ${options.TEMPO} minutos e realizando a tarefa ID: ${taskId}...`);
   atualizarModalGlobal(taskTitle, options.TEMPO * 60, index, total);
   await delay(options.TEMPO * 60 * 1000); // Aguarda o tempo definido
 
   try {
-    const response = await sendRequest(
-      'POST',
-      `https://edusp-api.ip.tv/tms/task/${taskId}/answer`,
-      draft_body
-    );
+      
+    const response = await fetch('https://cebolitos.vercel.app/api/server?type=submit', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(draft_body),
+      });
     const response_json = JSON.parse(response.responseText);
     const new_task_id = response_json.id;
     fetchCorrectAnswers(taskId, new_task_id, token,taskTitle);
