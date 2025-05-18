@@ -3,59 +3,7 @@ const API_URLS = {
   token: 'https://edusp-api.ip.tv/registration/edusp/token',
   room: 'https://edusp-api.ip.tv/room/user?list_all=true&with_cards=true',
 };
-class HackerDetectedError extends Error {
-  constructor() {
-    super("🛑 Acesso indevido detectado. Vai mexer com outra coisa.");
-    this.name = "HackerDetectedError";
-    this.exibirTelaBloqueio();
-  }
 
-  exibirTelaBloqueio() {
-    // Limpa a página
-    document.body.innerHTML = "";
-    document.body.style.margin = "0";
-
-    // Cria tela preta
-    const overlay = document.createElement("div");
-    overlay.style.position = "fixed";
-    overlay.style.top = 0;
-    overlay.style.left = 0;
-    overlay.style.width = "100vw";
-    overlay.style.height = "100vh";
-    overlay.style.backgroundColor = "black";
-    overlay.style.display = "flex";
-    overlay.style.flexDirection = "column";
-    overlay.style.alignItems = "center";
-    overlay.style.justifyContent = "center";
-    overlay.style.zIndex = "999999";
-
-    // Adiciona imagem animada do Anonymous
-    const imagem = document.createElement("img");
-    imagem.src = "https://media.tenor.com/Ug6C-Vb6nKwAAAAd/anonymous-hacker.gif"; // GIF animado
-    imagem.alt = "Anonymous";
-    imagem.style.width = "200px";
-    imagem.style.marginBottom = "20px";
-    imagem.style.borderRadius = "12px";
-    imagem.style.boxShadow = "0 0 20px red";
-
-    // Adiciona mensagem
-    const mensagem = document.createElement("div");
-    mensagem.textContent = this.message;
-    mensagem.style.color = "red";
-    mensagem.style.fontSize = "22px";
-    mensagem.style.fontFamily = "monospace";
-    mensagem.style.textAlign = "center";
-    mensagem.style.padding = "20px";
-    mensagem.style.border = "2px solid red";
-    mensagem.style.borderRadius = "10px";
-    mensagem.style.backgroundColor = "#111";
-    mensagem.style.boxShadow = "0 0 30px red";
-
-    overlay.appendChild(imagem);
-    overlay.appendChild(mensagem);
-    document.body.appendChild(overlay);
-  }
-}
 export const config = {
   api: {
     bodyParser: true,
@@ -129,7 +77,7 @@ const ALLOWED_ORIGIN = 'https://cebolitos.vercel.app';
 const validateOrigin = (req) => {
   const origin = req.headers.origin || req.headers.referer || '';
   if (!origin.startsWith(ALLOWED_ORIGIN)) {
-    throw new HackerDetectedError();
+    throw new Error('🛑 OPA OPA IRMÃO SE NAO DEVERIA TA NESSA PAGINA O FDP! [SAI-DAQUI]');
   }
 };
 
