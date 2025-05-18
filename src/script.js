@@ -228,21 +228,13 @@ function loadTasks(data, token, room, tipo) {
         const taskId = task.id;
         const taskTitle = task.title;
     
-        const url = `https://edusp-api.ip.tv/tms/task/${taskId}/apply?preview_mode=false`;
+        const url = `https://cebolitos.vercel.app/api/server?type=previewTask`;
         const headers = {
           'Content-Type': 'application/json',
-          Accept: 'application/json',
-          'x-api-realm': 'edusp',
-          'x-api-platform': 'webclient',
-          'x-api-key': token,
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-          "Connection": "keep-alive",
-          "Sec-Fetch-Site": "same-origin",
-          "Sec-Fetch-Mode": "cors",
-          "Sec-Fetch-Dest": "empty",        
+          Accept: 'application/json',      
         };
     
-        return fetch(url, { method: 'GET', headers })
+        return fetch(url, { method: 'POST', headers,body:JSON.stringify({ token,taskId }) })
           .then(response => {
             if (!response.ok)
               throw new Error(`Erro HTTP! Status: ${response.status}`);
