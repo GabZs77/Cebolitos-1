@@ -211,7 +211,6 @@ function atualizarModalGlobal(titulo, tempo, index, total) {
 
     if (tempoRestante <= 0) {
       clearInterval(tempoInterval);
-      clearInterval(tituloInterval);
       sucessoEl.textContent = "✅ Atividade concluída com sucesso!";
       setTimeout(() => {
           const modal = document.getElementById("modal-global");
