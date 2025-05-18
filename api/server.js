@@ -39,6 +39,25 @@ const headers = {
   return options;
 };
 
+const fetchWithRetry = async (url, options, maxAttempts = 3) => {
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const response = await fetch(url, options);
+
+      if (!response.ok) {
+        console.warn(`Tentativa ${attempt} falhou - Status: ${response.status}`);
+        if (attempt === maxAttempts) throw new Error(`Erro HTTP ${response.status}`);
+        continue;
+      }
+
+      return response;
+    } catch (err) {
+      console.warn(`Tentativa ${attempt} deu erro:`, err.message);
+      if (attempt === maxAttempts) throw err;
+    }
+  }
+};
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -56,7 +75,7 @@ export default async function handler(req, res) {
     console.log("Enviando essa porra:", targetUrl);
     console.log("opcoes desse carai", options);
 
-    const response = await fetch(targetUrl, options);
+    const response = await fetchWithRetry(targetUrl, options);
     const data = await response.json();
 
     return res.status(response.status).json(data);
