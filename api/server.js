@@ -19,14 +19,17 @@ const validateQueryParams = (query) => {
 };
 
 const buildFetchOptions = (req) => {
-  const options = {
-    method: req.method,
-    headers: {
-      ...req.headers,
-      host: undefined,
-    },
+const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'x-api-realm': 'edusp',
+    'x-api-platform': 'webclient',
   };
 
+  const options = {
+    method: req.method,
+    headers,
+  };
   if (req.method !== 'GET') {
     options.body = JSON.stringify(req.body);
     options.headers['Content-Type'] = 'application/json';
