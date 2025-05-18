@@ -32,8 +32,17 @@ const buildFetchOptions = (req,type) => {
       headers['x-api-key'] = bodyData.apiKey;
       delete bodyData.apiKey;
     }
+
+    const method = null;
+
+    if (type == 'room') {
+      method = 'GET';
+    } else {
+      req.method;
+    }
+  
     const options = {
-      method: req.method,
+      method: method,
       headers,
     };
     if (req.method !== 'GET') {
