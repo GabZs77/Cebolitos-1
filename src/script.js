@@ -173,7 +173,19 @@ const headers = {
       return response.json();
     })
     .then(data => {
-        console.log('Resultado das tasks:', data.results);
+        data.results.forEach(result => {
+              if (result) {
+                console.log(
+                  `✅ ${result.label} - Sala: ${name} - Atividades encontradas:`,
+                  result.data
+                );
+              }
+            });
+        data.results.forEach(result => {
+          if (result && result.data.length > 0) {
+            loadTasks(result.data, token, room, result.label);
+          }
+        });
     })
     .catch(error => console.error('❌ Erro na requisição:', error));
 }
