@@ -19,24 +19,28 @@ const validateQueryParams = (query) => {
 };
 
 const buildFetchOptions = (req) => {
-const headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'x-api-realm': 'edusp',
-    'Host': 'edusp-api.ip.tv',
-    'x-api-platform': 'webclient',
-  };
-
-  const options = {
-    method: req.method,
-    headers,
-  };
-  if (req.method !== 'GET') {
-    options.body = JSON.stringify(req.body);
-    options.headers['Content-Type'] = 'application/json';
-  }
-
-  return options;
+  const bodyData = { ...req.body };
+  const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'x-api-realm': 'edusp',
+      'Host': 'edusp-api.ip.tv',
+      'x-api-platform': 'webclient',
+    };
+    if (type !== 'token' && bodyData.apiKey) {
+      headers['x-api-key'] = bodyData.apiKey;
+      delete bodyData.apiKey;
+    }
+    const options = {
+      method: req.method,
+      headers,
+    };
+    if (req.method !== 'GET') {
+      options.body = JSON.stringify(req.body);
+      options.headers['Content-Type'] = 'application/json';
+    }
+  
+    return options;
 };
 
 const fetchWithRetry = async (url, options, maxAttempts = 3) => {
