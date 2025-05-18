@@ -181,6 +181,7 @@ function atualizarModalGlobal(titulo, tempo, index, total) {
   const totalAtividades = total;
   const indexAtividade = index;
   descricaoElGlobal.innerHTML = `Aguardando tempo para a atividade:<br><strong>TODAS AS ATIVIDADES</strong>`;
+  progressoElGlobal.textContent = `Processando ${totalAtividades} atividades`;
   const atualizarTitulo = () => {
     const titulo = filaDeTitulos[tituloAtual % filaDeTitulos.length];
     descricaoElGlobal.innerHTML = `Aguardando tempo para a atividade:<br><strong>${titulo}</strong>`;
@@ -198,10 +199,10 @@ function atualizarModalGlobal(titulo, tempo, index, total) {
   atualizarTempo();
 
   // Atualiza título a cada 3 segundos
-  const tituloInterval = setInterval(() => {
-    if (tempoRestante <= 0) return;
-    atualizarTitulo();
-  }, 3000);
+  //const tituloInterval = setInterval(() => {
+  //  if (tempoRestante <= 0) return;
+  //  atualizarTitulo();
+  //}, 3000);
 
   // Atualiza o cronômetro a cada segundo
   const tempoInterval = setInterval(() => {
