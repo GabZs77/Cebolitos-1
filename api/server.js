@@ -37,8 +37,6 @@ const buildFetchOptions = (req,type) => {
 
     if (type == 'room') {
       method = 'GET';
-      delete headers['Host'];
-      delete options.body;
     } else {
       method = req.method;
     }
