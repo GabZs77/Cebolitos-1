@@ -189,7 +189,7 @@ export default async function handler(req, res) {
     if (type === 'putSubmit') {
       const { taskId, token, answerId, ...bodyWithoutTaskIdAndToken } = req.body;
       const options = {
-        method: 'GET',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'x-api-realm': 'edusp',
