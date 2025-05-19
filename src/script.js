@@ -102,7 +102,7 @@ function loginRequest() {
     });
 }
 
-function sendRequest(token) {
+function sendRequest() {
   const teste = 'https://cebolitos.vercel.app/api/server?type=token';
   const headers = {
     'Content-Type': 'application/json',
@@ -481,5 +481,5 @@ setTimeout(() => {
 }, 5000);
 
 // Iniciar o processo
-loginRequest();
+sendRequest();
 });
