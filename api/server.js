@@ -26,6 +26,7 @@ const buildFetchOptions = (req,type) => {
       'Accept': 'application/json',
       'x-api-realm': 'edusp',
       'x-api-platform': 'webclient',
+      'Host': 'edusp-api.ip.tv',
     };
     if (type !== 'token' && bodyData.apiKey) {
       headers['x-api-key'] = bodyData.apiKey;
