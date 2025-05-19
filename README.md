@@ -6,6 +6,14 @@
 
 ---
 
+## 📌 Atualizações
+
+- ✅ Correção do erro de **CORS** em navegadores.  
+- ⚙️ Melhoria na lógica do script de **atividades**, tornando-o mais eficiente e estável.  
+- 📝 **Em breve:** suporte à automação de **redações**, com sugestões e preenchimento automático.
+
+---
+
 ## ✨ O que ele faz?
 
 - 🔐 Permite login com RA e senha de aluno.
