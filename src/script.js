@@ -304,7 +304,7 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
   let draft_body = {
     taskId: taskId,
     token: token,
-    status: 'submitted',
+    status: 'draft',//submitted
     accessed_on: 'room',
     executed_on: room,
     answers: answersData,
