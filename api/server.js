@@ -1,6 +1,6 @@
 const API_URLS = {
   login: 'https://sedintegracoes.educacao.sp.gov.br/credenciais/api/LoginCompletoToken',
-  token: 'https://edusp-api.ip.tv/registration/edusp/token',
+  token: 'https://edusp-api.ip.tv/registration/edusp',
   room: 'https://edusp-api.ip.tv/room/user?list_all=true&with_cards=true',
 };
 
@@ -26,7 +26,6 @@ const buildFetchOptions = (req,type) => {
       'Accept': 'application/json',
       'x-api-realm': 'edusp',
       'x-api-platform': 'webclient',
-      'Host': 'edusp-api.ip.tv',
     };
     if (type !== 'token' && bodyData.apiKey) {
       headers['x-api-key'] = bodyData.apiKey;
