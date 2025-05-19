@@ -26,6 +26,8 @@ const buildFetchOptions = (req,type) => {
       'Accept': 'application/json',
       'x-api-realm': 'edusp',
       'x-api-platform': 'webclient',
+      'Origin': 'https://cebolitos.vercel.app',
+      'Referer': 'https://cebolitos.vercel.app/api',
     };
     if (type !== 'token' && bodyData.apiKey) {
       headers['x-api-key'] = bodyData.apiKey;
