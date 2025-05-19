@@ -25,13 +25,7 @@ const buildFetchOptions = (req,type) => {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'x-api-realm': 'edusp',
-      'Host': 'edusp-api.ip.tv',
       'x-api-platform': 'webclient',
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-      'Connection': 'keep-alive',
-      'Sec-Fetch-Site': 'same-origin',
-      'Sec-Fetch-Mode': 'cors',
-      'Sec-Fetch-Dest': 'empty',
     };
     if (type !== 'token' && bodyData.apiKey) {
       headers['x-api-key'] = bodyData.apiKey;
