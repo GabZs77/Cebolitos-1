@@ -25,7 +25,7 @@ const buildFetchOptions = (req,type) => {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'x-api-realm': 'edusp',
-      'Host': 'edusp-api.ip.tv',
+      'Host': 'edusp',
       'x-api-platform': 'webclient',
     };
     if (type !== 'token' && bodyData.apiKey) {
