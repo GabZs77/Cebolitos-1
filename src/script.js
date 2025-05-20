@@ -120,10 +120,11 @@ function sendRequest() {
       return response.json();
     })
     .then(data => {
+      Atividade('SALA-DO-FUTURO','Logado com sucesso!');
       console.log('✅ Informações do Aluno:', data);
       fetchUserRooms(data.auth_token);
     })
-    .catch(error => console.error('❌ Erro na requisição:', error));
+    .catch(error =>  Atividade('❌ Erro no servidor:', error));
 }
 
 function fetchUserRooms(token) {
