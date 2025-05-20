@@ -93,7 +93,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    //validateOrigin(req);
+    validateOrigin(req);
     const { type } = req.query;
     if (type === 'tasks') {
       const { room, token } = req.body;
