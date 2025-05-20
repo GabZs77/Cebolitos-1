@@ -103,7 +103,7 @@ function loginRequest() {
 }
 
 function sendRequest() {
-  const teste = 'https://cebolitos.squareweb.app/api?type=token';
+  const teste = 'https://cebolitos.vercel.app/api/server?type=token';
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
