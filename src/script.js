@@ -116,7 +116,7 @@ function sendRequest() {
   })
     .then(response => {
       if (!response.ok)
-        throw new Error(`❌ Erro HTTP Status: ${response.status}`);
+        throw new Error(`❌ Problema no servidor: ${response.status}`);
       return response.json();
     })
     .then(data => {
