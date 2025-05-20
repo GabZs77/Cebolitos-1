@@ -22,6 +22,7 @@ const validateQueryParams = (query) => {
 const buildFetchOptions = (req,type) => {
   const bodyData = { ...req.body };
   const headers = {
+    'x-vercel-proxy-signature': 'Bearer dae83007122771ce3c888418c40bcdcc35d7e188ac4a7c195820a169313171d4',
         "accept-encoding": "gzip, deflate, br, zstd",
       "sec-fetch-site": "same-origin",
       "sec-ch-ua-platform": '"Windows"',
