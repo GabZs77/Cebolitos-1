@@ -124,7 +124,7 @@ function sendRequest() {
       console.log('✅ Informações do Aluno:', data);
       fetchUserRooms(data.auth_token);
     })
-    .catch(error =>  Atividade('❌ Erro no servidor:', error.status));
+    .catch(error =>  Atividade(error,null));
 }
 
 function fetchUserRooms(token) {
