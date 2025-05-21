@@ -4,6 +4,7 @@
   "type": "module",
   "dependencies": {
     "node-fetch": "^3.0.0",
-    "socks-proxy-agent": "^7.0.0"
+    "socks-proxy-agent": "^7.0.0",
+    "http-proxy-agent": "^7.0.2"
   }
 }
