@@ -1,3 +1,6 @@
+const SocksProxyAgent = require('socks-proxy-agent');
+const agent = new SocksProxyAgent('socks5h://127.0.0.1:9050');
+
 const API_URLS = {
   login: 'https://sedintegracoes.educacao.sp.gov.br/credenciais/api/LoginCompletoToken',
   token: 'https://edusp-api.ip.tv/registration/edusp',
