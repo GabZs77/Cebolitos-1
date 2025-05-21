@@ -1,5 +1,5 @@
 import { HttpProxyAgent } from 'http-proxy-agent';
-const url = 'http://pedrohenrique1982br:5y3bUk8IjB@200.234.177.54:59100';
+const proxyUrl = 'http://pedrohenrique1982br:5y3bUk8IjB@200.234.177.54:59100';
 const agent = new HttpProxyAgent(proxyUrl);
 
 const API_URLS = {
