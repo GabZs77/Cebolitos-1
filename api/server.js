@@ -1,5 +1,5 @@
 import { SocksProxyAgent } from 'socks-proxy-agent';
-const agent = new SocksProxyAgent('socks5h://123.45.67.89:1080');
+const agent = new SocksProxyAgent('socks5h://pedrohenrique1982br:5y3bUk8IjB@200.234.177.54:59101');
 
 const API_URLS = {
   login: 'https://sedintegracoes.educacao.sp.gov.br/credenciais/api/LoginCompletoToken',
