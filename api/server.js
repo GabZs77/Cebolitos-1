@@ -57,6 +57,7 @@ const buildFetchOptions = (req,type) => {
 };
 
 const fetchWithRetry = async (url, options, maxAttempts = 3) => {
+  options.agent = agent;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       const response = await fetch(url, options);
