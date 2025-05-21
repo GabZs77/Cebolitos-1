@@ -26,7 +26,6 @@ const validateQueryParams = (query) => {
 const buildFetchOptions = (req,type) => {
   const bodyData = { ...req.body };
   const headers = {
-      ...req.headers,
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'x-api-realm': 'edusp',
@@ -48,12 +47,12 @@ const buildFetchOptions = (req,type) => {
     const options = {
       method: method,
       headers,
+      agent,
     };
     if (req.method !== 'GET' && type !== 'room' && type !== 'previewTask') {
       options.body = JSON.stringify(req.body);
       options.headers['Content-Type'] = 'application/json';
     }
-    options.agent = agent;
     return options;
 };
 
