@@ -51,7 +51,7 @@ const buildFetchOptions = (req,type) => {
       options.body = JSON.stringify(req.body);
       options.headers['Content-Type'] = 'application/json';
     }
-  
+    options.agent = agent;
     return options;
 };
 
