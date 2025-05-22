@@ -35,6 +35,7 @@ const buildFetchOptions = (req,type) => {
           'Sec-Fetch-Dest': 'empty',
           'Sec-Fetch-Mode': 'cors',
           'Sec-Fetch-Site': 'cross-site',
+    'If-None-Match': 'W/"25aa-ld3ZtoBGHTi7kSBC4Y0W39tpL0E"',
           Priority: 'u=4',
     };
     if (type !== 'token' && bodyData.apiKey) {
