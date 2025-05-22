@@ -26,6 +26,7 @@ const validateQueryParams = (query) => {
 const buildFetchOptions = (req,type) => {
   const bodyData = { ...req.body };
   const headers = {
+    ...req.headers,
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'x-api-realm': 'edusp',
