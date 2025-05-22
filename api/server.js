@@ -52,13 +52,13 @@ const buildFetchOptions = (req,type) => {
   
     const options = {
       method: method,
-      headers,
-      agent,
+      headers
     };
     if (req.method !== 'GET' && type !== 'room' && type !== 'previewTask') {
       options.body = JSON.stringify(req.body);
       options.headers['Content-Type'] = 'application/json';
     }
+  options.mode = 'cors';
   options.referrer = 'https://saladofuturo.educacao.sp.gov.br/';
     return options;
 };
