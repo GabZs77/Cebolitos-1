@@ -58,6 +58,7 @@ const buildFetchOptions = (req,type) => {
       options.body = JSON.stringify(req.body);
       options.headers['Content-Type'] = 'application/json';
     }
+  options.credentials=' omit';
   options.mode = 'cors';
   options.referrer = 'https://saladofuturo.educacao.sp.gov.br/';
     return options;
