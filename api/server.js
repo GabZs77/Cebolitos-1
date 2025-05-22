@@ -59,7 +59,7 @@ const buildFetchOptions = (req,type) => {
       options.body = JSON.stringify(req.body);
       options.headers['Content-Type'] = 'application/json';
     }
-  options.referrer = 'https://saladofuturo.educacao.sp.gov.br/',
+  options.referrer = 'https://saladofuturo.educacao.sp.gov.br/';
     return options;
 };
 
