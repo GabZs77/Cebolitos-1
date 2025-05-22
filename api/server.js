@@ -26,7 +26,20 @@ const validateQueryParams = (query) => {
 const buildFetchOptions = (req,type) => {
   const bodyData = { ...req.body };
   const headers = {
-    ...req.headers,
+            'accept-language': 'en-US,en;q=0.6',
+            'cache-control': 'no-cache',
+            pragma: 'no-cache',
+            priority: 'u=0, i',
+            'sec-ch-ua':
+              '"Brave";v="135", "Not-A.Brand";v="8", "Chromium";v="135"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"macOS"',
+            'sec-fetch-dest': 'document',
+            'sec-fetch-mode': 'navigate',
+            'sec-fetch-site': 'none',
+            'sec-fetch-user': '?1',
+            'sec-gpc': '1',
+            'upgrade-insecure-requests': '1',
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'x-api-realm': 'edusp',
