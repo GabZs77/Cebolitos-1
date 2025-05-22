@@ -26,24 +26,16 @@ const validateQueryParams = (query) => {
 const buildFetchOptions = (req,type) => {
   const bodyData = { ...req.body };
   const headers = {
-            'accept-language': 'en-US,en;q=0.6',
-            'cache-control': 'no-cache',
-            pragma: 'no-cache',
-            priority: 'u=0, i',
-            'sec-ch-ua':
-              '"Brave";v="135", "Not-A.Brand";v="8", "Chromium";v="135"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"macOS"',
-            'sec-fetch-dest': 'document',
-            'sec-fetch-mode': 'navigate',
-            'sec-fetch-site': 'none',
-            'sec-fetch-user': '?1',
-            'sec-gpc': '1',
-            'upgrade-insecure-requests': '1',
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'x-api-realm': 'edusp',
-      'x-api-platform': 'webclient',
+          Accept: 'application/json',
+          'Accept-Language': 'en-US,en;q=0.5',
+          'content-type': 'application/json',
+          'x-api-platform': 'webclient',
+          'x-api-realm': 'edusp',
+          'Sec-GPC': '1',
+          'Sec-Fetch-Dest': 'empty',
+          'Sec-Fetch-Mode': 'cors',
+          'Sec-Fetch-Site': 'cross-site',
+          Priority: 'u=4',
     };
     if (type !== 'token' && bodyData.apiKey) {
       headers['x-api-key'] = bodyData.apiKey;
@@ -67,6 +59,7 @@ const buildFetchOptions = (req,type) => {
       options.body = JSON.stringify(req.body);
       options.headers['Content-Type'] = 'application/json';
     }
+  options.referrer = 'https://saladofuturo.educacao.sp.gov.br/',
     return options;
 };
 
