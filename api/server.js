@@ -30,6 +30,7 @@ const buildFetchOptions = (req,type) => {
           'content-type': 'application/json',
           'x-api-platform': 'webclient',
           'x-api-realm': 'edusp',
+          'Host': 'edusp-api.ip.tv',
     };
     if (type !== 'token' && bodyData.apiKey) {
       headers['x-api-key'] = bodyData.apiKey;
@@ -46,8 +47,7 @@ const buildFetchOptions = (req,type) => {
   
     const options = {
       method: method,
-      headers,
-      agent
+      headers
     };
     if (req.method !== 'GET' && type !== 'room' && type !== 'previewTask') {
       options.body = JSON.stringify(req.body);
