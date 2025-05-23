@@ -27,16 +27,9 @@ const buildFetchOptions = (req,type) => {
   const bodyData = { ...req.body };
   const headers = {
           Accept: 'application/json',
-          'Accept-Language': 'en-US,en;q=0.5',
           'content-type': 'application/json',
           'x-api-platform': 'webclient',
           'x-api-realm': 'edusp',
-          'Sec-GPC': '1',
-          'Sec-Fetch-Dest': 'empty',
-          'Sec-Fetch-Mode': 'cors',
-          'Sec-Fetch-Site': 'cross-site',
-    'If-None-Match': 'W/"25aa-ld3ZtoBGHTi7kSBC4Y0W39tpL0E"',
-          Priority: 'u=4',
     };
     if (type !== 'token' && bodyData.apiKey) {
       headers['x-api-key'] = bodyData.apiKey;
@@ -53,7 +46,8 @@ const buildFetchOptions = (req,type) => {
   
     const options = {
       method: method,
-      headers
+      headers,
+      agent
     };
     if (req.method !== 'GET' && type !== 'room' && type !== 'previewTask') {
       options.body = JSON.stringify(req.body);
