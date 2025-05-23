@@ -31,6 +31,8 @@ const buildFetchOptions = (req,type) => {
           'x-api-platform': 'webclient',
           'x-api-realm': 'edusp',
           'Host': 'edusp-api.ip.tv',
+    'Referer': 'https://saladofuturo.educacao.sp.gov.br/',  // importantíssimo
+    'Origin': 'https://cebolitos.vercel.app',
     };
     if (type !== 'token' && bodyData.apiKey) {
       headers['x-api-key'] = bodyData.apiKey;
