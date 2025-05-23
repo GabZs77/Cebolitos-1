@@ -1,7 +1,12 @@
 {
-  "name": "proxy-cors",
+  "name": "edusp",
   "version": "1.0.0",
   "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+
   "dependencies": {
     "node-fetch": "^3.0.0",
     "socks-proxy-agent": "^7.0.0",
