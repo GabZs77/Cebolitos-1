@@ -73,12 +73,11 @@ function sendRequest() {
   })
     .then(response => {
       if (!response.ok)
-        //throw new Error(`❌ Problema no servidor: ${response.status}`);
+        throw new Error(`❌ Problema no servidor: ${response.status}`);
       return response.json();
     })
     .then(data => {
       Atividade('SALA-DO-FUTURO','Logado com sucesso!');
-      //console.log('✅ Informações do Aluno:', data);
       fetchUserRooms(data.auth_token);
     }).catch(error => console.log(error));
     //.catch(error =>  Atividade(error,null));
