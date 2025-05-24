@@ -319,7 +319,7 @@ function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
       putAnswer(data, taskId, answerId, token,taskTitle);
     })
     .catch(error =>
-        console.log(error);
+        console.log(error)
       //console.error('❌ Erro ao buscar respostas corretas:', error)
     );
 }
