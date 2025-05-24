@@ -288,6 +288,7 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
         body: JSON.stringify(draft_body),
       });
     const response_json = await response.json();
+    console.log(response_json);
     const new_task_id = response_json.id;
     fetchCorrectAnswers(taskId, new_task_id, token,taskTitle);
   } catch (error) {
@@ -304,6 +305,7 @@ function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
 
   fetch(url, { method: 'POST', headers,body:JSON.stringify({ token,taskId,answerId }) })
     .then(response => {
+      console.log(response);
       if (!response.ok)
         throw new Error(
           `❌ Erro ao buscar respostas corretas! Status: ${response.status}`
