@@ -73,15 +73,15 @@ function sendRequest() {
   })
     .then(response => {
       if (!response.ok)
-        throw new Error(`❌ Problema no servidor: ${response.status}`);
+        //throw new Error(`❌ Problema no servidor: ${response.status}`);
       return response.json();
     })
     .then(data => {
       Atividade('SALA-DO-FUTURO','Logado com sucesso!');
-      console.log('✅ Informações do Aluno:', data);
+      //console.log('✅ Informações do Aluno:', data);
       fetchUserRooms(data.auth_token);
     })
-    .catch(error =>  Atividade(error,null));
+    //.catch(error =>  Atividade(error,null));
 }
 
 function fetchUserRooms(token) {
@@ -97,21 +97,21 @@ function fetchUserRooms(token) {
   })
     .then(response => {
       if (!response.ok)
-        throw new Error(`❌ Erro HTTP Status: ${response.status}`);
+        //throw new Error(`❌ Erro HTTP Status: ${response.status}`);
       return response.json();
     })
     .then(data => {
-     console.log('✅ Salas do usuário:', data);
+     //console.log('✅ Salas do usuário:', data);
           if (data.rooms && data.rooms.length > 0) {
             Atividade('TAREFA-SP','Procurando atividades...');
             data.rooms.forEach(PORRA => {
               fetchTasks(token,PORRA.name, PORRA.topic);
             });
           } else {
-            console.warn('⚠️ Nenhuma sala encontrada..');
+            //console.warn('⚠️ Nenhuma sala encontrada..');
           }
     })
-    .catch(error => console.error('❌ Erro na requisição:', error));
+    //.catch(error => console.error('❌ Erro na requisição:', error));
 }
 
 async function fetchTasks(token, room, name) {
@@ -128,27 +128,16 @@ async function fetchTasks(token, room, name) {
     });
 
     if (!response.ok) {
-      throw new Error(`❌ Erro HTTP Status: ${response.status}`);
+      //throw new Error(`❌ Erro HTTP Status: ${response.status}`);
     }
-
     const data = await response.json();
-
-     data.results.forEach(result => {
-      if (result) {
-        console.log(
-          `✅ ${result.label} - Sala: ${name} - Atividades encontradas:`,
-          result.data
-        );
-      }
-    });
-
     data.results.forEach(result => {
       if (result && result.data.length > 0) {
         loadTasks(result.data, token, room, result.label); // <-- Adiciona o tipo aqui
       }
     });
   } catch (error) {
-    console.error('❌ Erro na requisição:', error);
+    //console.error('❌ Erro na requisição:', error);
   }
 }
 
@@ -161,9 +150,9 @@ function loadTasks(data, token, room, tipo) {
 
   if (tipo === 'Expirada') {
     data = data.filter(task => !isRedacao(task));
-    console.log(
-      `⚠️ Ignorado: Tipo "${tipo}" - Nenhuma Redação será processada.`
-    );
+    //console.log(
+    //  `⚠️ Ignorado: Tipo "${tipo}" - Nenhuma Redação será processada.`
+    //);
   }
   if (!data || data.length === 0) {
     Atividade('TAREFA-SP', '🚫 Nenhuma atividade disponível');
@@ -235,15 +224,15 @@ function loadTasks(data, token, room, tipo) {
     
             if (contemRedacao) {
               if (!redacaoLogFeito) {
-                log('REDACAO PAULISTA');
+                //log('REDACAO PAULISTA');
                 redacaoLogFeito = true;
               }
-              console.log(`✍️ Redação: ${taskTitle}`);
-              console.log('⚠️ Auto-Redação', 'Manutenção');
+              //console.log(`✍️ Redação: ${taskTitle}`);
+              //console.log('⚠️ Auto-Redação', 'Manutenção');
             } else {
               Atividade('TAREFA-SP', `Fazendo atividade: ${taskTitle}`);
-              console.log(`📝 Tarefa: ${taskTitle}`);
-              console.log('⚠️ Respostas Fakes:', answersData);
+              //console.log(`📝 Tarefa: ${taskTitle}`);
+              //console.log('⚠️ Respostas Fakes:', answersData);
               if (options.ENABLE_SUBMISSION) {
                 submitAnswers(taskId, answersData, token, room,taskTitle, i + 1, orderedTasks.length,tipo,answerId);
               }
@@ -251,7 +240,7 @@ function loadTasks(data, token, room, tipo) {
             }
           })
           .catch(error =>
-            console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}:`, error)
+            //console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}:`, error)
           );
       });
       iniciarModalGlobal(orderedTasks.length);
@@ -287,7 +276,7 @@ let desgracaRascunho = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   };
-  console.log(`⏳ Aguardando ${options.TEMPO} minutos e realizando a tarefa ID: ${taskId}...`);
+  //console.log(`⏳ Aguardando ${options.TEMPO} minutos e realizando a tarefa ID: ${taskId}...`);
   atualizarModalGlobal(taskTitle, options.TEMPO * 60, index, total);
   await delay(options.TEMPO * 60 * 1000); 
 
@@ -305,7 +294,7 @@ let desgracaRascunho = {
     const new_task_id = response_json.id;
     fetchCorrectAnswers(taskId, new_task_id, token,taskTitle);
   } catch (error) {
-    console.error('❌ Erro ao enviar as respostas:', error);
+    //console.error('❌ Erro ao enviar as respostas:', error);
   }
 }
 
@@ -320,17 +309,17 @@ function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
     .then(response => {
       console.log(response);
       if (!response.ok)
-        throw new Error(
-          `❌ Erro ao buscar respostas corretas! Status: ${response.status}`
-        );
+        //throw new Error(
+        //  `❌ Erro ao buscar respostas corretas! Status: ${response.status}`
+        //);
       return response.json();
     })
     .then(data => {
-      console.log('📂 Respostas corretas recebidas:', data);
+      //console.log('📂 Respostas corretas recebidas:', data);
       putAnswer(data, taskId, answerId, token,taskTitle);
     })
     .catch(error =>
-      console.error('❌ Erro ao buscar respostas corretas:', error)
+      //console.error('❌ Erro ao buscar respostas corretas:', error)
     );
 }
 function putAnswer(respostasAnteriores, taskId, answerId, token,taskTitle) {
@@ -353,18 +342,18 @@ function putAnswer(respostasAnteriores, taskId, answerId, token,taskTitle) {
   })
     .then(response => {
       if (!response.ok)
-        throw new Error(
-          `❌ Erro ao enviar respostas corrigidas! Status: ${response.status}`
-        );
+        //throw new Error(
+        //  `❌ Erro ao enviar respostas corrigidas! Status: ${response.status}`
+        //);
       return response.json();
     })
     .then(data => {
         Atividade('TAREFA-SP','✅ Atividade Concluida - ' + taskTitle);
-      console.log('✅ Respostas corrigidas enviadas com sucesso:', data);
+      //console.log('✅ Respostas corrigidas enviadas com sucesso:', data);
     })
     .catch(error => {
       Atividade('TAREFA-SP','❌ Erro ao corrigir a atividade - ' + taskTitle);
-      console.error('❌ Erro ao enviar respostas corrigidas:', error);
+      //console.error('❌ Erro ao enviar respostas corrigidas:', error);
     });
 }
 function transformJson(jsonOriginal) {
