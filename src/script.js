@@ -184,6 +184,7 @@ function loadTasks(data, token, room, tipo) {
       const promises = orderedTasks.map((task, i) => {
         const taskId = task.id;
         const taskTitle = task.title;
+        const answerId = (tipo === 'Rascunho' && task.answer_id != null) ? task.answer_id : undefined;
            const url = (tipo === 'Rascunho')
       ? `https://api.cebolitos.cloud/?type=previewTaskR`
       : `https://api.cebolitos.cloud/?type=previewTask`;
@@ -191,8 +192,8 @@ function loadTasks(data, token, room, tipo) {
           'Content-Type': 'application/json',
           Accept: 'application/json',      
         };
-        const body = (tipo === 'Rascunho' && task.answer_id != null && task.answer_id !== undefined)
-      ? JSON.stringify({ token, taskId, answerId: task.answer_id })
+        const body = (tipo === 'Rascunho' && answerId != null)
+      ? JSON.stringify({ token, taskId, answerId })
       : JSON.stringify({ token, taskId });
         return fetch(url, { method: 'POST', headers,body })
           .then(response => {
