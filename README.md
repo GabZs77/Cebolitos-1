@@ -9,7 +9,8 @@
 ## 📌 Atualizações
 
 - ✅ Correção do erro **400** em navegadores.**(ONLINE DEFINITIVO)**
-- ⚙️ Melhoria na lógica do script de **atividades**, tornando-o mais eficiente e estável.  
+- ✅ Corrigido erro de não enviar as atividades!
+- ⚙️ Melhoria na lógica do script de **atividades**, tornando-o mais eficiente e estável.
 - 📝 **Em breve:** suporte à automação de **redações**, com sugestões e preenchimento automático.
 
 ---
