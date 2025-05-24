@@ -1,7 +1,6 @@
 
 let MostrarSenha = document.getElementById("VerSenha");
 let Senha = document.getElementById("senha");
-const userAgent = navigator.userAgent;
 let trava = false;
 
 MostrarSenha.addEventListener("click", () => {
@@ -60,48 +59,6 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
         password: document.getElementById('senha').value,
       },
     };
-
-function makeRequest(url, method = 'GET', headers = {}, body = null) {
-  const options = {
-    method,
-    headers: {
-      'User-Agent': navigator.userAgent,
-      'Content-Type': 'application/json',
-      ...headers,
-    },
-  };
-  if (body) {
-    options.body = body; // já está como string no sendRequestNew
-  }
-
-  return fetch(url, options)
-    .then(res => {
-      if (!res.ok) throw new Error(`❌ HTTP ${method} ${url} => ${res.status}`);
-      return res.json();
-    });
-}
-function loginRequest() {
-  const headers = {
-    Accept: 'application/json, text/plain, */*',
-    'User-Agent': navigator.userAgent,
-    'Ocp-Apim-Subscription-Key': '2b03c1db3884488795f79c37c069381a',
-  };
-
-  makeRequest(options.LOGIN_URL, 'POST', headers, JSON.stringify(options.LOGIN_DATA))
-    .then(data => {
-      console.log('✅ Login bem-sucedido:', data);
-      Atividade('SALA-DO-FUTURO','Logado com sucesso!');
-      sendRequest(data.token);
-    })
-    .catch(error => {
-      Atividade('SALA-DO-FUTURO','Nao foi possivel logar!')
-      setTimeout(() => {
-        trava = false;
-      }, 2000);
-
-    });
-}
-
 function sendRequest() {
   const teste = 'https://api.cebolitos.cloud/?type=token';
   const headers = {
@@ -475,17 +432,10 @@ function transformJson(jsonOriginal) {
 function removeTags(htmlString) {
   return htmlString.replace(/<[^>]*>?/gm, '');
 }
-function log(str) {
-console.log("===================================");
-console.log(`★ ✦ CEBOLITOS ${str} ✦ ★`);
-console.log("===================================");
-
-}
 
 setTimeout(() => {
   trava = false;
 }, 5000);
 
-// Iniciar o processo
 sendRequest();
 });
