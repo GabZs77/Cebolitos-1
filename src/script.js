@@ -185,7 +185,7 @@ function loadTasks(data, token, room, tipo) {
         const taskId = task.id;
         const taskTitle = task.title;
         const answerId = task.answer_id;
-    
+        console.log(answerId);
            const url = (tipo === 'Rascunho')
       ? `https://api.cebolitos.cloud/?type=previewTaskR`
       : `https://api.cebolitos.cloud/?type=previewTask`;
