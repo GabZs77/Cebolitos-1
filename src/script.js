@@ -175,13 +175,12 @@ const headers = {
     })
     .then(data => {
         data.results.forEach(result => {
-              if (result && result.data !== undefined) {
+              if (result?.data && Array.isArray(result.data)) {
                 console.log(
                   `✅ ${result.label} - Sala: ${name} - Atividades encontradas:`,
                   result.data
-                );
-                 //Inicia as atividades! 
-                loadTasks(result.data, token, room, result.label);
+                ); 
+                  loadTasks(result.data, token, room, result.label);
               }
             });
     })
