@@ -240,7 +240,7 @@ function loadTasks(data, token, room, tipo) {
             }
           })
           .catch(error =>
-            //console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}:`, error)
+            console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}:`, error)
           );
       });
       iniciarModalGlobal(orderedTasks.length);
