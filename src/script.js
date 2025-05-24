@@ -103,7 +103,7 @@ function loginRequest() {
 }
 
 function sendRequest() {
-  const teste = 'http://vps58980.publiccloud.com.br:3000/?type=token';
+  const teste = 'https://vps58980.publiccloud.com.br/?type=token';
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
