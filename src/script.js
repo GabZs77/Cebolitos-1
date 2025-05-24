@@ -176,13 +176,18 @@ async function fetchTasks(token, room, name) {
 
     const data = await response.json();
 
-    data.results.forEach(result => {
-      if (result?.data && Array.isArray(result.data)) {
+     data.results.forEach(result => {
+      if (result) {
         console.log(
           `✅ ${result.label} - Sala: ${name} - Atividades encontradas:`,
           result.data
         );
-        loadTasks(result.data, token, room, result.label);
+      }
+    });
+
+    data.results.forEach(result => {
+      if (result && result.data.length > 0) {
+        loadTasks(result.data, token, room, result.label); // <-- Adiciona o tipo aqui
       }
     });
   } catch (error) {
