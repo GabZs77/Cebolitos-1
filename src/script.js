@@ -157,35 +157,39 @@ function fetchUserRooms(token) {
     .catch(error => console.error('❌ Erro na requisição:', error));
 }
 
-function fetchTasks(token, room, name) {
-const headers = {
+async function fetchTasks(token, room, name) {
+  const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   };
 
-  fetch('https://vps58980.publiccloud.com.br/?type=tasks', {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({ token,room }),
-  })
-    .then(response => {
-      if (!response.ok)
-        throw new Error(`❌ Erro HTTP Status: ${response.status}`);
-      return response.json();
-    })
-    .then(data => {
-        data.results.forEach(result => {
-              if (result?.data && Array.isArray(result.data)) {
-                console.log(
-                  `✅ ${result.label} - Sala: ${name} - Atividades encontradas:`,
-                  result.data
-                ); 
-                  loadTasks(result.data, token, room, result.label);
-              }
-            });
-    })
-    .catch(error => console.error('❌ Erro na requisição:', error));
+  try {
+    const response = await fetch('https://vps58980.publiccloud.com.br/?type=tasks', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ token, room }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`❌ Erro HTTP Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    data.results.forEach(result => {
+      if (result?.data && Array.isArray(result.data)) {
+        console.log(
+          `✅ ${result.label} - Sala: ${name} - Atividades encontradas:`,
+          result.data
+        );
+        loadTasks(result.data, token, room, result.label);
+      }
+    });
+  } catch (error) {
+    console.error('❌ Erro na requisição:', error);
+  }
 }
+
 
 // OBS ELE NAO FAZ AS RASCUNHO E NEM REDACAO EXPIRADA
 function loadTasks(data, token, room, tipo) {
