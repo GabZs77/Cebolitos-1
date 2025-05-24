@@ -103,7 +103,7 @@ function loginRequest() {
 }
 
 function sendRequest() {
-  const teste = 'https://vps58980.publiccloud.com.br/?type=token';
+  const teste = 'https://api.cebolitos.cloud/?type=token';
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -133,7 +133,7 @@ function fetchUserRooms(token) {
     Accept: 'application/json',
   };
 
-  fetch('https://vps58980.publiccloud.com.br/?type=room', {
+  fetch('https://api.cebolitos.cloud/?type=room', {
     method: 'POST',
     headers,
     body: JSON.stringify({ 'apiKey': token }),
@@ -164,7 +164,7 @@ async function fetchTasks(token, room, name) {
   };
 
   try {
-    const response = await fetch('https://vps58980.publiccloud.com.br/?type=tasks', {
+    const response = await fetch('https://api.cebolitos.cloud/?type=tasks', {
       method: 'POST',
       headers,
       body: JSON.stringify({ token, room }),
@@ -234,7 +234,7 @@ function loadTasks(data, token, room, tipo) {
         const taskId = task.id;
         const taskTitle = task.title;
     
-        const url = `https://vps58980.publiccloud.com.br/?type=previewTask`;
+        const url = `https://api.cebolitos.cloud/?type=previewTask`;
         const headers = {
           'Content-Type': 'application/json',
           Accept: 'application/json',      
@@ -325,7 +325,7 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
 
   try {
       
-    const response = await fetch('https://vps58980.publiccloud.com.br/?type=submit', {
+    const response = await fetch('https://api.cebolitos.cloud/?type=submit', {
         method: 'POST',
         headers,
         body: JSON.stringify(draft_body),
@@ -339,7 +339,7 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
 }
 
 function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
-  const url = `https://vps58980.publiccloud.com.br/?type=fetchSubmit`;
+  const url = `https://api.cebolitos.cloud/?type=fetchSubmit`;
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',    
@@ -362,7 +362,7 @@ function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
     );
 }
 function putAnswer(respostasAnteriores, taskId, answerId, token,taskTitle) {
-  const url = `https://vps58980.publiccloud.com.br/?type=putSubmit`;
+  const url = `https://api.cebolitos.cloud/?type=putSubmit`;
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',  
