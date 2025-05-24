@@ -103,7 +103,7 @@ function loginRequest() {
 }
 
 function sendRequest() {
-  const teste = 'https://cebolitos.onrender.com/?type=token';
+  const teste = 'http://191.252.113.39:3000/?type=token';
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
