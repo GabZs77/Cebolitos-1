@@ -155,12 +155,6 @@ async function fetchTasks(token, room, name) {
 
 // OBS ELE NAO FAZ AS RASCUNHO E NEM REDACAO EXPIRADA
 function loadTasks(data, token, room, tipo) {
-  if (tipo === 'Rascunho') {
-    console.log(
-      `⚠️ Ignorado: Tipo "${tipo}" - Nenhuma tarefa será processada.`
-    );
-    return;
-  }
   const isRedacao = task =>
     task.tags.some(t => t.toLowerCase().includes('redacao')) ||
     task.title.toLowerCase().includes('redação');
@@ -190,20 +184,26 @@ function loadTasks(data, token, room, tipo) {
       const promises = orderedTasks.map((task, i) => {
         const taskId = task.id;
         const taskTitle = task.title;
+        const answerId = task.answer_id;
     
-        const url = `https://api.cebolitos.cloud/?type=previewTask`;
+           const url = (tipo === 'Rascunho')
+      ? `https://api.cebolitos.cloud/?type=previewTaskR`
+      : `https://api.cebolitos.cloud/?type=previewTask`;
         const headers = {
           'Content-Type': 'application/json',
           Accept: 'application/json',      
         };
-    
-        return fetch(url, { method: 'POST', headers,body:JSON.stringify({ token,taskId }) })
+        const body = (tipo === 'Rascunho')
+      ? JSON.stringify({ token, taskId, answerId })
+      : JSON.stringify({ token, taskId });
+        return fetch(url, { method: 'POST', headers,body })
           .then(response => {
             if (!response.ok)
               throw new Error(`Erro HTTP! Status: ${response.status}`);
             return response.json();
           })
           .then(details => {
+            console.log(details);
             const answersData = {};
     
             details.questions.forEach(question => {
