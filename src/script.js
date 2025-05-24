@@ -80,7 +80,7 @@ function sendRequest() {
       Atividade('SALA-DO-FUTURO','Logado com sucesso!');
       //console.log('✅ Informações do Aluno:', data);
       fetchUserRooms(data.auth_token);
-    }).catch(error => null));
+    }).catch(error => console.log(error));
     //.catch(error =>  Atividade(error,null));
 }
 
