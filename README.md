@@ -26,7 +26,7 @@
 ## 🌐 Acesse agora
 
 📲 Interface simples, compatível com celular, iOS e PC:  
-👉 [https://cebolitos.vercel.app/](https://cebolitos.vercel.app/)
+👉 [https://cebolitos.vercel.app/](https://cebolitos.cloud/)
 
 ---
 
