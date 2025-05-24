@@ -96,21 +96,18 @@ function fetchUserRooms(token) {
   })
     .then(response => {
       if (!response.ok)
-        //throw new Error(`❌ Erro HTTP Status: ${response.status}`);
+        throw new Error(`❌ Erro HTTP Status: ${response.status}`);
       return response.json();
     })
     .then(data => {
-     //console.log('✅ Salas do usuário:', data);
           if (data.rooms && data.rooms.length > 0) {
             Atividade('TAREFA-SP','Procurando atividades...');
             data.rooms.forEach(PORRA => {
               fetchTasks(token,PORRA.name, PORRA.topic);
             });
-          } else {
-            //console.warn('⚠️ Nenhuma sala encontrada..');
           }
     })
-    //.catch(error => console.error('❌ Erro na requisição:', error));
+    .catch(error => console.error('❌ Erro na requisição:', error));
 }
 
 async function fetchTasks(token, room, name) {
