@@ -184,7 +184,6 @@ function loadTasks(data, token, room, tipo) {
       const promises = orderedTasks.map((task, i) => {
         const taskId = task.id;
         const taskTitle = task.title;
-        const answerId = task.answer_id;
            const url = (tipo === 'Rascunho')
       ? `https://api.cebolitos.cloud/?type=previewTaskR`
       : `https://api.cebolitos.cloud/?type=previewTask`;
@@ -193,7 +192,7 @@ function loadTasks(data, token, room, tipo) {
           Accept: 'application/json',      
         };
         const body = (tipo === 'Rascunho')
-      ? JSON.stringify({ token, taskId, answerId })
+      ? JSON.stringify({ token, taskId, answerId: task.answer_id })
       : JSON.stringify({ token, taskId });
         return fetch(url, { method: 'POST', headers,body })
           .then(response => {
@@ -202,7 +201,6 @@ function loadTasks(data, token, room, tipo) {
             return response.json();
           })
           .then(details => {
-            console.log(details);
             const answersData = {};
     
             details.questions.forEach(question => {
@@ -263,26 +261,26 @@ function delay(ms) {
 }
 
 async function submitAnswers(taskId, answersData, token, room, taskTitle, index, total,tipo,answerId) {
-let draft_body = {
+let porra = {
     taskId: taskId,
     token: token,
-    status: 'submitted',//submitted
+    status: 'submitted',
     accessed_on: 'room',
     executed_on: room,
     answers: answersData,
   };
-let draft_bodyR = {
+let desgracaRascunho = {
     taskId: taskId,
     token: token,
     answerId: answerId,
-    status: 'submitted',//submitted
+    status: 'submitted',
     accessed_on: 'room',
     executed_on: room,
     answers: answersData,
   };
  const body = (tipo === 'Rascunho')
-      ? draft_bodyR
-      : draft_body;
+      ? desgracaRascunho
+      : porra;
 
   const headers = {
     'Content-Type': 'application/json',
@@ -290,7 +288,7 @@ let draft_bodyR = {
   };
   console.log(`⏳ Aguardando ${options.TEMPO} minutos e realizando a tarefa ID: ${taskId}...`);
   atualizarModalGlobal(taskTitle, options.TEMPO * 60, index, total);
-  await delay(options.TEMPO * 60 * 1000); // Aguarda o tempo definido
+  await delay(options.TEMPO * 60 * 1000); 
 
   try {
       const url = (tipo === 'Rascunho')
