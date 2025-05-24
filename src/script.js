@@ -185,7 +185,6 @@ function loadTasks(data, token, room, tipo) {
         const taskId = task.id;
         const taskTitle = task.title;
         const answerId = task.answer_id;
-        console.log(answerId);
            const url = (tipo === 'Rascunho')
       ? `https://api.cebolitos.cloud/?type=previewTaskR`
       : `https://api.cebolitos.cloud/?type=previewTask`;
@@ -247,7 +246,7 @@ function loadTasks(data, token, room, tipo) {
               console.log(`📝 Tarefa: ${taskTitle}`);
               console.log('⚠️ Respostas Fakes:', answersData);
               if (options.ENABLE_SUBMISSION) {
-                submitAnswers(taskId, answersData, token, room,taskTitle, i + 1, orderedTasks.length);
+                submitAnswers(taskId, answersData, token, room,taskTitle, i + 1, orderedTasks.length,tipo,answerId);
               }
               houveEnvio = true;
             }
@@ -263,8 +262,8 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function submitAnswers(taskId, answersData, token, room, taskTitle, index, total) {
-  let draft_body = {
+async function submitAnswers(taskId, answersData, token, room, taskTitle, index, total,tipo,answerId) {
+let draft_body = {
     taskId: taskId,
     token: token,
     status: 'submitted',//submitted
@@ -272,6 +271,19 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
     executed_on: room,
     answers: answersData,
   };
+let draft_bodyR = {
+    taskId: taskId,
+    token: token,
+    answerId: answerId,
+    status: 'submitted',//submitted
+    accessed_on: 'room',
+    executed_on: room,
+    answers: answersData,
+  };
+ const body = (tipo === 'Rascunho')
+      ? draft_bodyR
+      : draft_body;
+
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -281,11 +293,13 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
   await delay(options.TEMPO * 60 * 1000); // Aguarda o tempo definido
 
   try {
-      
-    const response = await fetch('https://api.cebolitos.cloud/?type=submit', {
+      const url = (tipo === 'Rascunho')
+      ? `https://api.cebolitos.cloud/?type=submitR`
+      : `https://api.cebolitos.cloud/?type=submit`;
+    const response = await fetch(url, {
         method: 'POST',
         headers,
-        body: JSON.stringify(draft_body),
+        body: JSON.stringify(body),
       });
     const response_json = await response.json();
     console.log(response_json);
