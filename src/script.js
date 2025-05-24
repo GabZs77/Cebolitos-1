@@ -175,7 +175,7 @@ const headers = {
     })
     .then(data => {
         data.results.forEach(result => {
-              if (result) {
+              if (result && result.data !== undefined) {
                 console.log(
                   `✅ ${result.label} - Sala: ${name} - Atividades encontradas:`,
                   result.data
