@@ -133,7 +133,7 @@ function fetchUserRooms(token) {
     Accept: 'application/json',
   };
 
-  fetch('https://cebolitos.vercel.app/api/server?type=room', {
+  fetch('https://vps58980.publiccloud.com.br/?type=room', {
     method: 'POST',
     headers,
     body: JSON.stringify({ 'apiKey': token }),
@@ -163,7 +163,7 @@ const headers = {
     Accept: 'application/json',
   };
 
-  fetch('https://cebolitos.vercel.app/api/server?type=tasks', {
+  fetch('https://vps58980.publiccloud.com.br/?type=tasks', {
     method: 'POST',
     headers,
     body: JSON.stringify({ token,room }),
@@ -229,7 +229,7 @@ function loadTasks(data, token, room, tipo) {
         const taskId = task.id;
         const taskTitle = task.title;
     
-        const url = `https://cebolitos.vercel.app/api/server?type=previewTask`;
+        const url = `https://vps58980.publiccloud.com.br/?type=previewTask`;
         const headers = {
           'Content-Type': 'application/json',
           Accept: 'application/json',      
@@ -320,7 +320,7 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
 
   try {
       
-    const response = await fetch('https://cebolitos.vercel.app/api/server?type=submit', {
+    const response = await fetch('https://vps58980.publiccloud.com.br/?type=submit', {
         method: 'POST',
         headers,
         body: JSON.stringify(draft_body),
@@ -334,7 +334,7 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
 }
 
 function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
-  const url = `https://cebolitos.vercel.app/api/server?type=fetchSubmit`;
+  const url = `https://vps58980.publiccloud.com.br/?type=fetchSubmit`;
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',    
@@ -357,7 +357,7 @@ function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
     );
 }
 function putAnswer(respostasAnteriores, taskId, answerId, token,taskTitle) {
-  const url = `https://cebolitos.vercel.app/api/server?type=putSubmit`;
+  const url = `https://vps58980.publiccloud.com.br/?type=putSubmit`;
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',  
