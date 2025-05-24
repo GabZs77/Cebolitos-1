@@ -80,7 +80,6 @@ function sendRequest() {
       Atividade('SALA-DO-FUTURO','Logado com sucesso!');
       fetchUserRooms(data.auth_token);
     }).catch(error => console.log(error));
-    //.catch(error =>  Atividade(error,null));
 }
 
 function fetchUserRooms(token) {
@@ -124,7 +123,7 @@ async function fetchTasks(token, room, name) {
     });
 
     if (!response.ok) {
-      //throw new Error(`❌ Erro HTTP Status: ${response.status}`);
+      throw new Error(`❌ Erro HTTP Status: ${response.status}`);
     }
     const data = await response.json();
     data.results.forEach(result => {
@@ -133,12 +132,8 @@ async function fetchTasks(token, room, name) {
       }
     });
   } catch (error) {
-    //console.error('❌ Erro na requisição:', error);
   }
 }
-
-
-// OBS ELE NAO FAZ AS RASCUNHO E NEM REDACAO EXPIRADA
 function loadTasks(data, token, room, tipo) {
   const isRedacao = task =>
     task.tags.some(t => t.toLowerCase().includes('redacao')) ||
@@ -146,9 +141,6 @@ function loadTasks(data, token, room, tipo) {
 
   if (tipo === 'Expirada') {
     data = data.filter(task => !isRedacao(task));
-    //console.log(
-    //  `⚠️ Ignorado: Tipo "${tipo}" - Nenhuma Redação será processada.`
-    //);
   }
   if (!data || data.length === 0) {
     Atividade('TAREFA-SP', '🚫 Nenhuma atividade disponível');
@@ -272,7 +264,6 @@ let desgracaRascunho = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   };
-  //console.log(`⏳ Aguardando ${options.TEMPO} minutos e realizando a tarefa ID: ${taskId}...`);
   atualizarModalGlobal(taskTitle, options.TEMPO * 60, index, total);
   await delay(options.TEMPO * 60 * 1000); 
 
@@ -290,7 +281,6 @@ let desgracaRascunho = {
     const new_task_id = response_json.id;
     fetchCorrectAnswers(taskId, new_task_id, token,taskTitle);
   } catch (error) {
-    //console.error('❌ Erro ao enviar as respostas:', error);
   }
 }
 
@@ -305,18 +295,16 @@ function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
     .then(response => {
       console.log(response);
       if (!response.ok)
-        //throw new Error(
-        //  `❌ Erro ao buscar respostas corretas! Status: ${response.status}`
-        //);
+        throw new Error(
+          `❌ Erro ao buscar respostas corretas! Status: ${response.status}`
+        );
       return response.json();
     })
     .then(data => {
-      //console.log('📂 Respostas corretas recebidas:', data);
       putAnswer(data, taskId, answerId, token,taskTitle);
     })
     .catch(error =>
         console.log(error)
-      //console.error('❌ Erro ao buscar respostas corretas:', error)
     );
 }
 function putAnswer(respostasAnteriores, taskId, answerId, token,taskTitle) {
