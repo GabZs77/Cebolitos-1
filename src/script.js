@@ -180,13 +180,10 @@ const headers = {
                   `✅ ${result.label} - Sala: ${name} - Atividades encontradas:`,
                   result.data
                 );
+                 //Inicia as atividades! 
+                loadTasks(result.data, token, room, result.label);
               }
             });
-        data.results.forEach(result => {
-          if (result && result.data.length > 0) {
-            loadTasks(result.data, token, room, result.label);
-          }
-        });
     })
     .catch(error => console.error('❌ Erro na requisição:', error));
 }
