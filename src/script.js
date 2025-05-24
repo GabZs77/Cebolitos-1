@@ -109,130 +109,137 @@ function fetchUserRooms(token) {
     .catch(error => console.error('❌ Erro na requisição:', error));
 }
 
-async function fetchTasks(token, room, name) {
-  const headers = {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
+async function loadTasks(data, token, room, tipo) {
+  if (!Array.isArray(data) || data.length === 0) {
+    Atividade('TAREFA-SP', '🚫 Nenhuma atividade disponível');
+    return;
+  }
+
+  // Função para identificar tarefas de redação
+  const isRedacao = task => {
+    if (!task || !task.tags || !task.title) return false;
+    return (
+      task.tags.some(t => typeof t === 'string' && t.toLowerCase().includes('redacao')) ||
+      task.title.toLowerCase().includes('redação')
+    );
   };
 
-  try {
-    const response = await fetch('https://api.cebolitos.cloud/?type=tasks', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ token, room }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`❌ Erro HTTP Status: ${response.status}`);
-    }
-    const data = await response.json();
-    data.results.forEach(result => {
-      if (result && result.data.length > 0) {
-        loadTasks(result.data, token, room, result.label); // <-- Adiciona o tipo aqui
-      }
-    });
-  } catch (error) {
-  }
-}
-function loadTasks(data, token, room, tipo) {
-  const isRedacao = task =>
-    task.tags.some(t => t.toLowerCase().includes('redacao')) ||
-    task.title.toLowerCase().includes('redação');
-
+  // Se for 'Expirada', filtrar tarefas que NÃO sejam redação
   if (tipo === 'Expirada') {
     data = data.filter(task => !isRedacao(task));
+    if (data.length === 0) {
+      Atividade('TAREFA-SP', '🚫 Nenhuma atividade disponível após filtro Expirada');
+      return;
+    }
   }
-  if (!data || data.length === 0) {
-    Atividade('TAREFA-SP', '🚫 Nenhuma atividade disponível');
-    return; 
-  }
-  const redacaoTasks = data.filter(task =>
-    task.tags.some(t => t.toLowerCase().includes('redacao'))
-  );
 
-  const outrasTasks = data.filter(
-    task => !task.tags.some(t => t.toLowerCase().includes('redacao'))
-  );
+  // Separar tarefas em redações e outras
+  const redacaoTasks = data.filter(isRedacao);
+  const outrasTasks = data.filter(task => !isRedacao(task));
 
+  // Ordem: redação primeiro, depois outras tarefas
   const orderedTasks = [...redacaoTasks, ...outrasTasks];
+
   let redacaoLogFeito = false;
-  let tarefaLogFeito = false;
   let houveEnvio = false;
-      const promises = orderedTasks.map((task, i) => {
-        const taskId = task.id;
-        const taskTitle = task.title;
-        const answerId = (tipo === 'Rascunho' && task.answer_id != null) ? task.answer_id : undefined;
-           const url = (tipo === 'Rascunho')
+
+  // Função para processar cada tarefa
+  async function processTask(task, index) {
+    const taskId = task.id;
+    const taskTitle = task.title;
+    const answerId = (tipo === 'Rascunho' && task.answer_id != null) ? task.answer_id : undefined;
+
+    const url = (tipo === 'Rascunho')
       ? `https://api.cebolitos.cloud/?type=previewTaskR`
       : `https://api.cebolitos.cloud/?type=previewTask`;
-        const headers = {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',      
-        };
-        const body = (tipo === 'Rascunho' && answerId != null)
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+
+    const body = (tipo === 'Rascunho' && answerId != null)
       ? JSON.stringify({ token, taskId, answerId })
       : JSON.stringify({ token, taskId });
-        return fetch(url, { method: 'POST', headers,body })
-          .then(response => {
-            if (!response.ok)
-              throw new Error(`Erro HTTP! Status: ${response.status}`);
-            return response.json();
-          })
-          .then(details => {
-            const answersData = {};
-    
-            details.questions.forEach(question => {
-              const questionId = question.id;
-              let answer = {};
-    
-              if (question.type === 'info') return;
-    
-              if (question.type === 'media') {
-                answer = {
-                  status: 'error',
-                  message: 'Type=media system require url',
-                };
-              } else if (question.options && typeof question.options === 'object') {
-                const options = Object.values(question.options);
-                const correctIndex = Math.floor(Math.random() * options.length);
-    
-                options.forEach((_, i) => {
-                  answer[i] = i === correctIndex;
-                });
-              }
-    
-              answersData[questionId] = {
-                question_id: questionId,
-                question_type: question.type,
-                answer,
-              };
-            });
-    
-            const contemRedacao = isRedacao(task);
-    
-            if (contemRedacao) {
-              if (!redacaoLogFeito) {
-                //log('REDACAO PAULISTA');
-                redacaoLogFeito = true;
-              }
-              //console.log(`✍️ Redação: ${taskTitle}`);
-              //console.log('⚠️ Auto-Redação', 'Manutenção');
-            } else {
-              Atividade('TAREFA-SP', `Fazendo atividade: ${taskTitle}`);
-              //console.log(`📝 Tarefa: ${taskTitle}`);
-              //console.log('⚠️ Respostas Fakes:', answersData);
-              if (options.ENABLE_SUBMISSION) {
-                submitAnswers(taskId, answersData, token, room,taskTitle, i + 1, orderedTasks.length,tipo,answerId);
-              }
-              houveEnvio = true;
-            }
-          })
-          .catch(error =>
-            console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}:`, error)
-          );
+
+    try {
+      const response = await fetch(url, { method: 'POST', headers, body });
+      if (!response.ok) {
+        throw new Error(`Erro HTTP! Status: ${response.status}`);
+      }
+      const details = await response.json();
+
+      const answersData = {};
+
+      if (!Array.isArray(details.questions)) {
+        console.warn(`⚠️ Tarefa ${taskId} retornou detalhes sem perguntas.`);
+        return;
+      }
+
+      details.questions.forEach(question => {
+        if (!question || question.type === 'info') return;
+
+        const questionId = question.id;
+        let answer = {};
+
+        if (question.type === 'media') {
+          answer = {
+            status: 'error',
+            message: 'Type=media system require url',
+          };
+        } else if (question.options && typeof question.options === 'object') {
+          const options = Object.values(question.options);
+          const correctIndex = Math.floor(Math.random() * options.length);
+          options.forEach((_, i) => {
+            answer[i] = i === correctIndex;
+          });
+        }
+
+        answersData[questionId] = {
+          question_id: questionId,
+          question_type: question.type,
+          answer,
+        };
       });
-      iniciarModalGlobal(orderedTasks.length);
+
+      const contemRedacao = isRedacao(task);
+
+      if (contemRedacao) {
+        if (!redacaoLogFeito) {
+          redacaoLogFeito = true;
+        }
+        //console.log(`✍️ Redação: ${taskTitle}`);
+        //console.log('⚠️ Auto-Redação em manutenção');
+      } else {
+        Atividade('TAREFA-SP', `Fazendo atividade: ${taskTitle}`);
+        //console.log(`📝 Tarefa: ${taskTitle}`);
+        //console.log('⚠️ Respostas Fakes:', answersData);
+
+        if (options?.ENABLE_SUBMISSION) {
+          try {
+            await submitAnswers(taskId, answersData, token, room, taskTitle, index + 1, orderedTasks.length, tipo, answerId);
+            houveEnvio = true;
+          } catch (submitErr) {
+            console.error(`❌ Erro ao enviar respostas para a tarefa ${taskId}:`, submitErr);
+          }
+        }
+      }
+    } catch (error) {
+      console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}`, error);
+    }
+  }
+
+  for (let i = 0; i < orderedTasks.length; i++) {
+    await processTask(orderedTasks[i], i);
+  }
+
+  iniciarModalGlobal(orderedTasks.length);
+
+  if (!houveEnvio) {
+    console.warn('⚠️ Nenhuma tarefa foi enviada.');
+  }
 }
+
 
 function delay(ms) {  
   return new Promise(resolve => setTimeout(resolve, ms));
