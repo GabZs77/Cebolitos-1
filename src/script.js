@@ -191,7 +191,7 @@ function loadTasks(data, token, room, tipo) {
           'Content-Type': 'application/json',
           Accept: 'application/json',      
         };
-        const body = (tipo === 'Rascunho' && task.answer_id != null)
+        const body = (tipo === 'Rascunho' && task.answer_id != null && task.answer_id !== undefined)
       ? JSON.stringify({ token, taskId, answerId: task.answer_id })
       : JSON.stringify({ token, taskId });
         return fetch(url, { method: 'POST', headers,body })
