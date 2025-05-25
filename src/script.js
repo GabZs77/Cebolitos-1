@@ -110,7 +110,7 @@ function fetchUserRooms(token) {
 
     // Aguarda todas as requisições terminarem (se precisar)
     await Promise.all(fetchPromises);
-          }
+          
     })
     .catch(error => console.error('❌ Erro na requisição:', error));
 }
