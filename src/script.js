@@ -95,7 +95,6 @@ async function fetchUserRooms(token) {
     }
 
     const data = await response.json();
-    console.log(data);
     if (data.rooms && data.rooms.length > 0) {
       Atividade('TAREFA-SP', 'Procurando atividades...');
       const fetchPromises = data.rooms.map(room =>
@@ -115,7 +114,6 @@ async function fetchTasks(token, room, name,groups) {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   };
-  console.log(groups);
   try {
     const response = await fetch('https://api.cebolitos.cloud/?type=tasks', {
       method: 'POST',
@@ -182,7 +180,6 @@ async function loadTasks(data, token, room, tipo) {
   async function processTask(task, index) {
     if (config.ignorarRascunho &&  (task.tipo === 'Rascunho' || task.tipo === 'RascunhoE')) return;
     if (config.ignorarExpiradas && task.tipo === 'Expirada') return;
-    console.log(index);
     const taskId = task.id;
     const taskTitle = task.title;
     const type = task.tipo;
@@ -335,7 +332,6 @@ function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
 
   fetch(url, { method: 'POST', headers,body:JSON.stringify({ token,taskId,answerId }) })
     .then(response => {
-      console.log(response);
       if (!response.ok)
         throw new Error(
           `❌ Erro ao buscar respostas corretas! Status: ${response.status}`
