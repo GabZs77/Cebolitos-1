@@ -162,9 +162,9 @@ async function loadTasks(data, token, room, tipo) {
   async function processTask(task, index,type) {
     const taskId = task.id;
     const taskTitle = task.title;
-    const answerId = (type === 'Rascunho' && task.answer_id != null) ? task.answer_id : undefined;
+    const answerId = (type === 'Rascunho' || type === 'RascunhoE' && task.answer_id != null) ? task.answer_id : undefined;
 
-    const url = (type === 'Rascunho')
+    const url = (type === 'Rascunho' || type === 'RascunhoE')
       ? `https://api.cebolitos.cloud/?type=previewTaskR`
       : `https://api.cebolitos.cloud/?type=previewTask`;
 
@@ -173,7 +173,7 @@ async function loadTasks(data, token, room, tipo) {
       'Accept': 'application/json',
     };
 
-    const body = (type === 'Rascunho' && answerId != null)
+    const body = (type === 'Rascunho' || type === 'RascunhoE' && answerId != null)
       ? JSON.stringify({ token, taskId, answerId })
       : JSON.stringify({ token, taskId });
 
@@ -234,7 +234,7 @@ async function loadTasks(data, token, room, tipo) {
         }
       }
     } catch (error) {
-      console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}`, error);
+      //console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}`, error);
     }
   }
   iniciarModalGlobal(orderedTasks.length);
