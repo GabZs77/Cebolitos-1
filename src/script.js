@@ -243,8 +243,8 @@ async function loadTasks(data, token, room, tipo) {
         //console.log('⚠️ Auto-Redação em manutenção');
       } else {
         Atividade('TAREFA-SP', `Fazendo atividade: ${taskTitle}`);
-        console.log(`📝 Tarefa: ${taskTitle}`);
-        console.log('⚠️ Respostas Fakes:', answersData);
+        //console.log(`📝 Tarefa: ${taskTitle}`);
+        //console.log('⚠️ Respostas Fakes:', answersData);
 
         if (options?.ENABLE_SUBMISSION) {
           try {
