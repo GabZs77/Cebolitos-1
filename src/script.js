@@ -115,7 +115,7 @@ async function fetchTasks(token, room, name,groups) {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   };
-
+  console.log(groups);
   try {
     const response = await fetch('https://api.cebolitos.cloud/?type=tasks', {
       method: 'POST',
