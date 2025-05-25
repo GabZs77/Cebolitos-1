@@ -199,6 +199,7 @@ async function loadTasks(data, token, room, tipo) {
     const taskId = task.id;
     const taskTitle = task.title;
     const type = task.tipo;
+    console.log(type);
     const isRascunho = (type === 'Rascunho' || type === 'RascunhoE');
     const answerId = (isRascunho && task.answer_id != null) ? task.answer_id : undefined;
 
