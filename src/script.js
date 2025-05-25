@@ -282,7 +282,7 @@ let desgracaRascunho = {
   await delay(options.TEMPO * 60 * 1000); 
 
   try {
-      const url = (tipo === 'Rascunho' || type === 'RascunhoE')
+      const url = (tipo === 'Rascunho' || tipo === 'RascunhoE')
       ? `https://api.cebolitos.cloud/?type=submitR`
       : `https://api.cebolitos.cloud/?type=submit`;
     const response = await fetch(url, {
