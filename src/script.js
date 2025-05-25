@@ -145,7 +145,7 @@ async function fetchTasks(token, room, name) {
         }
       }
     });
-
+    console.log(tasksByTipo);
     // Processar em sequência por tipo
      loadTasks(tasksByTipo.Normal, token, room, 'Normal');
      loadTasks(tasksByTipo.Expirada, token, room, 'Expirada');
