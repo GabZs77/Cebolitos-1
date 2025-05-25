@@ -9,7 +9,7 @@
 ## 📌 Atualizações
 
 - ✅ Correção do erro **400** em navegadores.**(ONLINE DEFINITIVO)**
-- ✅ Adicione temporário um MENU para poder filtrar entre **(PENDENTES,RASCUNHO,EXPIRADA)** e agora você pode escolher o tempo!
+- ✅ Adicionado temporário um MENU para poder filtrar entre **(PENDENTES,RASCUNHO,EXPIRADA)** e agora você pode escolher o tempo!
 - ✅ Cebolitos está fazendo as atividades em **(RASCUNHO e RASCUNHO EXPIRADA)**
 - ✅ Corrigido problema que o cebolitos enviava atividade que era obrigatório **(URL)**, agora ele só ignora! :)
 
