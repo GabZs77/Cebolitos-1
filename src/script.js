@@ -272,6 +272,11 @@ async function loadTasks(data, token, room, tipo) {
     if (i === 0) {
        config = await solicitarTempoUsuario();
        options.TEMPO = config.tempo;
+       if (config.ignorarRascunho){
+           Atividade('TAREFA-SP','IGNOROU ATIVIDADES EM RASCUNHO!');
+       } else if (config.ignorarExpiradas) {
+           Atividade('TAREFA-SP','IGNOROU ATIVIDADES EXPIRADAS!');
+       }
     } 
     await processTask(orderedTasks[i], i);
   }
