@@ -187,10 +187,10 @@ async function loadTasks(data, token, room, tipo) {
   async function processTask(task, index) {
     if (config.ignorarRascunho &&  (task.tipo === 'Rascunho' || task.tipo === 'RascunhoE')) return;
     if (config.ignorarExpiradas && task.tipo === 'Expirada') return;
+    console.log(index);
     const taskId = task.id;
     const taskTitle = task.title;
     const type = task.tipo;
-    console.log('task tipo: ', type);
     const isRascunho = (type === 'Rascunho' || type === 'RascunhoE');
     const answerId = (isRascunho && task.answer_id != null) ? task.answer_id : undefined;
 
