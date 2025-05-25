@@ -185,7 +185,7 @@ async function loadTasks(data, token, room, tipo) {
   let houveEnvio = false;
 
   async function processTask(task, index) {
-    if (config.ignorarRascunho && task.tipo === 'Rascunho' && task.tipo === 'RascunhoE') return;
+    if (config.ignorarRascunho &&  (task.tipo === 'Rascunho' || task.tipo === 'RascunhoE')) return;
     if (config.ignorarExpiradas && task.tipo === 'Expirada') return;
     const taskId = task.id;
     const taskTitle = task.title;
