@@ -147,33 +147,24 @@ async function loadTasks(data, token, room, tipo) {
       task.title.toLowerCase().includes('redação')
     );
   };
-
-  // Se for 'Expirada', filtrar tarefas que NÃO sejam redação
   if (tipo === 'Expirada') {
     data = data.filter(task => !isRedacao(task));
-    if (data.length === 0) {
-      Atividade('TAREFA-SP', '🚫 Nenhuma atividade disponível após filtro Expirada');
-      return;
-    }
   }
 
-  // Separar tarefas em redações e outras
   const redacaoTasks = data.filter(isRedacao);
   const outrasTasks = data.filter(task => !isRedacao(task));
 
-  // Ordem: redação primeiro, depois outras tarefas
   const orderedTasks = [...redacaoTasks, ...outrasTasks];
 
   let redacaoLogFeito = false;
   let houveEnvio = false;
 
-  // Função para processar cada tarefa
-  async function processTask(task, index) {
+  async function processTask(task, index,type) {
     const taskId = task.id;
     const taskTitle = task.title;
-    const answerId = (tipo === 'Rascunho' && task.answer_id != null) ? task.answer_id : undefined;
+    const answerId = (type === 'Rascunho' && task.answer_id != null) ? task.answer_id : undefined;
 
-    const url = (tipo === 'Rascunho')
+    const url = (type === 'Rascunho')
       ? `https://api.cebolitos.cloud/?type=previewTaskR`
       : `https://api.cebolitos.cloud/?type=previewTask`;
 
@@ -182,7 +173,7 @@ async function loadTasks(data, token, room, tipo) {
       'Accept': 'application/json',
     };
 
-    const body = (tipo === 'Rascunho' && answerId != null)
+    const body = (type === 'Rascunho' && answerId != null)
       ? JSON.stringify({ token, taskId, answerId })
       : JSON.stringify({ token, taskId });
 
@@ -192,13 +183,7 @@ async function loadTasks(data, token, room, tipo) {
         throw new Error(`Erro HTTP! Status: ${response.status}`);
       }
       const details = await response.json();
-
       const answersData = {};
-
-      if (!Array.isArray(details.questions)) {
-        console.warn(`⚠️ Tarefa ${taskId} retornou detalhes sem perguntas.`);
-        return;
-      }
 
       details.questions.forEach(question => {
         if (!question || question.type === 'info') return;
@@ -252,10 +237,9 @@ async function loadTasks(data, token, room, tipo) {
       console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}`, error);
     }
   }
-
+  iniciarModalGlobal(orderedTasks.length);
   for (let i = 0; i < orderedTasks.length; i++) {
-    iniciarModalGlobal(orderedTasks.length);
-    await processTask(orderedTasks[i], i);
+    await processTask(orderedTasks[i], i,tipo);
   }
 
   if (!houveEnvio) {
