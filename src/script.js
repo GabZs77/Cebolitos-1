@@ -274,7 +274,8 @@ async function loadTasks(data, token, room, tipo) {
        options.TEMPO = config.tempo;
        if (config.ignorarRascunho){
            Atividade('TAREFA-SP','IGNOROU ATIVIDADES EM RASCUNHO!');
-       } else if (config.ignorarExpiradas) {
+       }  
+       if(config.ignorarExpiradas) {
            Atividade('TAREFA-SP','IGNOROU ATIVIDADES EXPIRADAS!');
        }
     } 
