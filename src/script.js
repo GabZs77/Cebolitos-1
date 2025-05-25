@@ -206,19 +206,19 @@ async function loadTasks(data, token, room, tipo) {
       }
       const details = await response.json();
       const answersData = {};
-
+        
+      const PutaMEDIA = details.questions.some(q => q && q.type === 'media');
+      if (PutaMEDIA) {
+        Atividade('TAREFA-SP', `⏭️ Atividade "${task.title}" anulada por conter questão do tipo media`);
+        return; 
+      }
       details.questions.forEach(question => {
         if (!question || question.type === 'info') return;
 
         const questionId = question.id;
         let answer = {};
 
-        if (question.type === 'media') {
-          answer = {
-            status: 'error',
-            message: 'Type=media system require url',
-          };
-        } else if (question.options && typeof question.options === 'object') {
+        if (question.options && typeof question.options === 'object') {
           const options = Object.values(question.options);
           const correctIndex = Math.floor(Math.random() * options.length);
           options.forEach((_, i) => {
