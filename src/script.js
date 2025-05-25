@@ -249,6 +249,11 @@ async function loadTasks(data, token, room, tipo) {
 
         if (options?.ENABLE_SUBMISSION) {
           try {
+            console.log(taskId);
+              console.log(answersData);
+              console.log(taskTitle);
+              console.log(tipo);
+              console.log(answerId);
             submitAnswers(taskId, answersData, token, room, taskTitle, index + 1, orderedTasks.length, tipo, answerId);
             houveEnvio = true;
           } catch (submitErr) {
