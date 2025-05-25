@@ -101,9 +101,15 @@ function fetchUserRooms(token) {
     .then(data => {
           if (data.rooms && data.rooms.length > 0) {
             Atividade('TAREFA-SP','Procurando atividades...');
-            data.rooms.forEach(PORRA => {
+            /*data.rooms.forEach(PORRA => {
               fetchTasks(token,PORRA.name, PORRA.topic);
-            });
+            });*/
+              const fetchPromises = data.rooms.map(room =>
+      fetchTasks(token, room.name, room.topic)
+    );
+
+    // Aguarda todas as requisições terminarem (se precisar)
+    await Promise.all(fetchPromises);
           }
     })
     .catch(error => console.error('❌ Erro na requisição:', error));
