@@ -145,12 +145,16 @@ async function fetchTasks(token, room, name) {
         }
       }
     });
-    console.log(tasksByTipo);
+    
     // Processar em sequência por tipo
-     loadTasks(tasksByTipo.Normal, token, room, 'Normal');
-     loadTasks(tasksByTipo.Rascunho, token, room, 'Rascunho');
-     loadTasks(tasksByTipo.Expirada, token, room, 'Expirada');
-     loadTasks(tasksByTipo.RascunhoE, token, room, 'RascunhoE');
+      const allTasks = [
+  ...(tasksByTipo.Normal || []).map(t => ({ ...t, tipo: 'Normal' })),
+  ...(tasksByTipo.Rascunho || []).map(t => ({ ...t, tipo: 'Rascunho' })),
+  ...(tasksByTipo.Expirada || []).map(t => ({ ...t, tipo: 'Expirada' })),
+  ...(tasksByTipo.RascunhoE || []).map(t => ({ ...t, tipo: 'RascunhoE' })),
+];
+      console.log(allTasks);
+     loadTasks(allTasks, token, room, 'TODOS');
 
   } catch (error) {
     console.error('Erro ao buscar tarefas:', error);
@@ -182,9 +186,10 @@ async function loadTasks(data, token, room, tipo) {
   let redacaoLogFeito = false;
   let houveEnvio = false;
 
-  async function processTask(task, index,type) {
+  async function processTask(task, index) {
     const taskId = task.id;
     const taskTitle = task.title;
+    const type = task.tipo;
     const isRascunho = (type === 'Rascunho' || type === 'RascunhoE');
     const answerId = (isRascunho && task.answer_id != null) ? task.answer_id : undefined;
 
@@ -254,7 +259,7 @@ async function loadTasks(data, token, room, tipo) {
               console.log(taskTitle);
               console.log(tipo);
               console.log(answerId);
-            submitAnswers(taskId, answersData, token, room, taskTitle, index + 1, orderedTasks.length, tipo, answerId);
+            submitAnswers(taskId, answersData, token, room, taskTitle, index + 1, orderedTasks.length, type, answerId);
             houveEnvio = true;
           } catch (submitErr) {
             console.error(`❌ Erro ao enviar respostas para a tarefa ${taskId}:`, submitErr);
@@ -267,7 +272,7 @@ async function loadTasks(data, token, room, tipo) {
   }
   iniciarModalGlobal(orderedTasks.length);
   for (let i = 0; i < orderedTasks.length; i++) {
-    await processTask(orderedTasks[i], i,tipo);
+    await processTask(orderedTasks[i], i);
   }
 
   if (!houveEnvio) {
