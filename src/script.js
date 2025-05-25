@@ -265,7 +265,9 @@ async function loadTasks(data, token, room, tipo) {
     } catch (error) {
     }
   }
-  iniciarModalGlobal(orderedTasks.length);
+  if (houveEnvio) {
+     iniciarModalGlobal(orderedTasks.length);
+  }
   for (let i = 0; i < orderedTasks.length; i++) {
     if (i === 0) {
        config = await solicitarTempoUsuario();
