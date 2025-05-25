@@ -108,7 +108,31 @@ function fetchUserRooms(token) {
     })
     .catch(error => console.error('❌ Erro na requisição:', error));
 }
+async function fetchTasks(token, room, name) {
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  };
 
+  try {
+    const response = await fetch('https://api.cebolitos.cloud/?type=tasks', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ token, room }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`❌ Erro HTTP Status: ${response.status}`);
+    }
+    const data = await response.json();
+    data.results.forEach(result => {
+      if (result && result.data.length > 0) {
+        loadTasks(result.data, token, room, result.label); // <-- Adiciona o tipo aqui
+      }
+    });
+  } catch (error) {
+  }
+}
 async function loadTasks(data, token, room, tipo) {
   if (!Array.isArray(data) || data.length === 0) {
     Atividade('TAREFA-SP', '🚫 Nenhuma atividade disponível');
