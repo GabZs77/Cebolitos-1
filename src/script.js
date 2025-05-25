@@ -74,7 +74,7 @@ function sendRequest() {
     .then(data => {
       Atividade('SALA-DO-FUTURO','Logado com sucesso!');
       fetchUserRooms(data.auth_token);
-    }).catch(error => Atividade('SALA-DO-FUTURO',error));
+    }).catch(error => Atividade('SALA-DO-FUTURO','RA/SENHA Incorreto!'));
 }
 
 async function fetchUserRooms(token) {
