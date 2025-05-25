@@ -64,8 +64,10 @@ function solicitarTempoUsuario() {
       return { label, checkbox };
     };
 
+    const pendentes = criarCheckbox('Pendente');
     const rascunho = criarCheckbox('Rascunho');
     const expiradas = criarCheckbox('Expiradas');
+    checkboxContainer.appendChild(pendentes.label);
     checkboxContainer.appendChild(rascunho.label);
     checkboxContainer.appendChild(expiradas.label);
 
@@ -123,7 +125,8 @@ function solicitarTempoUsuario() {
       resolve({
         tempo: valor,
         ignorarExpiradas: expiradas.checkbox.checked,
-        ignorarRascunho: rascunho.checkbox.checked
+        ignorarRascunho: rascunho.checkbox.checked,
+        ignorarPendente: pendentes.checkbox.checkk
       });
     };
 
