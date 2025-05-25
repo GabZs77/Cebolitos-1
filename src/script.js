@@ -298,7 +298,7 @@ let desgracaRascunho = {
     executed_on: room,
     answers: answersData,
   };
- const body = (tipo === 'Rascunho')
+ const body = (tipo === 'Rascunho' || tipo === 'RascunhoE')
       ? desgracaRascunho
       : porra;
 
