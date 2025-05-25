@@ -148,8 +148,8 @@ async function fetchTasks(token, room, name) {
     console.log(tasksByTipo);
     // Processar em sequência por tipo
      loadTasks(tasksByTipo.Normal, token, room, 'Normal');
-     loadTasks(tasksByTipo.Expirada, token, room, 'Expirada');
-     loadTasks(tasksByTipo.Rascunho, token, room, 'Rascunho');
+     loadTasks(tasksByTipo.Expirada, token, room, 'Rascunho');
+     loadTasks(tasksByTipo.Rascunho, token, room, 'Expirada');
      loadTasks(tasksByTipo.RascunhoE, token, room, 'RascunhoE');
 
   } catch (error) {
