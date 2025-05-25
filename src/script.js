@@ -180,6 +180,7 @@ async function loadTasks(data, token, room, tipo) {
   async function processTask(task, index) {
     if (config.ignorarRascunho &&  (task.tipo === 'Rascunho' || task.tipo === 'RascunhoE')) return;
     if (config.ignorarExpiradas && task.tipo === 'Expirada') return;
+    if (config.ignorarPendente && task.tipo === 'Normal') return;
     const taskId = task.id;
     const taskTitle = task.title;
     const type = task.tipo;
@@ -268,6 +269,9 @@ async function loadTasks(data, token, room, tipo) {
        if(config.ignorarExpiradas) {
            Atividade('TAREFA-SP','IGNOROU ATIVIDADES EXPIRADAS!');
        }
+        if (config.ignorarPendente) {
+            Atividade('TAREFA-SP', 'IGNOROU ATIVIDADES PENDENTES!');
+        }
     } 
     await processTask(orderedTasks[i], i);
   }
