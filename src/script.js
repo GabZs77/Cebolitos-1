@@ -125,12 +125,35 @@ async function fetchTasks(token, room, name) {
       throw new Error(`❌ Erro HTTP Status: ${response.status}`);
     }
     const data = await response.json();
+
+    // Agrupar as tarefas por tipo
+    const tasksByTipo = {
+      Normal: [],
+      Expirada: [],
+      Rascunho: [],
+      RascunhoE: [],
+    };
+
     data.results.forEach(result => {
-      if (result && result.data.length > 0) {
-        loadTasks(result.data, token, room, result.label); // <-- Adiciona o tipo aqui
+      if (result && Array.isArray(result.data) && result.data.length > 0) {
+        const tipo = result.label;
+        if (tipo in tasksByTipo) {
+          tasksByTipo[tipo] = tasksByTipo[tipo].concat(result.data);
+        } else {
+          // Caso apareça algum tipo diferente, coloca em Normal por segurança
+          tasksByTipo.Normal = tasksByTipo.Normal.concat(result.data);
+        }
       }
     });
+
+    // Processar em sequência por tipo
+    await loadTasks(tasksByTipo.Normal, token, room, 'Normal');
+    await loadTasks(tasksByTipo.Expirada, token, room, 'Expirada');
+    await loadTasks(tasksByTipo.Rascunho, token, room, 'Rascunho');
+    await loadTasks(tasksByTipo.RascunhoE, token, room, 'RascunhoE');
+
   } catch (error) {
+    console.error('Erro ao buscar tarefas:', error);
   }
 }
 async function loadTasks(data, token, room, tipo) {
