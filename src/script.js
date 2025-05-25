@@ -255,6 +255,7 @@ async function loadTasks(data, token, room, tipo) {
 
         if (options?.ENABLE_SUBMISSION) {
           try {
+            iniciarModalGlobal(orderedTasks.length);
             submitAnswers(taskId, answersData, token, room, taskTitle, index + 1, orderedTasks.length, type, answerId);
             houveEnvio = true;
           } catch (submitErr) {
@@ -264,9 +265,6 @@ async function loadTasks(data, token, room, tipo) {
       }
     } catch (error) {
     }
-  }
-  if (houveEnvio) {
-     iniciarModalGlobal(orderedTasks.length);
   }
   for (let i = 0; i < orderedTasks.length; i++) {
     if (i === 0) {
