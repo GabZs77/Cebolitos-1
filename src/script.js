@@ -147,10 +147,10 @@ async function fetchTasks(token, room, name) {
     });
 
     // Processar em sequência por tipo
-    await loadTasks(tasksByTipo.Normal, token, room, 'Normal');
-    await loadTasks(tasksByTipo.Expirada, token, room, 'Expirada');
-    await loadTasks(tasksByTipo.Rascunho, token, room, 'Rascunho');
-    await loadTasks(tasksByTipo.RascunhoE, token, room, 'RascunhoE');
+     loadTasks(tasksByTipo.Normal, token, room, 'Normal');
+     loadTasks(tasksByTipo.Expirada, token, room, 'Expirada');
+     loadTasks(tasksByTipo.Rascunho, token, room, 'Rascunho');
+     loadTasks(tasksByTipo.RascunhoE, token, room, 'RascunhoE');
 
   } catch (error) {
     console.error('Erro ao buscar tarefas:', error);
