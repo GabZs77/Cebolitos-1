@@ -51,13 +51,8 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
     if(trava) return;
     trava = true;
     const options = {
-      TEMPO: 3, //Tempo atividade em Minutos
+      TEMPO: 3,
       ENABLE_SUBMISSION: true,
-      LOGIN_URL: 'https://sedintegracoes.educacao.sp.gov.br/credenciais/api/LoginCompletoToken',
-      LOGIN_DATA: {
-        id: document.getElementById('ra').value, 
-        password: document.getElementById('senha').value,
-      },
     };
 function sendRequest() {
   const teste = 'https://api.cebolitos.cloud/?type=token';
@@ -287,48 +282,47 @@ function delay(ms) {
 }
 
 async function submitAnswers(taskId, answersData, token, room, taskTitle, index, total,tipo,answerId) {
-let porra = {
-    taskId: taskId,
-    token: token,
-    status: 'submitted',
-    accessed_on: 'room',
-    executed_on: room,
-    answers: answersData,
-  };
-let desgracaRascunho = {
-    taskId: taskId,
-    token: token,
-    answerId: answerId,
-    status: 'submitted',
-    accessed_on: 'room',
-    executed_on: room,
-    answers: answersData,
-  };
- const body = (tipo === 'Rascunho' || tipo === 'RascunhoE')
-      ? desgracaRascunho
-      : porra;
-
-  const headers = {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-  };
-  atualizarModalGlobal(taskTitle, options.TEMPO * 60, index, total);
-  await delay(options.TEMPO * 60 * 1000); 
-
-  try {
-      const url = (tipo === 'Rascunho' || tipo === 'RascunhoE')
-      ? `https://api.cebolitos.cloud/?type=submitR`
-      : `https://api.cebolitos.cloud/?type=submit`;
-    const response = await fetch(url, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body),
-      });
-    const response_json = await response.json();
-    console.log(response_json);
-    const new_task_id = response_json.id;
-    fetchCorrectAnswers(taskId, new_task_id, token,taskTitle);
-  } catch (error) {
+    let porra = {
+        taskId: taskId,
+        token: token,
+        status: 'submitted',
+        accessed_on: 'room',
+        executed_on: room,
+        answers: answersData,
+      };
+    let desgracaRascunho = {
+        taskId: taskId,
+        token: token,
+        answerId: answerId,
+        status: 'submitted',
+        accessed_on: 'room',
+        executed_on: room,
+        answers: answersData,
+      };
+     const body = (tipo === 'Rascunho' || tipo === 'RascunhoE')
+          ? desgracaRascunho
+          : porra;
+    
+      const headers = {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      };
+      atualizarModalGlobal(taskTitle, options.TEMPO * 60, index, total);
+      await delay(options.TEMPO * 60 * 1000); 
+    
+      try {
+          const url = (tipo === 'Rascunho' || tipo === 'RascunhoE')
+          ? `https://api.cebolitos.cloud/?type=submitR`
+          : `https://api.cebolitos.cloud/?type=submit`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(body),
+          });
+        const response_json = await response.json();
+        const new_task_id = response_json.id;
+        fetchCorrectAnswers(taskId, new_task_id, token,taskTitle);
+      } catch (error) {
   }
 }
 
@@ -382,7 +376,6 @@ function putAnswer(respostasAnteriores, taskId, answerId, token,taskTitle) {
     })
     .then(data => {
         Atividade('TAREFA-SP','✅ Atividade Concluida - ' + taskTitle);
-      //console.log('✅ Respostas corrigidas enviadas com sucesso:', data);
     })
     .catch(error => {
       Atividade('TAREFA-SP','❌ Erro ao corrigir a atividade - ' + taskTitle);
@@ -397,7 +390,6 @@ function transformJson(jsonOriginal) {
     let novoJson = {
       accessed_on: jsonOriginal.accessed_on,
       executed_on: jsonOriginal.executed_on,
-      //duration: 60.00,
       answers: {}
     };
 
