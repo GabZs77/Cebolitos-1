@@ -180,11 +180,13 @@ async function loadTasks(data, token, room, tipo) {
   const redacaoTasks = data.filter(isRedacao);
   const outrasTasks = data.filter(task => !isRedacao(task));
   const orderedTasks = [...redacaoTasks, ...outrasTasks];
-
+  let config = null;
   let redacaoLogFeito = false;
   let houveEnvio = false;
 
   async function processTask(task, index) {
+    if (config.ignorarRascunho && task.tipo === 'Rascunho' && task.tipo === 'RascunhoE') return;
+    if (config.ignorarExpiradas && task.tipo === 'Expirada') return;
     const taskId = task.id;
     const taskTitle = task.title;
     const type = task.tipo;
@@ -265,6 +267,9 @@ async function loadTasks(data, token, room, tipo) {
   }
   iniciarModalGlobal(orderedTasks.length);
   for (let i = 0; i < orderedTasks.length; i++) {
+    if (i === 0) {
+       config = await solicitarTempoUsuario();
+    } 
     await processTask(orderedTasks[i], i);
   }
 }
