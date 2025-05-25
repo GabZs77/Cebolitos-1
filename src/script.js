@@ -269,6 +269,7 @@ async function loadTasks(data, token, room, tipo) {
   for (let i = 0; i < orderedTasks.length; i++) {
     if (i === 0) {
        config = await solicitarTempoUsuario();
+       options.TEMPO = config.tempo;
     } 
     await processTask(orderedTasks[i], i);
   }
