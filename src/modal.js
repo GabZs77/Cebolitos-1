@@ -29,22 +29,19 @@ function solicitarTempoUsuario() {
     caixa.style.width = '90%';
     caixa.style.maxWidth = '360px';
 
-    const titulo = document.createElement('h3');
-    titulo.textContent = 'Defina o tempo por atividade';
-    titulo.style.marginBottom = '18px';
-    titulo.style.fontSize = '18px';
-
     const ignorarTitulo = document.createElement('p');
     ignorarTitulo.textContent = 'Ignorar Atividades';
     ignorarTitulo.style.fontWeight = 'bold';
-    ignorarTitulo.style.margin = '10px 0 8px 0';
+    ignorarTitulo.style.marginBottom = '12px';
+    ignorarTitulo.style.fontSize = '16px';
 
     const checkboxContainer = document.createElement('div');
     checkboxContainer.style.display = 'flex';
     checkboxContainer.style.flexDirection = 'column';
     checkboxContainer.style.alignItems = 'flex-start';
-    checkboxContainer.style.gap = '4px';
-    checkboxContainer.style.marginBottom = '16px';
+    checkboxContainer.style.paddingLeft = '40px'; // <-- só um pouco pro centro
+    checkboxContainer.style.gap = '6px';
+    checkboxContainer.style.marginBottom = '18px';
 
     const criarCheckbox = (labelText) => {
       const label = document.createElement('label');
@@ -52,6 +49,7 @@ function solicitarTempoUsuario() {
       label.style.alignItems = 'center';
       label.style.gap = '6px';
       label.style.fontSize = '15px';
+      label.style.cursor = 'pointer';
 
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
@@ -65,11 +63,16 @@ function solicitarTempoUsuario() {
       return { label, checkbox };
     };
 
-    const expiradas = criarCheckbox('Expiradas');
     const rascunho = criarCheckbox('Rascunho');
-
-    checkboxContainer.appendChild(expiradas.label);
+    const expiradas = criarCheckbox('Expiradas');
     checkboxContainer.appendChild(rascunho.label);
+    checkboxContainer.appendChild(expiradas.label);
+
+    const titulo = document.createElement('p');
+    titulo.textContent = 'Defina o tempo por atividade';
+    titulo.style.marginBottom = '12px';
+    titulo.style.fontSize = '16px';
+    titulo.style.fontWeight = 'bold';
 
     const input = document.createElement('input');
     input.type = 'text';
@@ -123,9 +126,9 @@ function solicitarTempoUsuario() {
       });
     };
 
-    caixa.appendChild(titulo);
     caixa.appendChild(ignorarTitulo);
     caixa.appendChild(checkboxContainer);
+    caixa.appendChild(titulo);
     caixa.appendChild(input);
     caixa.appendChild(erro);
     caixa.appendChild(botao);
@@ -133,6 +136,7 @@ function solicitarTempoUsuario() {
     document.body.appendChild(overlay);
   });
 }
+
 
 
 
