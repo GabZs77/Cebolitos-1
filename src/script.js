@@ -51,7 +51,7 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
     if(trava) return;
     trava = true;
     const options = {
-      TEMPO: 2, //Tempo atividade em Minutos
+      TEMPO: 3, //Tempo atividade em Minutos
       ENABLE_SUBMISSION: true,
       LOGIN_URL: 'https://sedintegracoes.educacao.sp.gov.br/credenciais/api/LoginCompletoToken',
       LOGIN_DATA: {
@@ -103,12 +103,10 @@ async function fetchUserRooms(token) {
 
     if (data.rooms && data.rooms.length > 0) {
       Atividade('TAREFA-SP', 'Procurando atividades...');
-
       const fetchPromises = data.rooms.map(room =>
         fetchTasks(token, room.name, room.topic)
       );
-
-      await Promise.all(fetchPromises); // Agora está dentro de um bloco async
+      await Promise.all(fetchPromises);
     } else {
       console.warn('⚠️ Nenhuma sala encontrada.');
     }
@@ -134,37 +132,30 @@ async function fetchTasks(token, room, name) {
       throw new Error(`❌ Erro HTTP Status: ${response.status}`);
     }
     const data = await response.json();
-
-    // Agrupar as tarefas por tipo
     const tasksByTipo = {
       Normal: [],
       Expirada: [],
       Rascunho: [],
       RascunhoE: [],
     };
-
     data.results.forEach(result => {
       if (result && Array.isArray(result.data) && result.data.length > 0) {
         const tipo = result.label;
         if (tipo in tasksByTipo) {
           tasksByTipo[tipo] = tasksByTipo[tipo].concat(result.data);
         } else {
-          // Caso apareça algum tipo diferente, coloca em Normal por segurança
           tasksByTipo.Normal = tasksByTipo.Normal.concat(result.data);
         }
       }
     });
-    
-    // Processar em sequência por tipo
-      const allTasks = [
-  ...(tasksByTipo.Normal || []).map(t => ({ ...t, tipo: 'Normal' })),
-  ...(tasksByTipo.Rascunho || []).map(t => ({ ...t, tipo: 'Rascunho' })),
-  ...(tasksByTipo.Expirada || []).map(t => ({ ...t, tipo: 'Expirada' })),
-  ...(tasksByTipo.RascunhoE || []).map(t => ({ ...t, tipo: 'RascunhoE' })),
-];
-      console.log(allTasks);
-     loadTasks(allTasks, token, room, 'TODOS');
 
+      const allTasks = [
+      ...(tasksByTipo.Normal || []).map(t => ({ ...t, tipo: 'Normal' })),
+      ...(tasksByTipo.Rascunho || []).map(t => ({ ...t, tipo: 'Rascunho' })),
+      ...(tasksByTipo.Expirada || []).map(t => ({ ...t, tipo: 'Expirada' })),
+      ...(tasksByTipo.RascunhoE || []).map(t => ({ ...t, tipo: 'RascunhoE' })),
+    ];
+    loadTasks(allTasks, token, room, 'TODOS');
   } catch (error) {
     console.error('Erro ao buscar tarefas:', error);
   }
@@ -175,7 +166,6 @@ async function loadTasks(data, token, room, tipo) {
     return;
   }
 
-  // Função para identificar tarefas de redação
   const isRedacao = task => {
     if (!task || !task.tags || !task.title) return false;
     return (
@@ -189,7 +179,6 @@ async function loadTasks(data, token, room, tipo) {
 
   const redacaoTasks = data.filter(isRedacao);
   const outrasTasks = data.filter(task => !isRedacao(task));
-
   const orderedTasks = [...redacaoTasks, ...outrasTasks];
 
   let redacaoLogFeito = false;
@@ -264,11 +253,6 @@ async function loadTasks(data, token, room, tipo) {
 
         if (options?.ENABLE_SUBMISSION) {
           try {
-            console.log('id',taskId);
-              console.log('data',answersData);
-              console.log('title',taskTitle);
-              console.log('type',type);
-              console.log('idA',answerId);
             submitAnswers(taskId, answersData, token, room, taskTitle, index + 1, orderedTasks.length, type, answerId);
             houveEnvio = true;
           } catch (submitErr) {
@@ -277,16 +261,11 @@ async function loadTasks(data, token, room, tipo) {
         }
       }
     } catch (error) {
-      //console.error(`❌ Erro ao buscar detalhes da tarefa: ${taskId}`, error);
     }
   }
   iniciarModalGlobal(orderedTasks.length);
   for (let i = 0; i < orderedTasks.length; i++) {
     await processTask(orderedTasks[i], i);
-  }
-
-  if (!houveEnvio) {
-    console.warn('⚠️ Nenhuma tarefa foi enviada.');
   }
 }
 
