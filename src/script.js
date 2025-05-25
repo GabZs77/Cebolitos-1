@@ -99,7 +99,7 @@ async function fetchUserRooms(token) {
     if (data.rooms && data.rooms.length > 0) {
       Atividade('TAREFA-SP', 'Procurando atividades...');
       const fetchPromises = data.rooms.map(room =>
-        fetchTasks(token, room.name, room.topic)
+        fetchTasks(token, room.name, room.topic,room.group_categories)
       );
       await Promise.all(fetchPromises);
     } else {
@@ -110,7 +110,7 @@ async function fetchUserRooms(token) {
   }
 }
 
-async function fetchTasks(token, room, name) {
+async function fetchTasks(token, room, name,groups) {
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -120,7 +120,7 @@ async function fetchTasks(token, room, name) {
     const response = await fetch('https://api.cebolitos.cloud/?type=tasks', {
       method: 'POST',
       headers,
-      body: JSON.stringify({ token, room }),
+      body: JSON.stringify({ token, room,groups }),
     });
 
     if (!response.ok) {
