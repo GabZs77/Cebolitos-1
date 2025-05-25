@@ -199,7 +199,7 @@ async function loadTasks(data, token, room, tipo) {
     const taskId = task.id;
     const taskTitle = task.title;
     const type = task.tipo;
-    console.log(type);
+    console.log('task tipo: ', type);
     const isRascunho = (type === 'Rascunho' || type === 'RascunhoE');
     const answerId = (isRascunho && task.answer_id != null) ? task.answer_id : undefined;
 
@@ -264,11 +264,11 @@ async function loadTasks(data, token, room, tipo) {
 
         if (options?.ENABLE_SUBMISSION) {
           try {
-            console.log(taskId);
-              console.log(answersData);
-              console.log(taskTitle);
-              console.log(tipo);
-              console.log(answerId);
+            console.log('id',taskId);
+              console.log('data',answersData);
+              console.log('title',taskTitle);
+              console.log('type',type);
+              console.log('idA',answerId);
             submitAnswers(taskId, answersData, token, room, taskTitle, index + 1, orderedTasks.length, type, answerId);
             houveEnvio = true;
           } catch (submitErr) {
