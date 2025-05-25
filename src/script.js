@@ -82,7 +82,7 @@ function sendRequest() {
     }).catch(error => console.log(error));
 }
 
-function fetchUserRooms(token) {
+async function fetchUserRooms(token) {
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
