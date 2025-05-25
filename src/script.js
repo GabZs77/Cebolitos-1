@@ -95,7 +95,7 @@ async function fetchUserRooms(token) {
     }
 
     const data = await response.json();
-
+    console.log(data);
     if (data.rooms && data.rooms.length > 0) {
       Atividade('TAREFA-SP', 'Procurando atividades...');
       const fetchPromises = data.rooms.map(room =>
