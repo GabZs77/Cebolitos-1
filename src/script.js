@@ -254,10 +254,9 @@ async function loadTasks(data, token, room, tipo) {
   }
 
   for (let i = 0; i < orderedTasks.length; i++) {
+    iniciarModalGlobal(orderedTasks.length);
     await processTask(orderedTasks[i], i);
   }
-
-  iniciarModalGlobal(orderedTasks.length);
 
   if (!houveEnvio) {
     console.warn('⚠️ Nenhuma tarefa foi enviada.');
