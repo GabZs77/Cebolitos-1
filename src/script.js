@@ -185,20 +185,20 @@ async function loadTasks(data, token, room, tipo) {
   async function processTask(task, index,type) {
     const taskId = task.id;
     const taskTitle = task.title;
-    const answerId = (type === 'Rascunho' || type === 'RascunhoE' && task.answer_id != null) ? task.answer_id : undefined;
+    const isRascunho = (type === 'Rascunho' || type === 'RascunhoE');
+    const answerId = (isRascunho && task.answer_id != null) ? task.answer_id : undefined;
 
-    const url = ((type === 'Rascunho') || (type === 'RascunhoE'))
-      ? `https://api.cebolitos.cloud/?type=previewTaskR`
-      : `https://api.cebolitos.cloud/?type=previewTask`;
-
+    const url = isRascunho
+        ? `https://api.cebolitos.cloud/?type=previewTaskR`
+        : `https://api.cebolitos.cloud/?type=previewTask`;
     const headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
 
-    const body = (type === 'Rascunho' || type === 'RascunhoE' && answerId != null)
-      ? JSON.stringify({ token, taskId, answerId })
-      : JSON.stringify({ token, taskId });
+    const body = isRascunho && answerId != null
+    ? JSON.stringify({ token, taskId, answerId })
+    : JSON.stringify({ token, taskId });
 
     try {
       const response = await fetch(url, { method: 'POST', headers, body });
@@ -249,7 +249,7 @@ async function loadTasks(data, token, room, tipo) {
 
         if (options?.ENABLE_SUBMISSION) {
           try {
-            await submitAnswers(taskId, answersData, token, room, taskTitle, index + 1, orderedTasks.length, tipo, answerId);
+            submitAnswers(taskId, answersData, token, room, taskTitle, index + 1, orderedTasks.length, tipo, answerId);
             houveEnvio = true;
           } catch (submitErr) {
             console.error(`❌ Erro ao enviar respostas para a tarefa ${taskId}:`, submitErr);
