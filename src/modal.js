@@ -34,6 +34,43 @@ function solicitarTempoUsuario() {
     titulo.style.marginBottom = '18px';
     titulo.style.fontSize = '18px';
 
+    const ignorarTitulo = document.createElement('p');
+    ignorarTitulo.textContent = 'Ignorar Atividades';
+    ignorarTitulo.style.fontWeight = 'bold';
+    ignorarTitulo.style.margin = '10px 0 8px 0';
+
+    const checkboxContainer = document.createElement('div');
+    checkboxContainer.style.display = 'flex';
+    checkboxContainer.style.flexDirection = 'column';
+    checkboxContainer.style.alignItems = 'flex-start';
+    checkboxContainer.style.gap = '4px';
+    checkboxContainer.style.marginBottom = '16px';
+
+    const criarCheckbox = (labelText) => {
+      const label = document.createElement('label');
+      label.style.display = 'flex';
+      label.style.alignItems = 'center';
+      label.style.gap = '6px';
+      label.style.fontSize = '15px';
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.style.cursor = 'pointer';
+
+      const span = document.createElement('span');
+      span.textContent = labelText;
+
+      label.appendChild(checkbox);
+      label.appendChild(span);
+      return { label, checkbox };
+    };
+
+    const expiradas = criarCheckbox('Expiradas');
+    const rascunho = criarCheckbox('Rascunho');
+
+    checkboxContainer.appendChild(expiradas.label);
+    checkboxContainer.appendChild(rascunho.label);
+
     const input = document.createElement('input');
     input.type = 'text';
     input.placeholder = '1 a 5 minutos';
@@ -79,10 +116,16 @@ function solicitarTempoUsuario() {
       }
 
       document.body.removeChild(overlay);
-      resolve(valor);
+      resolve({
+        tempo: valor,
+        ignorarExpiradas: expiradas.checkbox.checked,
+        ignorarRascunho: rascunho.checkbox.checked
+      });
     };
 
     caixa.appendChild(titulo);
+    caixa.appendChild(ignorarTitulo);
+    caixa.appendChild(checkboxContainer);
     caixa.appendChild(input);
     caixa.appendChild(erro);
     caixa.appendChild(botao);
@@ -90,6 +133,7 @@ function solicitarTempoUsuario() {
     document.body.appendChild(overlay);
   });
 }
+
 
 
 
