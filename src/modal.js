@@ -2,6 +2,7 @@ let modalGlobal = null;
 let tempoElGlobal = null;
 let progressoElGlobal = null;
 let descricaoElGlobal = null;
+let atived = false;
 function solicitarTempoUsuario() {
   return new Promise((resolve) => {
     // Overlay
@@ -142,6 +143,7 @@ function solicitarTempoUsuario() {
 
 
 function iniciarModalGlobal(total) {
+  if (!atived) {
   modalGlobal = document.createElement("div");
   modalGlobal.style.position = "fixed";
   modalGlobal.style.top = "0";
@@ -215,6 +217,8 @@ function iniciarModalGlobal(total) {
   caixa.appendChild(avisoEl);
   modalGlobal.appendChild(caixa);
   document.body.appendChild(modalGlobal);
+    atived = true;
+  }
 }
 
 
@@ -264,6 +268,7 @@ function atualizarModalGlobal(titulo, tempo, index, total) {
           const modal = document.getElementById("modal-global");
           filaDeTitulos = [];
           tituloAtual = 0;
+          atived = false;
           if (modal && modal.parentNode) {
             modal.parentNode.removeChild(modal);
           }
