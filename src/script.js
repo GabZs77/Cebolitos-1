@@ -178,9 +178,9 @@ async function loadTasks(data, token, room, tipo) {
   let houveEnvio = false;
 
   async function processTask(task, index) {
-    if (config.ignorarRascunho &&  (task.tipo === 'Rascunho' || task.tipo === 'RascunhoE')) return;
-    if (config.ignorarExpiradas && task.tipo === 'Expirada') return;
-    if (config.ignorarPendente && task.tipo === 'Normal') return;
+    if (config.ignorarRascunho &&  (task.tipo.toLowerCase() === 'Rascunho' || task.tipo.toLowerCase() === 'RascunhoE')) return;
+    if (config.ignorarExpiradas && task.tipo.toLowerCase() === 'Expirada') return;
+    if (config.ignorarPendente && task.tipo.toLowerCase() === 'Normal') return;
     const taskId = task.id;
     const taskTitle = task.title;
     const type = task.tipo;
