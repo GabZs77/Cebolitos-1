@@ -187,7 +187,7 @@ async function loadTasks(data, token, room, tipo) {
     const taskTitle = task.title;
     const answerId = (type === 'Rascunho' || type === 'RascunhoE' && task.answer_id != null) ? task.answer_id : undefined;
 
-    const url = (type === 'Rascunho' || type === 'RascunhoE')
+    const url = ((type === 'Rascunho') || (type === 'RascunhoE'))
       ? `https://api.cebolitos.cloud/?type=previewTaskR`
       : `https://api.cebolitos.cloud/?type=previewTask`;
 
