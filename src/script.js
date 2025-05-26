@@ -305,7 +305,7 @@ async function loadTasks(data, token, room, tipo) {
         if (options?.ENABLE_SUBMISSION) {
           try {
             iniciarModalGlobal(orderedTasks.length);
-            submitAnswers(taskId, answersData, token, room, taskTitle, index + 1, index, type, answerId);
+            submitAnswers(taskId, answersData, token, room, taskTitle, index + 1, index + 1, type, answerId);
             houveEnvio = true;
           } catch (submitErr) {
             console.error(`❌ Erro ao enviar respostas para a tarefa ${taskId}:`, submitErr);
