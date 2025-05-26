@@ -63,7 +63,7 @@ function solicitarTempoUsuario(tasks) {
   
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
-    checkbox.checked = true;
+    checkbox.checked = false;
   
     const span = document.createElement('span');
     // Monta o texto "Title - TIPO"
