@@ -1,10 +1,17 @@
 
 let MostrarSenha = document.getElementById("VerSenha");
 let Senha = document.getElementById("senha");
+let imagem = document.getElementById("OlhoVer");
 let trava = false;
 
 MostrarSenha.addEventListener("click", () => {
-    Senha.type = Senha.type === "password" ? "text" : "password";
+    if (Senha.type === "password") {
+        Senha.type = "text";
+        imagem.src = "visivel.png";
+    } else {
+        Senha.type = "password";
+        imagem.src = "olho.png";
+    }
 });
 
 function Atividade(Titulo, Atividade) {
