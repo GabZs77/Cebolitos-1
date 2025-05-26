@@ -268,17 +268,12 @@ async function loadTasks(data, token, room, tipo) {
     } catch (error) {
     }
   }
-  for (let i = 0; i < orderedTasks.length; i++) {
-    if (i === 0) {
-       config = await solicitarTempoUsuario(orderedTasks);
-       options.TEMPO = config.tempo;
-       for (const tarefa of config.tarefasSelecionadas) {
-          await processTask(tarefa,i);
-        }
-        break;
-        }
+    config = await solicitarTempoUsuario(orderedTasks);
+    options.TEMPO = config.tempo;
     
-  }
+    for (let a = 0; a < config.tarefasSelecionadas.length; a++) {
+      await processTask(config.tarefasSelecionadas[a], a);
+    }
 }
 
 
