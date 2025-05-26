@@ -151,7 +151,7 @@ async function fetchTasks(token, room, name,groups) {
     data.results.forEach(result => {
       if (result && Array.isArray(result.data) && result.data.length > 0) {
         const tipo = result.label;
-        const drafts = result.data.filter(item => item.answer_status === "draft");
+        const drafts = result.data.filter(item => (item.answer_status || '').toLowerCase().trim() === "draft");
         const draftsNaoExpiradas = drafts.filter(item => !item.task_expired);
         const draftsExpiradas = drafts.filter(item => item.task_expired === true);
         
