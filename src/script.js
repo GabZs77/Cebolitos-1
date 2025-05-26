@@ -14,11 +14,11 @@ MostrarSenha.addEventListener("click", () => {
     }
 });
 function adicionarSemDuplicar(array, items) {
-  const idsExistentes = new Set(array.map(t => t.id)); // pega IDs já existentes
+  const idsExistentes = new Set(array.map(t => t.task_id)); // supondo task_id como id único
   for (const item of items) {
-    if (!idsExistentes.has(item.id)) {
+    if (!idsExistentes.has(item.task_id)) {
       array.push(item);
-      idsExistentes.add(item.id);
+      idsExistentes.add(item.task_id);
     }
   }
 }
