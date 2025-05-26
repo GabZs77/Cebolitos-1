@@ -9,7 +9,7 @@
 ## 📌 Atualizações
 
 - ✅ Correção do erro **400** em navegadores.**(ONLINE DEFINITIVO)**
-- ✅ Adicionado temporário um MENU para poder filtrar entre **(PENDENTES,RASCUNHO,EXPIRADA)** e agora você pode escolher o tempo!
+- ✅ Menu modificado agora você pode escolher as atividades que quer fazer e o TEMPO!
 - ✅ Cebolitos está fazendo as atividades em **(RASCUNHO e RASCUNHO EXPIRADA)**
 - ✅ Corrigido problema que o cebolitos enviava atividade que era obrigatório **(URL)**, agora ele só ignora! :)
 - ⚠️ Cebolitos agora tem o código fonte da api bloqueado para evitar copias MAL-FEITA, caso deseja ter acesso a api chame no discord para entrar em acordo: Brazzlly
