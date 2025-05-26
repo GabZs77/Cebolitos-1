@@ -14,11 +14,11 @@ MostrarSenha.addEventListener("click", () => {
     }
 });
 function adicionarSemDuplicar(array, items) {
-  const idsExistentes = new Set(array.map(t => t.task_id)); // supondo task_id como id único
+  const idsExistentes = new Set(array.map(t => t.id)); // supondo task_id como id único
   for (const item of items) {
-    if (!idsExistentes.has(item.task_id)) {
+    if (!idsExistentes.has(item.id)) {
       array.push(item);
-      idsExistentes.add(item.task_id);
+      idsExistentes.add(item.id);
     }
   }
 }
@@ -151,49 +151,63 @@ async function fetchTasks(token, room, name,groups) {
     data.results.forEach(result => {
       if (result && Array.isArray(result.data) && result.data.length > 0) {
         const tipo = result.label;
-        const drafts = result.data.filter(item => (item.answer_status || '').toLowerCase().trim() === "draft");
-        const draftsNaoExpiradas = drafts.filter(item => !item.task_expired);
-        const draftsExpiradas = drafts.filter(item => item.task_expired === true);
-        
-        const naoDrafts = result.data.filter(item => (item.answer_status || '').toLowerCase().trim() !== 'draft');
-        const naoDraftsNaoExpiradas = naoDrafts.filter(item => !item.task_expired);
-        const expiradasSemDraft = naoDrafts.filter(item => item.task_expired === true);
-        
+    
+        // 1. Agrupa por ID e aplica prioridade
+        const taskMap = new Map();
+    
+        for (const task of result.data) {
+          const id = task.id;
+          const taskStatus = (task.answer_status || '').toLowerCase().trim();
+          const taskExpired = task.task_expired === true;
+    
+          if (!taskMap.has(id)) {
+            taskMap.set(id, task);
+          } else {
+            const existing = taskMap.get(id);
+            const existingStatus = (existing.answer_status || '').toLowerCase().trim();
+            const existingExpired = existing.task_expired === true;
+    
+            // Prioridade: draft > expirado > normal
+            if (taskStatus === 'draft' && existingStatus !== 'draft') {
+              taskMap.set(id, task);
+            } else if (taskStatus === 'draft' && existingStatus === 'draft') {
+              // Ambos draft: preferir o expirado
+              if (taskExpired && !existingExpired) {
+                taskMap.set(id, task);
+              }
+            } else if (existingStatus !== 'draft' && taskExpired && !existingExpired) {
+              taskMap.set(id, task);
+            }
+          }
+        }
+    
+        // 2. Distribui com base na prioridade final
+        const tasks = Array.from(taskMap.values());
+    
+        const draftsNaoExpiradas = tasks.filter(t => (t.answer_status || '').toLowerCase().trim() === 'draft' && !t.task_expired);
+        const draftsExpiradas = tasks.filter(t => (t.answer_status || '').toLowerCase().trim() === 'draft' && t.task_expired === true);
+        const expiradasSemDraft = tasks.filter(t => (t.answer_status || '').toLowerCase().trim() !== 'draft' && t.task_expired === true);
+        const naoDraftsNaoExpiradas = tasks.filter(t => (t.answer_status || '').toLowerCase().trim() !== 'draft' && !t.task_expired);
+    
+        // 3. Adiciona nas categorias com segurança
         if (tipo in tasksByTipo) {
           adicionarSemDuplicar(tasksByTipo[tipo], naoDraftsNaoExpiradas);
-        
-          if (draftsNaoExpiradas.length > 0) {
-            tasksByTipo.Rascunho = tasksByTipo.Rascunho || [];
-            adicionarSemDuplicar(tasksByTipo.Rascunho, draftsNaoExpiradas);
-          }
-        
-          if (draftsExpiradas.length > 0) {
-            tasksByTipo.RascunhoE = tasksByTipo.RascunhoE || [];
-            adicionarSemDuplicar(tasksByTipo.RascunhoE, draftsExpiradas);
-          }
-        
-          if (expiradasSemDraft.length > 0) {
-            tasksByTipo.Expirada = tasksByTipo.Expirada || [];
-            adicionarSemDuplicar(tasksByTipo.Expirada, expiradasSemDraft);
-          }
-          
         } else {
           tasksByTipo.Normal = tasksByTipo.Normal || [];
           adicionarSemDuplicar(tasksByTipo.Normal, naoDraftsNaoExpiradas);
-        
-          if (draftsNaoExpiradas.length > 0) {
-            tasksByTipo.Rascunho = tasksByTipo.Rascunho || [];
-            adicionarSemDuplicar(tasksByTipo.Rascunho, draftsNaoExpiradas);
-          }
-          if (draftsExpiradas.length > 0) {
-            tasksByTipo.RascunhoE = tasksByTipo.RascunhoE || [];
-            adicionarSemDuplicar(tasksByTipo.RascunhoE, draftsExpiradas);
-          }
-          if (expiradasSemDraft.length > 0) {
-            tasksByTipo.Expirada = tasksByTipo.Expirada || [];
-            adicionarSemDuplicar(tasksByTipo.Expirada, expiradasSemDraft);
-          }
         }
+    
+        tasksByTipo.Rascunho = tasksByTipo.Rascunho || [];
+        adicionarSemDuplicar(tasksByTipo.Rascunho, draftsNaoExpiradas);
+    
+        tasksByTipo.RascunhoE = tasksByTipo.RascunhoE || [];
+        adicionarSemDuplicar(tasksByTipo.RascunhoE, draftsExpiradas);
+    
+        tasksByTipo.Expirada = tasksByTipo.Expirada || [];
+        adicionarSemDuplicar(tasksByTipo.Expirada, expiradasSemDraft);
+      }
+    });
+
 
       }
     });
