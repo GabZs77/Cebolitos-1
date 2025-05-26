@@ -277,7 +277,7 @@ async function loadTasks(data, token, room, tipo) {
         }
         break;
         }
-    } 
+    
   }
 }
 
