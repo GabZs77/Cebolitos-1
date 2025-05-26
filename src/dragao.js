@@ -82,7 +82,7 @@
 
 function setSprite(name, frame) {
     const sprite = spriteSets[name][frame % spriteSets[name].length];
-    nekoEl.style.backgroundPosition = `-${sprite[0] * 32}px -${sprite[1] * 32}px`;
+    dragonEl.style.backgroundPosition = `-${sprite[0] * 32}px -${sprite[1] * 32}px`;
 }
 
 
