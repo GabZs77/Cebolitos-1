@@ -12,6 +12,7 @@
 - ✅ Adicionado temporário um MENU para poder filtrar entre **(PENDENTES,RASCUNHO,EXPIRADA)** e agora você pode escolher o tempo!
 - ✅ Cebolitos está fazendo as atividades em **(RASCUNHO e RASCUNHO EXPIRADA)**
 - ✅ Corrigido problema que o cebolitos enviava atividade que era obrigatório **(URL)**, agora ele só ignora! :)
+- ⚠️ Cebolitos agora tem o código fonte da api bloqueado para evitar copias MAL-FEITA, caso deseja ter acesso a api chame no discord para entrar em acordo: Brazzlly
 
 ---
 
@@ -34,10 +35,7 @@
 ## 🛠️ Observações
 
 🧩 Este projeto foi desenvolvido com base em estruturas e lógicas já existentes na comunidade de automação educacional.  
-📬 Por isso, o código será **open-source** para que todos possam colaborar, estudar e melhorar a ferramenta juntos.
-⏱️ Por padrão, o sistema espera **150 segundos** para enviar cada atividade. Isso ajuda a simular um comportamento humano e evitar bloqueios.
-
-⚠️ Está em **fase de testes** — bugs e falhas podem acontecer. Mas atualizações estão a caminho! 🚧
+⏱️ Você pode ajustar o tempo que precisar nas atividades!
 
 ---
 
