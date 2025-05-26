@@ -209,8 +209,6 @@ async function fetchTasks(token, room, name,groups) {
     });
 
 
-      
-    });
 
       const allTasks = [
       ...(tasksByTipo.Normal || []).map(t => ({ ...t, tipo: 'Normal' })),
