@@ -3,23 +3,7 @@ let tempoElGlobal = null;
 let progressoElGlobal = null;
 let descricaoElGlobal = null;
 let atived = false;
-for (let i = 0; i < orderedTasks.length; i++) {
-  if (i === 0) {
-    // Passa orderedTasks para solicitarTempoUsuario para criar checkboxes
-    config = await solicitarTempoUsuario(orderedTasks);
-    options.TEMPO = config.tempo;
 
-    // Agora config.tarefasSelecionadas tem só as tarefas marcadas
-    // Você pode processar só as tarefas selecionadas:
-    for (const tarefa of config.tarefasSelecionadas) {
-      await processTask(tarefa);
-    }
-
-    break; // já processou todas selecionadas, sai do loop
-  }
-}
-
-// Função modificada:
 function solicitarTempoUsuario(tasks) {
   return new Promise((resolve) => {
     // Overlay
