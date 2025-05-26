@@ -165,8 +165,7 @@ form {
   align-items: center;
   gap: 10px;
   height: 40px;
-  width: 80%;
-
+  width: auto;
 }
 
 #ajuste p {
@@ -182,9 +181,6 @@ form {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  position: absolute;
-  bottom: 5px;
-  left: 28px;
 }
 
 @keyframes sumir {
