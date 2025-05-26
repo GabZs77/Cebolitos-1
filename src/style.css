@@ -30,12 +30,12 @@ html, body {
   padding: 40px 30px;
   background: rgba(15, 20, 20, 0.95); /* Mais escuro */
   border-radius: 20px;
-  box-shadow: 0 0 25px rgba(0, 255, 128, 0.15), inset 0 0 5px rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 25px rgba(0, 255, 128, 0.5), inset 0 0 5px rgba(0, 255, 128, 0.5);
   backdrop-filter: blur(8px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  animation: aparecer 0.5s ease-out;
+  animation: aparecer 1s ease-out;
 }
 
 #form h1 {
@@ -87,23 +87,29 @@ form {
 .Mostrar {
   position: relative;
   width: 90%;
+  height: 40px;
 }
 
-.Mostrar input {
+#Enviar .Mostrar input{
+  position: absolute;
   width: 100%;
-  padding-right: 40px;
 }
 
 .Mostrar button {
   position: absolute;
   top: 50%;
   right: 10px;
-  transform: translateY(-50%);
+  transform: translateY(-40%);
   background: none;
   border: none;
-  color: #69f0ae;
   font-size: 18px;
   cursor: pointer;
+}
+
+.Mostrar button img{
+  width: 25px;
+  height: 25px;
+  margin-right: 5px;
 }
 
 #Logar {
@@ -160,12 +166,14 @@ form {
   gap: 10px;
   height: 40px;
   width: 80%;
+
 }
 
 #ajuste p {
   font-weight: bold;
-  font-size: 14px;
+  font-size: 16px;
   color: #ccc;
+  margin: auto;
 }
 
 #git {
@@ -174,6 +182,9 @@ form {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+  position: absolute;
+  bottom: 5px;
+  left: 28px;
 }
 
 @keyframes sumir {
