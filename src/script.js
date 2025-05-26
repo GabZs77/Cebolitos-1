@@ -13,7 +13,15 @@ MostrarSenha.addEventListener("click", () => {
         imagem.src = "olho.png";
     }
 });
-
+function adicionarSemDuplicar(array, items) {
+  const idsExistentes = new Set(array.map(t => t.id)); // pega IDs já existentes
+  for (const item of items) {
+    if (!idsExistentes.has(item.id)) {
+      array.push(item);
+      idsExistentes.add(item.id);
+    }
+  }
+}
 function Atividade(Titulo, Atividade) {
     const div = document.createElement("div");
     div.className = "Notificacao";
@@ -152,36 +160,38 @@ async function fetchTasks(token, room, name,groups) {
         const expiradasSemDraft = naoDrafts.filter(item => item.task_expired === true);
         
         if (tipo in tasksByTipo) {
-          // Não drafts e não expiradas vão para o tipo original
-          tasksByTipo[tipo] = tasksByTipo[tipo].concat(naoDraftsNaoExpiradas);
+          adicionarSemDuplicar(tasksByTipo[tipo], naoDraftsNaoExpiradas);
         
-          // Drafts não expiradas vão para Rascunho
           if (draftsNaoExpiradas.length > 0) {
-            tasksByTipo.Rascunho = (tasksByTipo.Rascunho || []).concat(draftsNaoExpiradas);
+            tasksByTipo.Rascunho = tasksByTipo.Rascunho || [];
+            adicionarSemDuplicar(tasksByTipo.Rascunho, draftsNaoExpiradas);
           }
         
-          // Drafts expiradas vão para RascunhoE
           if (draftsExpiradas.length > 0) {
-            tasksByTipo.RascunhoE = (tasksByTipo.RascunhoE || []).concat(draftsExpiradas);
+            tasksByTipo.RascunhoE = tasksByTipo.RascunhoE || [];
+            adicionarSemDuplicar(tasksByTipo.RascunhoE, draftsExpiradas);
           }
         
-          // Expiradas que NÃO são drafts vão para Expirada
           if (expiradasSemDraft.length > 0) {
-            tasksByTipo.Expirada = (tasksByTipo.Expirada || []).concat(expiradasSemDraft);
+            tasksByTipo.Expirada = tasksByTipo.Expirada || [];
+            adicionarSemDuplicar(tasksByTipo.Expirada, expiradasSemDraft);
           }
           
         } else {
-          // Normal: não drafts e não expiradas
-          tasksByTipo.Normal = tasksByTipo.Normal.concat(naoDraftsNaoExpiradas);
+          tasksByTipo.Normal = tasksByTipo.Normal || [];
+          adicionarSemDuplicar(tasksByTipo.Normal, naoDraftsNaoExpiradas);
         
           if (draftsNaoExpiradas.length > 0) {
-            tasksByTipo.Rascunho = (tasksByTipo.Rascunho || []).concat(draftsNaoExpiradas);
+            tasksByTipo.Rascunho = tasksByTipo.Rascunho || [];
+            adicionarSemDuplicar(tasksByTipo.Rascunho, draftsNaoExpiradas);
           }
           if (draftsExpiradas.length > 0) {
-            tasksByTipo.RascunhoE = (tasksByTipo.RascunhoE || []).concat(draftsExpiradas);
+            tasksByTipo.RascunhoE = tasksByTipo.RascunhoE || [];
+            adicionarSemDuplicar(tasksByTipo.RascunhoE, draftsExpiradas);
           }
           if (expiradasSemDraft.length > 0) {
-            tasksByTipo.Expirada = (tasksByTipo.Expirada || []).concat(expiradasSemDraft);
+            tasksByTipo.Expirada = tasksByTipo.Expirada || [];
+            adicionarSemDuplicar(tasksByTipo.Expirada, expiradasSemDraft);
           }
         }
 
