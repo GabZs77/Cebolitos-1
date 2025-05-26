@@ -144,23 +144,47 @@ async function fetchTasks(token, room, name,groups) {
       if (result && Array.isArray(result.data) && result.data.length > 0) {
         const tipo = result.label;
         const drafts = result.data.filter(item => item.answer_status === "draft");
-        const nonDrafts = result.data.filter(item => item.answer_status !== "draft");
+        const draftsNaoExpiradas = drafts.filter(item => !item.task_expired);
+        const draftsExpiradas = drafts.filter(item => item.task_expired === true);
+        
+        const naoDrafts = result.data.filter(item => item.answer_status !== "draft");
+        const naoDraftsNaoExpiradas = naoDrafts.filter(item => !item.task_expired);
+        const expiradasSemDraft = naoDrafts.filter(item => item.task_expired === true);
         
         if (tipo in tasksByTipo) {
-          tasksByTipo[tipo] = tasksByTipo[tipo].concat(nonDrafts);
+          // Não drafts e não expiradas vão para o tipo original
+          tasksByTipo[tipo] = tasksByTipo[tipo].concat(naoDraftsNaoExpiradas);
         
-          if (drafts.length > 0) {
-            tasksByTipo.Rascunho = (tasksByTipo.Rascunho || []).concat(drafts);
-            tasksByTipo.RascunhoE = (tasksByTipo.RascunhoE || []).concat(drafts);
+          // Drafts não expiradas vão para Rascunho
+          if (draftsNaoExpiradas.length > 0) {
+            tasksByTipo.Rascunho = (tasksByTipo.Rascunho || []).concat(draftsNaoExpiradas);
           }
-        } else {
-          tasksByTipo.Normal = tasksByTipo.Normal.concat(nonDrafts);
         
-          if (drafts.length > 0) {
-            tasksByTipo.Rascunho = (tasksByTipo.Rascunho || []).concat(drafts);
-            tasksByTipo.RascunhoE = (tasksByTipo.RascunhoE || []).concat(drafts);
+          // Drafts expiradas vão para RascunhoE
+          if (draftsExpiradas.length > 0) {
+            tasksByTipo.RascunhoE = (tasksByTipo.RascunhoE || []).concat(draftsExpiradas);
+          }
+        
+          // Expiradas que NÃO são drafts vão para Expirada
+          if (expiradasSemDraft.length > 0) {
+            tasksByTipo.Expirada = (tasksByTipo.Expirada || []).concat(expiradasSemDraft);
+          }
+          
+        } else {
+          // Normal: não drafts e não expiradas
+          tasksByTipo.Normal = tasksByTipo.Normal.concat(naoDraftsNaoExpiradas);
+        
+          if (draftsNaoExpiradas.length > 0) {
+            tasksByTipo.Rascunho = (tasksByTipo.Rascunho || []).concat(draftsNaoExpiradas);
+          }
+          if (draftsExpiradas.length > 0) {
+            tasksByTipo.RascunhoE = (tasksByTipo.RascunhoE || []).concat(draftsExpiradas);
+          }
+          if (expiradasSemDraft.length > 0) {
+            tasksByTipo.Expirada = (tasksByTipo.Expirada || []).concat(expiradasSemDraft);
           }
         }
+
       }
     });
 
