@@ -149,10 +149,9 @@ form {
 }
 
 .Notificacao {
-  background: linear-gradient(135deg, rgba(0, 230, 118, 0.1), rgba(0, 255, 128, 0.15));
-  box-shadow: 0 0 8px rgba(0, 255, 128, 0.3);
+  background: linear-gradient(135deg, rgba(0, 50, 25, 0.6), rgba(0, 100, 50, 0.6));
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 8px;
   color: white;
   font-size: 14px;
   max-width: 100%;
@@ -169,8 +168,10 @@ form {
 }
 
 #ajuste p {
-  font-weight: bold;
+  font-weight: bolder;
   font-size: 16px;
+  font-family: cursive;
+  font-style: oblique;
   color: #ccc;
   margin: auto;
 }
@@ -189,5 +190,14 @@ form {
   }
   to {
     transform: translateX(-100vw);
+  }
+}
+
+@keyframes Aparecer {
+  from{
+    transform: translateX(-100vw);
+  }
+  to{
+    transform: translateX(0);
   }
 }

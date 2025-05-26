@@ -30,8 +30,10 @@ function Atividade(Titulo, Atividade) {
     const article = document.getElementById("TamanhoN");
     article.appendChild(div);
 
+    div.style.animation = "Aparecer 1s ease";
+
     setTimeout(() => {
-        div.style.animation = "sumir 1.5s ease";
+        div.style.animation = "sumir 1s ease";
         div.addEventListener("animationstart", () => {
           setTimeout(() => {
               const interval = setInterval(() => {
