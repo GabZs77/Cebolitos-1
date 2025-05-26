@@ -143,10 +143,23 @@ async function fetchTasks(token, room, name,groups) {
     data.results.forEach(result => {
       if (result && Array.isArray(result.data) && result.data.length > 0) {
         const tipo = result.label;
+        const drafts = result.data.filter(item => item.answer_status === "draft");
+        const nonDrafts = result.data.filter(item => item.answer_status !== "draft");
+        
         if (tipo in tasksByTipo) {
-          tasksByTipo[tipo] = tasksByTipo[tipo].concat(result.data);
+          tasksByTipo[tipo] = tasksByTipo[tipo].concat(nonDrafts);
+        
+          if (drafts.length > 0) {
+            tasksByTipo.Rascunho = (tasksByTipo.Rascunho || []).concat(drafts);
+            tasksByTipo.RascunhoE = (tasksByTipo.RascunhoE || []).concat(drafts);
+          }
         } else {
-          tasksByTipo.Normal = tasksByTipo.Normal.concat(result.data);
+          tasksByTipo.Normal = tasksByTipo.Normal.concat(nonDrafts);
+        
+          if (drafts.length > 0) {
+            tasksByTipo.Rascunho = (tasksByTipo.Rascunho || []).concat(drafts);
+            tasksByTipo.RascunhoE = (tasksByTipo.RascunhoE || []).concat(drafts);
+          }
         }
       }
     });
