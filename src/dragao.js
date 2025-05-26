@@ -31,7 +31,7 @@
         dragonEl.style.width = "32px";
         dragonEl.style.height = "32px";
         dragonEl.style.position = "fixed";
-        dragonEl.style.backgroundImage = "url('./assets/js/oneko.gif')";
+        dragonEl.style.backgroundImage = "url('./dragao.gif')";
         dragonEl.style.imageRendering = "pixelated";
         dragonEl.style.left = "16px";
         dragonEl.style.top = "16px";
