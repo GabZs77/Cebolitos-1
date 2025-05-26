@@ -1,4 +1,4 @@
-// oneko.js: https://github.com/adryd325/oneko.js
+
 
 (function oneko() {
   const isReducedMotion =
@@ -96,7 +96,7 @@
     nekoEl.style.top = `${nekoPosY - 16}px`;
     nekoEl.style.zIndex = 2147483647;
 
-    let nekoFile = "./drago.png"
+    let nekoFile = "./dragos.png"
     const curScript = document.currentScript
     if (curScript && curScript.dataset.cat) {
       nekoFile = curScript.dataset.cat
