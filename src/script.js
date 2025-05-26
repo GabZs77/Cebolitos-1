@@ -148,81 +148,81 @@ async function fetchTasks(token, room, name,groups) {
       Rascunho: [],
       RascunhoE: [],
     };
-
 data.results.forEach(result => {
-  if (!result || !Array.isArray(result.data) || result.data.length === 0) return;
+  if (result && Array.isArray(result.data) && result.data.length > 0) {
+    const tipo = result.label;
 
-  const tipo = result.label;
-  const taskMap = new Map();
+    // 1. Agrupar por ID e aplicar prioridades
+    const taskMap = new Map();
 
-  // 1. Agrupamento com prioridade
-  for (const task of result.data) {
-    const id = task.id;
-    const status = (task.answer_status || '').toLowerCase().trim();
-    const expirado = task.task_expired === true;
+    for (const task of result.data) {
+      const id = String(task.id);
+      const taskStatus = (task.answer_status || '').toLowerCase().trim();
+      const taskExpired = task.task_expired === true;
 
-    if (!taskMap.has(id)) {
-      taskMap.set(id, task);
-    } else {
-      const existente = taskMap.get(id);
-      const statusExistente = (existente.answer_status || '').toLowerCase().trim();
-      const expiradoExistente = existente.task_expired === true;
-
-      // Prioridade: draft > draft expirado > expirado > normal
-      if (status === 'draft' && statusExistente !== 'draft') {
+      if (!taskMap.has(id)) {
         taskMap.set(id, task);
-      } else if (status === 'draft' && statusExistente === 'draft') {
-        if (expirado && !expiradoExistente) {
+      } else {
+        const existing = taskMap.get(id);
+        const existingStatus = (existing.answer_status || '').toLowerCase().trim();
+        const existingExpired = existing.task_expired === true;
+
+        // Prioridade: draft > expirado > normal
+        if (taskStatus === 'draft' && existingStatus !== 'draft') {
+          taskMap.set(id, task);
+        } else if (taskStatus === 'draft' && existingStatus === 'draft') {
+          if (taskExpired && !existingExpired) {
+            taskMap.set(id, task);
+          }
+        } else if (existingStatus !== 'draft' && taskExpired && !existingExpired) {
           taskMap.set(id, task);
         }
-      } else if (
-        status !== 'draft' &&
-        statusExistente !== 'draft' &&
-        expirado &&
-        !expiradoExistente
-      ) {
-        taskMap.set(id, task);
       }
     }
+
+    // 2. Separar tarefas com base na prioridade
+    const tasks = Array.from(taskMap.values());
+
+    const draftsNaoExpiradas = tasks.filter(t => (t.answer_status || '').toLowerCase().trim() === 'draft' && !t.task_expired);
+    const draftsExpiradas = tasks.filter(t => (t.answer_status || '').toLowerCase().trim() === 'draft' && t.task_expired === true);
+    const expiradasSemDraft = tasks.filter(t => (t.answer_status || '').toLowerCase().trim() !== 'draft' && t.task_expired === true);
+    const naoDraftsNaoExpiradas = tasks.filter(t => (t.answer_status || '').toLowerCase().trim() !== 'draft' && !t.task_expired);
+
+    // 3. Adicionar nas categorias corretas
+    if (tipo in tasksByTipo) {
+      adicionarSemDuplicar(tasksByTipo[tipo], naoDraftsNaoExpiradas);
+    } else {
+      tasksByTipo.Normal = tasksByTipo.Normal || [];
+      adicionarSemDuplicar(tasksByTipo.Normal, naoDraftsNaoExpiradas);
+    }
+
+    tasksByTipo.Rascunho = tasksByTipo.Rascunho || [];
+    adicionarSemDuplicar(tasksByTipo.Rascunho, draftsNaoExpiradas);
+
+    tasksByTipo.RascunhoE = tasksByTipo.RascunhoE || [];
+    adicionarSemDuplicar(tasksByTipo.RascunhoE, draftsExpiradas);
+
+    tasksByTipo.Expirada = tasksByTipo.Expirada || [];
+    adicionarSemDuplicar(tasksByTipo.Expirada, expiradasSemDraft);
   }
-
-  // 2. Classificação final das tarefas
-  const tarefasUnicas = Array.from(taskMap.values());
-
-  const draftsNaoExpiradas = tarefasUnicas.filter(t =>
-    (t.answer_status || '').toLowerCase().trim() === 'draft' && !t.task_expired
-  );
-
-  const draftsExpiradas = tarefasUnicas.filter(t =>
-    (t.answer_status || '').toLowerCase().trim() === 'draft' && t.task_expired === true
-  );
-
-  const expiradasSemDraft = tarefasUnicas.filter(t =>
-    (t.answer_status || '').toLowerCase().trim() !== 'draft' && t.task_expired === true
-  );
-
-  const naoDraftsNaoExpiradas = tarefasUnicas.filter(t =>
-    (t.answer_status || '').toLowerCase().trim() !== 'draft' && !t.task_expired
-  );
-
-  // 3. Adição nas categorias com segurança
-  if (tipo in tasksByTipo) {
-    adicionarSemDuplicar(tasksByTipo[tipo], naoDraftsNaoExpiradas);
-  } else {
-    tasksByTipo.Normal = tasksByTipo.Normal || [];
-    adicionarSemDuplicar(tasksByTipo.Normal, naoDraftsNaoExpiradas);
-  }
-
-  tasksByTipo.Rascunho = tasksByTipo.Rascunho || [];
-  adicionarSemDuplicar(tasksByTipo.Rascunho, draftsNaoExpiradas);
-
-  tasksByTipo.RascunhoE = tasksByTipo.RascunhoE || [];
-  adicionarSemDuplicar(tasksByTipo.RascunhoE, draftsExpiradas);
-
-  tasksByTipo.Expirada = tasksByTipo.Expirada || [];
-  adicionarSemDuplicar(tasksByTipo.Expirada, expiradasSemDraft);
 });
 
+// 4. Diagnóstico final: verificar se algum item foi classificado em mais de uma categoria
+const idIndex = {};
+
+for (const tipo in tasksByTipo) {
+  for (const t of tasksByTipo[tipo]) {
+    const id = String(t.id);
+    if (!idIndex[id]) idIndex[id] = [];
+    idIndex[id].push(tipo);
+  }
+}
+
+for (const id in idIndex) {
+  if (idIndex[id].length > 1) {
+    console.warn(`❗ ID duplicado em múltiplos tipos: ${id} → [${idIndex[id].join(', ')}]`);
+  }
+}
 
 
       const allTasks = [
