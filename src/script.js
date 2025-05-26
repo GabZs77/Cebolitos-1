@@ -270,19 +270,14 @@ async function loadTasks(data, token, room, tipo) {
   }
   for (let i = 0; i < orderedTasks.length; i++) {
     if (i === 0) {
-       config = await solicitarTempoUsuario();
+       config = await solicitarTempoUsuario(orderedTasks);
        options.TEMPO = config.tempo;
-       if (config.ignorarRascunho){
-           Atividade('TAREFA-SP','IGNOROU ATIVIDADES EM RASCUNHO!');
-       }  
-       if(config.ignorarExpiradas) {
-           Atividade('TAREFA-SP','IGNOROU ATIVIDADES EXPIRADAS!');
-       }
-        if (config.ignorarPendente) {
-            Atividade('TAREFA-SP', 'IGNOROU ATIVIDADES PENDENTES!');
+       for (const tarefa of config.tarefasSelecionadas) {
+          await processTask(tarefa,i);
+        }
+        break;
         }
     } 
-    await processTask(orderedTasks[i], i);
   }
 }
 
