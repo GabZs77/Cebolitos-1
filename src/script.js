@@ -268,6 +268,7 @@ async function loadTasks(data, token, room, tipo) {
     } catch (error) {
     }
   }
+    console.log(orderedTasks);
     config = await solicitarTempoUsuario(orderedTasks);
     options.TEMPO = config.tempo;
     
