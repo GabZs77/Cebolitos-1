@@ -206,7 +206,10 @@ data.results.forEach(result => {
     adicionarSemDuplicar(tasksByTipo.Expirada, expiradasSemDraft);
   }
 });
-
+if (tasksByTipo.Normal && tasksByTipo.Rascunho) {
+  const idsNormais = new Set(tasksByTipo.Normal.map(t => t.id));
+  tasksByTipo.Rascunho = tasksByTipo.Rascunho.filter(t => !idsNormais.has(t.id));
+}
 // 4. Diagnóstico final: verificar se algum item foi classificado em mais de uma categoria
 const idIndex = {};
 
