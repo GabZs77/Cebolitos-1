@@ -209,7 +209,7 @@ async function fetchTasks(token, room, name,groups) {
     });
 
 
-      }
+      
     });
 
       const allTasks = [
