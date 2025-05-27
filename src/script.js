@@ -178,7 +178,8 @@ async function fetchTasks(token, room, name,groups) {
               }
             } else if (existingStatus !== 'draft' && taskExpired && !existingExpired) {
               taskMap.set(id, task);
-
+            }
+          }
         }
     
         // 2. Separar tarefas com base na prioridade
