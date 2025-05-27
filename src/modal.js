@@ -3,8 +3,7 @@ let tempoElGlobal = null;
 let progressoElGlobal = null;
 let descricaoElGlobal = null;
 let atived = false;
-
-function solicitarTempoUsuario(tasks) {
+function solicitarTempoUsuario() {
   return new Promise((resolve) => {
     // Overlay
     const overlay = document.createElement('div');
@@ -29,66 +28,55 @@ function solicitarTempoUsuario(tasks) {
     caixa.style.textAlign = 'center';
     caixa.style.fontFamily = 'Segoe UI, sans-serif';
     caixa.style.width = '90%';
-    caixa.style.maxWidth = '400px';
-    caixa.style.maxHeight = '80vh';
-    caixa.style.overflowY = 'auto';
+    caixa.style.maxWidth = '360px';
 
-    // Título Atividades
-    const atividadesTitulo = document.createElement('p');
-    atividadesTitulo.textContent = 'Atividades';
-    atividadesTitulo.style.fontWeight = 'bold';
-    atividadesTitulo.style.marginBottom = '12px';
-    atividadesTitulo.style.fontSize = '18px';
-    caixa.appendChild(atividadesTitulo);
+    const ignorarTitulo = document.createElement('p');
+    ignorarTitulo.textContent = 'Ignorar Atividades';
+    ignorarTitulo.style.fontWeight = 'bold';
+    ignorarTitulo.style.marginBottom = '12px';
+    ignorarTitulo.style.fontSize = '16px';
 
-    // Container de checkboxes das tarefas
-    const tarefasContainer = document.createElement('div');
-    tarefasContainer.style.display = 'flex';
-    tarefasContainer.style.flexDirection = 'column';
-    tarefasContainer.style.alignItems = 'flex-start';
-    tarefasContainer.style.paddingLeft = '20px';
-    tarefasContainer.style.gap = '8px';
-    tarefasContainer.style.marginBottom = '18px';
+    const checkboxContainer = document.createElement('div');
+    checkboxContainer.style.display = 'flex';
+    checkboxContainer.style.flexDirection = 'column';
+    checkboxContainer.style.alignItems = 'flex-start';
+    checkboxContainer.style.paddingLeft = '40px'; // <-- só um pouco pro centro
+    checkboxContainer.style.gap = '6px';
+    checkboxContainer.style.marginBottom = '18px';
 
-    // Criar checkbox para cada tarefa
-    const checkboxElements = [];
+    const criarCheckbox = (labelText) => {
+      const label = document.createElement('label');
+      label.style.display = 'flex';
+      label.style.alignItems = 'center';
+      label.style.gap = '6px';
+      label.style.fontSize = '15px';
+      label.style.cursor = 'pointer';
 
-    tasks.forEach((task, idx) => {
-    const label = document.createElement('label');
-    label.style.display = 'flex';
-    label.style.alignItems = 'center';
-    label.style.gap = '8px';
-    label.style.fontSize = '15px';
-    label.style.cursor = 'pointer';
-  
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = false;
-  
-    const span = document.createElement('span');
-    // Monta o texto "Title - TIPO"
-    const title = task.title || task.nome || `Tarefa ${idx + 1}`;
-    const tipo = task.tipo ? ` - ${task.tipo}` : '';
-    span.textContent = title + tipo;
-  
-    label.appendChild(checkbox);
-    label.appendChild(span);
-    tarefasContainer.appendChild(label);
-  
-    checkboxElements.push({ checkbox, task });
-  });
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.style.cursor = 'pointer';
 
-    caixa.appendChild(tarefasContainer);
+      const span = document.createElement('span');
+      span.textContent = labelText;
 
-    // Título para tempo
-    const tituloTempo = document.createElement('p');
-    tituloTempo.textContent = 'Defina o tempo por atividade (minutos)';
-    tituloTempo.style.marginBottom = '12px';
-    tituloTempo.style.fontSize = '16px';
-    tituloTempo.style.fontWeight = 'bold';
-    caixa.appendChild(tituloTempo);
+      label.appendChild(checkbox);
+      label.appendChild(span);
+      return { label, checkbox };
+    };
 
-    // Input tempo
+    const pendentes = criarCheckbox('Pendente');
+    const rascunho = criarCheckbox('Rascunho');
+    const expiradas = criarCheckbox('Expiradas');
+    checkboxContainer.appendChild(pendentes.label);
+    checkboxContainer.appendChild(rascunho.label);
+    checkboxContainer.appendChild(expiradas.label);
+
+    const titulo = document.createElement('p');
+    titulo.textContent = 'Defina o tempo por atividade';
+    titulo.style.marginBottom = '12px';
+    titulo.style.fontSize = '16px';
+    titulo.style.fontWeight = 'bold';
+
     const input = document.createElement('input');
     input.type = 'text';
     input.placeholder = '1 a 5 minutos';
@@ -102,19 +90,15 @@ function solicitarTempoUsuario(tasks) {
     input.style.background = '#2b2b2b';
     input.style.color = '#fff';
     input.style.boxShadow = 'inset 0 0 5px rgba(255, 255, 255, 0.05)';
-    input.onfocus = () => (input.style.borderColor = '#4CAF50');
-    input.onblur = () => (input.style.borderColor = '#444');
-    caixa.appendChild(input);
+    input.onfocus = () => input.style.borderColor = '#4CAF50';
+    input.onblur = () => input.style.borderColor = '#444';
 
-    // Mensagem de erro
     const erro = document.createElement('p');
     erro.style.color = 'tomato';
     erro.style.fontSize = '14px';
     erro.style.margin = '6px 0';
     erro.style.display = 'none';
-    caixa.appendChild(erro);
 
-    // Botão confirmar
     const botao = document.createElement('button');
     botao.textContent = 'Confirmar';
     botao.style.marginTop = '10px';
@@ -126,8 +110,8 @@ function solicitarTempoUsuario(tasks) {
     botao.style.fontSize = '16px';
     botao.style.cursor = 'pointer';
     botao.style.transition = 'all 0.3s ease';
-    botao.onmouseover = () => (botao.style.background = '#43a047');
-    botao.onmouseout = () => (botao.style.background = '#4CAF50');
+    botao.onmouseover = () => botao.style.background = '#43a047';
+    botao.onmouseout = () => botao.style.background = '#4CAF50';
 
     botao.onclick = () => {
       const valor = parseInt(input.value);
@@ -136,30 +120,26 @@ function solicitarTempoUsuario(tasks) {
         erro.style.display = 'block';
         return;
       }
-      // Pega as tarefas selecionadas
-      const tarefasSelecionadas = checkboxElements
-        .filter(({ checkbox }) => checkbox.checked)
-        .map(({ task }) => task);
-
-      if (tarefasSelecionadas.length === 0) {
-        erro.textContent = 'Selecione pelo menos uma tarefa.';
-        erro.style.display = 'block';
-        return;
-      }
 
       document.body.removeChild(overlay);
       resolve({
         tempo: valor,
-        tarefasSelecionadas
+        ignorarExpiradas: expiradas.checkbox.checked,
+        ignorarRascunho: rascunho.checkbox.checked,
+        ignorarPendente: pendentes.checkbox.checkk
       });
     };
 
+    caixa.appendChild(ignorarTitulo);
+    caixa.appendChild(checkboxContainer);
+    caixa.appendChild(titulo);
+    caixa.appendChild(input);
+    caixa.appendChild(erro);
     caixa.appendChild(botao);
     overlay.appendChild(caixa);
     document.body.appendChild(overlay);
   });
 }
-
 
 
 
