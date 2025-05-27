@@ -64,7 +64,6 @@ function solicitarTempoUsuario(tasks) {
     botaoFechar.onmouseout = () => (botaoFechar.style.color = '#ccc');
     botaoFechar.onclick = () => {
       document.body.removeChild(overlay);
-      reject(new Error('Usuário fechou o modal'));
     };
     
     // Título
