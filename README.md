@@ -9,7 +9,7 @@
 ## 📌 Atualizações
 
 - ✅ Correção do erro **400** em navegadores.**(ONLINE DEFINITIVO)**
-- ✅ Menu: Agora você pode ver o tipo da atividade e selecionar qual atividade quer fazer, e selecionaro tempo!
+- ✅ Menu: Agora você pode ver o tipo da atividade e selecionar qual atividade quer fazer, e selecionar o tempo!
 - ✅ Corrigo um erro no tempo das atividades!
 - ✅ Cebolitos está fazendo as atividades em **(RASCUNHO e RASCUNHO EXPIRADA)**
 - ✅ Corrigido problema que o cebolitos enviava atividade que era obrigatório **(URL)**, agora ele só ignora! :)
