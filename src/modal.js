@@ -51,7 +51,7 @@ function solicitarTempoUsuario(tasks) {
     titulo.style.color = '#ffffff';
     caixa.appendChild(titulo);
 
-    // Lista de tarefas
+    // Lista de tarefas com scroll
     const tarefasContainer = document.createElement('div');
     Object.assign(tarefasContainer.style, {
       display: 'flex',
@@ -59,7 +59,9 @@ function solicitarTempoUsuario(tasks) {
       alignItems: 'flex-start',
       paddingLeft: '10px',
       gap: '10px',
-      marginBottom: '24px'
+      marginBottom: '24px',
+      maxHeight: '300px', // Limitar altura da lista de tarefas
+      overflowY: 'auto', // Permitindo o scroll
     });
 
     const checkboxElements = [];
@@ -112,25 +114,73 @@ function solicitarTempoUsuario(tasks) {
     });
     caixa.appendChild(tituloTempo);
 
-    // Campo de input
-    const input = document.createElement('input');
-    Object.assign(input.style, {
-      padding: '12px 15px',
-      width: '220px',
-      border: '1px solid #555',
-      borderRadius: '10px',
-      marginBottom: '12px',
-      fontSize: '16px',
-      background: '#333',
+    // Controles de incremento de tempo
+    const inputContainer = document.createElement('div');
+    inputContainer.style.display = 'flex';
+    inputContainer.style.alignItems = 'center';
+    inputContainer.style.justifyContent = 'center';
+    inputContainer.style.gap = '10px';
+    caixa.appendChild(inputContainer);
+
+    const decrementButton = document.createElement('button');
+    decrementButton.textContent = '-';
+    Object.assign(decrementButton.style, {
+      padding: '8px 12px',
+      fontSize: '18px',
+      background: '#4CAF50',
       color: '#fff',
-      outline: 'none',
-      transition: 'border-color 0.3s ease',
-      boxShadow: 'inset 0 0 5px rgba(255, 255, 255, 0.1)'
+      border: 'none',
+      borderRadius: '8px',
+      cursor: 'pointer',
+      transition: 'background 0.2s ease'
     });
-    input.placeholder = '1 a 5 minutos';
-    input.onfocus = () => input.style.borderColor = '#4CAF50';
-    input.onblur = () => input.style.borderColor = '#555';
-    caixa.appendChild(input);
+    decrementButton.onmouseover = () => decrementButton.style.background = '#43a047';
+    decrementButton.onmouseout = () => decrementButton.style.background = '#4CAF50';
+
+    const inputTempo = document.createElement('input');
+    inputTempo.type = 'number';
+    inputTempo.value = 1; // Valor inicial 1
+    inputTempo.min = 1;
+    inputTempo.max = 6;
+    inputTempo.style.width = '80px';
+    inputTempo.style.padding = '8px';
+    inputTempo.style.fontSize = '16px';
+    inputTempo.style.textAlign = 'center';
+    inputTempo.style.border = '1px solid #555';
+    inputTempo.style.borderRadius = '10px';
+    inputTempo.style.background = '#333';
+    inputTempo.style.color = '#fff';
+
+    const incrementButton = document.createElement('button');
+    incrementButton.textContent = '+';
+    Object.assign(incrementButton.style, {
+      padding: '8px 12px',
+      fontSize: '18px',
+      background: '#4CAF50',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '8px',
+      cursor: 'pointer',
+      transition: 'background 0.2s ease'
+    });
+    incrementButton.onmouseover = () => incrementButton.style.background = '#43a047';
+    incrementButton.onmouseout = () => incrementButton.style.background = '#4CAF50';
+
+    incrementButton.onclick = () => {
+      if (parseInt(inputTempo.value) < 6) {
+        inputTempo.value = parseInt(inputTempo.value) + 1;
+      }
+    };
+
+    decrementButton.onclick = () => {
+      if (parseInt(inputTempo.value) > 1) {
+        inputTempo.value = parseInt(inputTempo.value) - 1;
+      }
+    };
+
+    inputContainer.appendChild(decrementButton);
+    inputContainer.appendChild(inputTempo);
+    inputContainer.appendChild(incrementButton);
 
     // Mensagem de erro
     const erro = document.createElement('p');
@@ -164,9 +214,9 @@ function solicitarTempoUsuario(tasks) {
     };
 
     botao.onclick = () => {
-      const valor = parseInt(input.value);
-      if (isNaN(valor) || valor < 1 || valor > 5) {
-        erro.textContent = 'Digite um número válido de 1 a 5.';
+      const valor = parseInt(inputTempo.value);
+      if (isNaN(valor) || valor < 1 || valor > 6) {
+        erro.textContent = 'Digite um número válido de 1 a 6.';
         erro.style.display = 'block';
         return;
       }
@@ -193,6 +243,7 @@ function solicitarTempoUsuario(tasks) {
     document.body.appendChild(overlay);
   });
 }
+
 
 
 function solicitarTempoUsuario2(tasks) {
