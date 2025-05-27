@@ -3,7 +3,172 @@ let tempoElGlobal = null;
 let progressoElGlobal = null;
 let descricaoElGlobal = null;
 let atived = false;
+
 function solicitarTempoUsuario(tasks) {
+  return new Promise((resolve) => {
+    // Overlay
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = 0;
+    overlay.style.left = 0;
+    overlay.style.width = '100vw';
+    overlay.style.height = '100vh';
+    overlay.style.background = 'rgba(0, 0, 0, 0.7)';
+    overlay.style.display = 'flex';
+    overlay.style.alignItems = 'center';
+    overlay.style.justifyContent = 'center';
+    overlay.style.zIndex = '10000';
+    overlay.style.opacity = 0;
+    overlay.style.transition = 'opacity 0.3s ease-in-out';
+    setTimeout(() => overlay.style.opacity = 1, 10); // Fade-in effect
+
+    // Caixa
+    const caixa = document.createElement('div');
+    caixa.style.background = '#2b2b2b';
+    caixa.style.color = '#f5f5f5';
+    caixa.style.padding = '30px 25px';
+    caixa.style.borderRadius = '20px';
+    caixa.style.boxShadow = '0 0 20px rgba(0, 0, 0, 0.4)';
+    caixa.style.textAlign = 'center';
+    caixa.style.fontFamily = 'Segoe UI, sans-serif';
+    caixa.style.width = '90%';
+    caixa.style.maxWidth = '450px';
+    caixa.style.maxHeight = '80vh';
+    caixa.style.overflowY = 'auto';
+    caixa.style.transform = 'scale(0.8)';
+    caixa.style.transition = 'transform 0.3s ease-in-out';
+    setTimeout(() => caixa.style.transform = 'scale(1)', 200); // Scale-up effect
+
+    // Título Atividades
+    const atividadesTitulo = document.createElement('p');
+    atividadesTitulo.textContent = 'Atividades';
+    atividadesTitulo.style.fontWeight = 'bold';
+    atividadesTitulo.style.marginBottom = '12px';
+    atividadesTitulo.style.fontSize = '20px';
+    atividadesTitulo.style.color = '#E0E0E0';
+    caixa.appendChild(atividadesTitulo);
+
+    // Container de checkboxes das tarefas
+    const tarefasContainer = document.createElement('div');
+    tarefasContainer.style.display = 'flex';
+    tarefasContainer.style.flexDirection = 'column';
+    tarefasContainer.style.alignItems = 'flex-start';
+    tarefasContainer.style.paddingLeft = '20px';
+    tarefasContainer.style.gap = '8px';
+    tarefasContainer.style.marginBottom = '18px';
+
+    // Criar checkbox para cada tarefa
+    const checkboxElements = [];
+
+    tasks.forEach((task, idx) => {
+      const label = document.createElement('label');
+      label.style.display = 'flex';
+      label.style.alignItems = 'center';
+      label.style.gap = '10px';
+      label.style.fontSize = '16px';
+      label.style.cursor = 'pointer';
+      label.style.transition = 'background-color 0.3s ease';
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = false;
+      checkbox.style.transition = 'transform 0.2s ease';
+      checkbox.onchange = () => {
+        checkbox.style.transform = checkbox.checked ? 'scale(1.2)' : 'scale(1)';
+      };
+
+      const span = document.createElement('span');
+      const title = task.title || task.nome || `Tarefa ${idx + 1}`;
+      const tipo = task.tipo ? ` - ${task.tipo}` : '';
+      span.textContent = title + tipo;
+  
+      label.appendChild(checkbox);
+      label.appendChild(span);
+      tarefasContainer.appendChild(label);
+  
+      checkboxElements.push({ checkbox, task });
+    });
+
+    caixa.appendChild(tarefasContainer);
+
+    const tituloTempo = document.createElement('p');
+    tituloTempo.textContent = 'Defina o tempo por atividade (minutos)';
+    tituloTempo.style.marginBottom = '12px';
+    tituloTempo.style.fontSize = '16px';
+    tituloTempo.style.fontWeight = 'bold';
+    tituloTempo.style.color = '#E0E0E0';
+    caixa.appendChild(tituloTempo);
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = '1 a 5 minutos';
+    input.style.padding = '12px 15px';
+    input.style.width = '220px';
+    input.style.border = '1px solid #444';
+    input.style.borderRadius = '12px';
+    input.style.marginBottom = '12px';
+    input.style.fontSize = '16px';
+    input.style.outline = 'none';
+    input.style.background = '#333';
+    input.style.color = '#fff';
+    input.style.transition = 'border-color 0.3s ease';
+    input.style.boxShadow = 'inset 0 0 5px rgba(255, 255, 255, 0.1)';
+    input.onfocus = () => (input.style.borderColor = '#4CAF50');
+    input.onblur = () => (input.style.borderColor = '#444');
+    caixa.appendChild(input);
+
+    const erro = document.createElement('p');
+    erro.style.color = 'tomato';
+    erro.style.fontSize = '14px';
+    erro.style.margin = '6px 0';
+    erro.style.display = 'none';
+    caixa.appendChild(erro);
+
+    const botao = document.createElement('button');
+    botao.textContent = 'Confirmar';
+    botao.style.marginTop = '10px';
+    botao.style.padding = '12px 25px';
+    botao.style.background = '#4CAF50';
+    botao.style.border = 'none';
+    botao.style.borderRadius = '12px';
+    botao.style.color = 'white';
+    botao.style.fontSize = '16px';
+    botao.style.cursor = 'pointer';
+    botao.style.transition = 'all 0.3s ease';
+    botao.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.2)';
+    botao.onmouseover = () => (botao.style.background = '#43a047');
+    botao.onmouseout = () => (botao.style.background = '#4CAF50');
+    botao.onclick = () => {
+      const valor = parseInt(input.value);
+      if (isNaN(valor) || valor < 1 || valor > 5) {
+        erro.textContent = 'Digite um número válido de 1 a 5.';
+        erro.style.display = 'block';
+        return;
+      }
+      const tarefasSelecionadas = checkboxElements
+        .filter(({ checkbox }) => checkbox.checked)
+        .map(({ task }) => task);
+
+      if (tarefasSelecionadas.length === 0) {
+        erro.textContent = 'Selecione pelo menos uma tarefa.';
+        erro.style.display = 'block';
+        return;
+      }
+
+      document.body.removeChild(overlay);
+      resolve({
+        tempo: valor,
+        tarefasSelecionadas
+      });
+    };
+
+    caixa.appendChild(botao);
+    overlay.appendChild(caixa);
+    document.body.appendChild(overlay);
+  });
+}
+
+function solicitarTempoUsuario2(tasks) {
   return new Promise((resolve) => {
     // Overlay
     const overlay = document.createElement('div');
