@@ -25,7 +25,7 @@ function solicitarTempoUsuario(tasks) {
     });
     setTimeout(() => (overlay.style.opacity = 1), 10);
 
-    // Caixa (modal)
+    // Modal box
     const caixa = document.createElement('div');
     Object.assign(caixa.style, {
       background: 'rgba(40, 40, 40, 0.95)',
@@ -38,7 +38,7 @@ function solicitarTempoUsuario(tasks) {
       width: '90%',
       maxWidth: '460px',
       maxHeight: '80vh',
-      overflow: 'hidden', // Sem scroll na modal
+      overflowY: 'auto',
       transform: 'scale(0.8)',
       transition: 'transform 0.4s ease'
     });
@@ -47,12 +47,14 @@ function solicitarTempoUsuario(tasks) {
     // Título
     const titulo = document.createElement('h2');
     titulo.textContent = '📝 Atividades';
-    titulo.style.marginBottom = '18px';
-    titulo.style.fontSize = '22px';
-    titulo.style.color = '#ffffff';
+    Object.assign(titulo.style, {
+      marginBottom: '18px',
+      fontSize: '22px',
+      color: '#ffffff'
+    });
     caixa.appendChild(titulo);
 
-    // Div de conteúdo das atividades (com scroll, se necessário)
+    // Container com scroll limitado a 4 tarefas
     const atividadesContainer = document.createElement('div');
     Object.assign(atividadesContainer.style, {
       display: 'flex',
@@ -61,13 +63,13 @@ function solicitarTempoUsuario(tasks) {
       paddingLeft: '10px',
       gap: '10px',
       marginBottom: '24px',
-      maxHeight: '240px', // Limitar a altura para 4 tarefas
-      overflowY: 'auto', // Permitindo o scroll dentro dessa área específica
+      maxHeight: '240px', // Aproximadamente 4 tarefas
+      overflowY: 'auto'
     });
 
     const checkboxElements = [];
 
-    tasks.slice(0, 4).forEach((task, idx) => {
+    tasks.forEach((task, idx) => {
       const label = document.createElement('label');
       Object.assign(label.style, {
         display: 'flex',
@@ -92,7 +94,7 @@ function solicitarTempoUsuario(tasks) {
       const span = document.createElement('span');
       const title = task.title || task.nome || `Tarefa ${idx + 1}`;
       const tipo = task.tipo ? ` - ${task.tipo}` : '';
-      const emoji = '🔹'; // Placeholder emoji
+      const emoji = '🔹';
       span.textContent = `${emoji} ${title}${tipo}`;
 
       label.appendChild(checkbox);
@@ -102,67 +104,7 @@ function solicitarTempoUsuario(tasks) {
       checkboxElements.push({ checkbox, task });
     });
 
-    caixa.appendChild(atividadesContainer); // Adiciona a lista de atividades dentro da caixa
-
-    // Verifica se há mais de 4 tarefas, se sim, cria um botão "Ver mais"
-    if (tasks.length > 4) {
-      const verMaisButton = document.createElement('button');
-      verMaisButton.textContent = 'Ver mais atividades';
-      Object.assign(verMaisButton.style, {
-        marginTop: '10px',
-        padding: '10px 20px',
-        background: '#4CAF50',
-        border: 'none',
-        borderRadius: '12px',
-        color: 'white',
-        fontSize: '14px',
-        cursor: 'pointer',
-        transition: 'background 0.2s ease'
-      });
-
-      verMaisButton.onmouseover = () => verMaisButton.style.background = '#43a047';
-      verMaisButton.onmouseout = () => verMaisButton.style.background = '#4CAF50';
-
-      verMaisButton.onclick = () => {
-        tasks.slice(4).forEach((task, idx) => {
-          const label = document.createElement('label');
-          Object.assign(label.style, {
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            fontSize: '15.5px',
-            cursor: 'pointer',
-            padding: '6px 10px',
-            borderRadius: '8px',
-            transition: 'background 0.2s',
-            width: '100%'
-          });
-
-          label.onmouseenter = () => label.style.background = 'rgba(255,255,255,0.05)';
-          label.onmouseleave = () => label.style.background = 'transparent';
-
-          const checkbox = document.createElement('input');
-          checkbox.type = 'checkbox';
-          checkbox.style.transform = 'scale(1.2)';
-          checkbox.style.cursor = 'pointer';
-
-          const span = document.createElement('span');
-          const title = task.title || task.nome || `Tarefa ${idx + 5}`;
-          const tipo = task.tipo ? ` - ${task.tipo}` : '';
-          const emoji = '🔹'; // Placeholder emoji
-          span.textContent = `${emoji} ${title}${tipo}`;
-
-          label.appendChild(checkbox);
-          label.appendChild(span);
-          atividadesContainer.appendChild(label);
-
-          checkboxElements.push({ checkbox, task });
-        });
-        verMaisButton.style.display = 'none'; // Esconde o botão após carregar mais tarefas
-      };
-
-      caixa.appendChild(verMaisButton);
-    }
+    caixa.appendChild(atividadesContainer);
 
     // Título do tempo
     const tituloTempo = document.createElement('p');
@@ -177,10 +119,12 @@ function solicitarTempoUsuario(tasks) {
 
     // Controles de incremento de tempo
     const inputContainer = document.createElement('div');
-    inputContainer.style.display = 'flex';
-    inputContainer.style.alignItems = 'center';
-    inputContainer.style.justifyContent = 'center';
-    inputContainer.style.gap = '10px';
+    Object.assign(inputContainer.style, {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '10px'
+    });
     caixa.appendChild(inputContainer);
 
     const decrementButton = document.createElement('button');
@@ -199,17 +143,19 @@ function solicitarTempoUsuario(tasks) {
     decrementButton.onmouseout = () => decrementButton.style.background = '#4CAF50';
 
     const inputTempo = document.createElement('input');
-    inputTempo.value = 1; // Valor inicial 1
+    inputTempo.value = 1;
     inputTempo.min = 1;
     inputTempo.max = 6;
-    inputTempo.style.width = '80px';
-    inputTempo.style.padding = '8px';
-    inputTempo.style.fontSize = '16px';
-    inputTempo.style.textAlign = 'center';
-    inputTempo.style.border = '1px solid #555';
-    inputTempo.style.borderRadius = '10px';
-    inputTempo.style.background = '#333';
-    inputTempo.style.color = '#fff';
+    Object.assign(inputTempo.style, {
+      width: '80px',
+      padding: '8px',
+      fontSize: '16px',
+      textAlign: 'center',
+      border: '1px solid #555',
+      borderRadius: '10px',
+      background: '#333',
+      color: '#fff'
+    });
 
     const incrementButton = document.createElement('button');
     incrementButton.textContent = '+';
@@ -227,81 +173,82 @@ function solicitarTempoUsuario(tasks) {
     incrementButton.onmouseout = () => incrementButton.style.background = '#4CAF50';
 
     incrementButton.onclick = () => {
-  if (parseInt(inputTempo.value) < 6) {
-    inputTempo.value = parseInt(inputTempo.value) + 1;
-  }
-};
+      if (parseInt(inputTempo.value) < 6) {
+        inputTempo.value = parseInt(inputTempo.value) + 1;
+      }
+    };
+    decrementButton.onclick = () => {
+      if (parseInt(inputTempo.value) > 1) {
+        inputTempo.value = parseInt(inputTempo.value) - 1;
+      }
+    };
 
-decrementButton.onclick = () => {
-  if (parseInt(inputTempo.value) > 1) {
-    inputTempo.value = parseInt(inputTempo.value) - 1;
-  }
-};
+    inputContainer.appendChild(decrementButton);
+    inputContainer.appendChild(inputTempo);
+    inputContainer.appendChild(incrementButton);
 
-inputContainer.appendChild(decrementButton);
-inputContainer.appendChild(inputTempo);
-inputContainer.appendChild(incrementButton);
+    // Erro
+    const erro = document.createElement('p');
+    Object.assign(erro.style, {
+      color: 'tomato',
+      fontSize: '14px',
+      margin: '6px 0',
+      display: 'none'
+    });
+    caixa.appendChild(erro);
 
-// Mensagem de erro
-const erro = document.createElement('p');
-erro.style.color = 'tomato';
-erro.style.fontSize = '14px';
-erro.style.margin = '6px 0';
-erro.style.display = 'none';
-caixa.appendChild(erro);
+    // Botão confirmar
+    const botao = document.createElement('button');
+    botao.textContent = '✅ Confirmar';
+    Object.assign(botao.style, {
+      marginTop: '15px',
+      padding: '12px 28px',
+      background: '#4CAF50',
+      border: 'none',
+      borderRadius: '12px',
+      color: 'white',
+      fontSize: '16px',
+      cursor: 'pointer',
+      boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+      transition: 'all 0.2s ease-in-out'
+    });
+    botao.onmouseover = () => botao.style.background = '#43a047';
+    botao.onmousedown = () => botao.style.transform = 'scale(0.96)';
+    botao.onmouseup = () => botao.style.transform = 'scale(1)';
+    botao.onmouseout = () => {
+      botao.style.background = '#4CAF50';
+      botao.style.transform = 'scale(1)';
+    };
 
-// Botão de confirmar
-const botao = document.createElement('button');
-botao.textContent = '✅ Confirmar';
-Object.assign(botao.style, {
-  marginTop: '15px',
-  padding: '12px 28px',
-  background: '#4CAF50',
-  border: 'none',
-  borderRadius: '12px',
-  color: 'white',
-  fontSize: '16px',
-  cursor: 'pointer',
-  boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-  transition: 'all 0.2s ease-in-out'
-});
-botao.onmouseover = () => botao.style.background = '#43a047';
-botao.onmousedown = () => botao.style.transform = 'scale(0.96)';
-botao.onmouseup = () => botao.style.transform = 'scale(1)';
-botao.onmouseout = () => {
-  botao.style.background = '#4CAF50';
-  botao.style.transform = 'scale(1)';
-};
+    botao.onclick = () => {
+      const valor = parseInt(inputTempo.value);
+      if (isNaN(valor) || valor < 1 || valor > 6) {
+        erro.textContent = 'Digite um número válido de 1 a 6.';
+        erro.style.display = 'block';
+        return;
+      }
 
-botao.onclick = () => {
-  const valor = parseInt(inputTempo.value);
-  if (isNaN(valor) || valor < 1 || valor > 6) {
-    erro.textContent = 'Digite um número válido de 1 a 6.';
-    erro.style.display = 'block';
-    return;
-  }
+      const tarefasSelecionadas = checkboxElements
+        .filter(({ checkbox }) => checkbox.checked)
+        .map(({ task }) => task);
 
-  const tarefasSelecionadas = checkboxElements
-    .filter(({ checkbox }) => checkbox.checked)
-    .map(({ task }) => task);
+      if (tarefasSelecionadas.length === 0) {
+        erro.textContent = 'Selecione pelo menos uma tarefa.';
+        erro.style.display = 'block';
+        return;
+      }
 
-  if (tarefasSelecionadas.length === 0) {
-    erro.textContent = 'Selecione pelo menos uma tarefa.';
-    erro.style.display = 'block';
-    return;
-  }
+      document.body.removeChild(overlay);
+      resolve({
+        tempo: valor,
+        tarefasSelecionadas
+      });
+    };
 
-  document.body.removeChild(overlay);
-  resolve({
-    tempo: valor,
-    tarefasSelecionadas
+    caixa.appendChild(botao);
+    overlay.appendChild(caixa);
+    document.body.appendChild(overlay);
   });
-};
-
-caixa.appendChild(botao);
-overlay.appendChild(caixa);
-document.body.appendChild(overlay);
-});
 }
 
 
