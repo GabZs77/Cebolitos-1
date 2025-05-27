@@ -138,7 +138,6 @@ function solicitarTempoUsuario(tasks) {
     decrementButton.onmouseout = () => decrementButton.style.background = '#4CAF50';
 
     const inputTempo = document.createElement('input');
-    inputTempo.type = 'number';
     inputTempo.value = 1; // Valor inicial 1
     inputTempo.min = 1;
     inputTempo.max = 6;
