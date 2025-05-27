@@ -61,13 +61,13 @@ function solicitarTempoUsuario(tasks) {
       paddingLeft: '10px',
       gap: '10px',
       marginBottom: '24px',
-      maxHeight: '300px', // Limitar altura da lista de atividades
+      maxHeight: '240px', // Limitar a altura para 4 tarefas
       overflowY: 'auto', // Permitindo o scroll dentro dessa área específica
     });
 
     const checkboxElements = [];
 
-    tasks.forEach((task, idx) => {
+    tasks.slice(0, 4).forEach((task, idx) => {
       const label = document.createElement('label');
       Object.assign(label.style, {
         display: 'flex',
@@ -103,6 +103,66 @@ function solicitarTempoUsuario(tasks) {
     });
 
     caixa.appendChild(atividadesContainer); // Adiciona a lista de atividades dentro da caixa
+
+    // Verifica se há mais de 4 tarefas, se sim, cria um botão "Ver mais"
+    if (tasks.length > 4) {
+      const verMaisButton = document.createElement('button');
+      verMaisButton.textContent = 'Ver mais atividades';
+      Object.assign(verMaisButton.style, {
+        marginTop: '10px',
+        padding: '10px 20px',
+        background: '#4CAF50',
+        border: 'none',
+        borderRadius: '12px',
+        color: 'white',
+        fontSize: '14px',
+        cursor: 'pointer',
+        transition: 'background 0.2s ease'
+      });
+
+      verMaisButton.onmouseover = () => verMaisButton.style.background = '#43a047';
+      verMaisButton.onmouseout = () => verMaisButton.style.background = '#4CAF50';
+
+      verMaisButton.onclick = () => {
+        tasks.slice(4).forEach((task, idx) => {
+          const label = document.createElement('label');
+          Object.assign(label.style, {
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            fontSize: '15.5px',
+            cursor: 'pointer',
+            padding: '6px 10px',
+            borderRadius: '8px',
+            transition: 'background 0.2s',
+            width: '100%'
+          });
+
+          label.onmouseenter = () => label.style.background = 'rgba(255,255,255,0.05)';
+          label.onmouseleave = () => label.style.background = 'transparent';
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.style.transform = 'scale(1.2)';
+          checkbox.style.cursor = 'pointer';
+
+          const span = document.createElement('span');
+          const title = task.title || task.nome || `Tarefa ${idx + 5}`;
+          const tipo = task.tipo ? ` - ${task.tipo}` : '';
+          const emoji = '🔹'; // Placeholder emoji
+          span.textContent = `${emoji} ${title}${tipo}`;
+
+          label.appendChild(checkbox);
+          label.appendChild(span);
+          atividadesContainer.appendChild(label);
+
+          checkboxElements.push({ checkbox, task });
+        });
+        verMaisButton.style.display = 'none'; // Esconde o botão após carregar mais tarefas
+      };
+
+      caixa.appendChild(verMaisButton);
+    }
 
     // Título do tempo
     const tituloTempo = document.createElement('p');
@@ -167,81 +227,81 @@ function solicitarTempoUsuario(tasks) {
     incrementButton.onmouseout = () => incrementButton.style.background = '#4CAF50';
 
     incrementButton.onclick = () => {
-      if (parseInt(inputTempo.value) < 6) {
-        inputTempo.value = parseInt(inputTempo.value) + 1;
-      }
-    };
+  if (parseInt(inputTempo.value) < 6) {
+    inputTempo.value = parseInt(inputTempo.value) + 1;
+  }
+};
 
-    decrementButton.onclick = () => {
-      if (parseInt(inputTempo.value) > 1) {
-        inputTempo.value = parseInt(inputTempo.value) - 1;
-      }
-    };
+decrementButton.onclick = () => {
+  if (parseInt(inputTempo.value) > 1) {
+    inputTempo.value = parseInt(inputTempo.value) - 1;
+  }
+};
 
-    inputContainer.appendChild(decrementButton);
-    inputContainer.appendChild(inputTempo);
-    inputContainer.appendChild(incrementButton);
+inputContainer.appendChild(decrementButton);
+inputContainer.appendChild(inputTempo);
+inputContainer.appendChild(incrementButton);
 
-    // Mensagem de erro
-    const erro = document.createElement('p');
-    erro.style.color = 'tomato';
-    erro.style.fontSize = '14px';
-    erro.style.margin = '6px 0';
-    erro.style.display = 'none';
-    caixa.appendChild(erro);
+// Mensagem de erro
+const erro = document.createElement('p');
+erro.style.color = 'tomato';
+erro.style.fontSize = '14px';
+erro.style.margin = '6px 0';
+erro.style.display = 'none';
+caixa.appendChild(erro);
 
-    // Botão de confirmar
-    const botao = document.createElement('button');
-    botao.textContent = '✅ Confirmar';
-    Object.assign(botao.style, {
-      marginTop: '15px',
-      padding: '12px 28px',
-      background: '#4CAF50',
-      border: 'none',
-      borderRadius: '12px',
-      color: 'white',
-      fontSize: '16px',
-      cursor: 'pointer',
-      boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-      transition: 'all 0.2s ease-in-out'
-    });
-    botao.onmouseover = () => botao.style.background = '#43a047';
-    botao.onmousedown = () => botao.style.transform = 'scale(0.96)';
-    botao.onmouseup = () => botao.style.transform = 'scale(1)';
-    botao.onmouseout = () => {
-      botao.style.background = '#4CAF50';
-      botao.style.transform = 'scale(1)';
-    };
+// Botão de confirmar
+const botao = document.createElement('button');
+botao.textContent = '✅ Confirmar';
+Object.assign(botao.style, {
+  marginTop: '15px',
+  padding: '12px 28px',
+  background: '#4CAF50',
+  border: 'none',
+  borderRadius: '12px',
+  color: 'white',
+  fontSize: '16px',
+  cursor: 'pointer',
+  boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+  transition: 'all 0.2s ease-in-out'
+});
+botao.onmouseover = () => botao.style.background = '#43a047';
+botao.onmousedown = () => botao.style.transform = 'scale(0.96)';
+botao.onmouseup = () => botao.style.transform = 'scale(1)';
+botao.onmouseout = () => {
+  botao.style.background = '#4CAF50';
+  botao.style.transform = 'scale(1)';
+};
 
-    botao.onclick = () => {
-      const valor = parseInt(inputTempo.value);
-      if (isNaN(valor) || valor < 1 || valor > 6) {
-        erro.textContent = 'Digite um número válido de 1 a 6.';
-        erro.style.display = 'block';
-        return;
-      }
+botao.onclick = () => {
+  const valor = parseInt(inputTempo.value);
+  if (isNaN(valor) || valor < 1 || valor > 6) {
+    erro.textContent = 'Digite um número válido de 1 a 6.';
+    erro.style.display = 'block';
+    return;
+  }
 
-      const tarefasSelecionadas = checkboxElements
-        .filter(({ checkbox }) => checkbox.checked)
-        .map(({ task }) => task);
+  const tarefasSelecionadas = checkboxElements
+    .filter(({ checkbox }) => checkbox.checked)
+    .map(({ task }) => task);
 
-      if (tarefasSelecionadas.length === 0) {
-        erro.textContent = 'Selecione pelo menos uma tarefa.';
-        erro.style.display = 'block';
-        return;
-      }
+  if (tarefasSelecionadas.length === 0) {
+    erro.textContent = 'Selecione pelo menos uma tarefa.';
+    erro.style.display = 'block';
+    return;
+  }
 
-      document.body.removeChild(overlay);
-      resolve({
-        tempo: valor,
-        tarefasSelecionadas
-      });
-    };
-
-    caixa.appendChild(botao);
-    overlay.appendChild(caixa);
-    document.body.appendChild(overlay);
+  document.body.removeChild(overlay);
+  resolve({
+    tempo: valor,
+    tarefasSelecionadas
   });
+};
+
+caixa.appendChild(botao);
+overlay.appendChild(caixa);
+document.body.appendChild(overlay);
+});
 }
 
 
