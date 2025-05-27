@@ -1,6 +1,7 @@
 
 let tempoRestanteGlobal = 0; // Variável global para o tempo restante
 let tempoInterval; // Intervalo de tempo global
+let tituloInterval;
 let filaDeTitulos = []; // Fila de títulos das tarefas
 let tempoPorAtividade = {}; // Tempo restante por atividade
 let atived = false;
@@ -520,9 +521,17 @@ function atualizarModalGlobal(titulo, tempo, index, total) {
 
   const totalAtividades = total;
   const indexAtividade = index;
-  descricaoElGlobal.innerHTML = `Aguardando tempo para a atividade:<br><strong>TODAS AS ATIVIDADES</strong>`;
   progressoElGlobal.textContent = `Processando ${totalAtividades} atividades`;
 
+ if (tituloInterval) clearInterval(tituloInterval);
+  tituloInterval = setInterval(() => {
+    if (filaDeTitulos.length > 0) {
+      const titulo = filaDeTitulos[tituloAtual % filaDeTitulos.length];
+      descricaoElGlobal.innerHTML = `Aguardando tempo para a atividade:<br><strong>${titulo}</strong>`;
+      tituloAtual++;
+    }
+  }, 3000);
+  
   // Atualiza o tempo a cada segundo
   if (tempoInterval) clearInterval(tempoInterval); // Limpa o intervalo anterior
 
@@ -534,6 +543,7 @@ function atualizarModalGlobal(titulo, tempo, index, total) {
     
     if (tempoRestanteAtual <= 0) {
       clearInterval(tempoInterval);
+      clearInterval(tituloInterval);
       sucessoEl.textContent = "✅ Atividade concluída com sucesso!";
       setTimeout(() => {
         const modal = document.getElementById("modal-global");
