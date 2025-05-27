@@ -4,6 +4,16 @@ let Senha = document.getElementById("senha");
 let imagem = document.getElementById("OlhoVer");
 let trava = false;
 
+function adicionarSemDuplicar(array, items) {
+  const idsExistentes = new Set(array.map(t => t.id)); // supondo task_id como id único
+  for (const item of items) {
+    if (!idsExistentes.has(item.id)) {
+      array.push(item);
+      idsExistentes.add(item.id);
+    }
+  }
+}
+
 MostrarSenha.addEventListener("click", () => {
     if (Senha.type === "password") {
         Senha.type = "text";
@@ -143,13 +153,80 @@ async function fetchTasks(token, room, name,groups) {
     data.results.forEach(result => {
       if (result && Array.isArray(result.data) && result.data.length > 0) {
         const tipo = result.label;
-        if (tipo in tasksByTipo) {
-          tasksByTipo[tipo] = tasksByTipo[tipo].concat(result.data);
-        } else {
-          tasksByTipo.Normal = tasksByTipo.Normal.concat(result.data);
+    
+        // 1. Agrupar por ID e aplicar prioridades
+        const taskMap = new Map();
+    
+        for (const task of result.data) {
+          const id = String(task.id);
+          const taskStatus = (task.answer_status || '').toLowerCase().trim();
+          const taskExpired = task.task_expired === true;
+    
+          if (!taskMap.has(id)) {
+            taskMap.set(id, task);
+          } else {
+            const existing = taskMap.get(id);
+            const existingStatus = (existing.answer_status || '').toLowerCase().trim();
+            const existingExpired = existing.task_expired === true;
+    
+            // Prioridade: draft > expirado > normal
+            if (taskStatus === 'draft' && existingStatus !== 'draft') {
+              taskMap.set(id, task);
+            } else if (taskStatus === 'draft' && existingStatus === 'draft') {
+              if (taskExpired && !existingExpired) {
+                taskMap.set(id, task);
+              }
+            } else if (existingStatus !== 'draft' && taskExpired && !existingExpired) {
+              taskMap.set(id, task);
+
         }
+    
+        // 2. Separar tarefas com base na prioridade
+        const tasks = Array.from(taskMap.values());
+    
+        const draftsNaoExpiradas = tasks.filter(t => (t.answer_status || '').toLowerCase().trim() === 'draft' && !t.task_expired);
+        const draftsExpiradas = tasks.filter(t => (t.answer_status || '').toLowerCase().trim() === 'draft' && t.task_expired === true);
+        const expiradasSemDraft = tasks.filter(t => (t.answer_status || '').toLowerCase().trim() !== 'draft' && t.task_expired === true);
+        const naoDraftsNaoExpiradas = tasks.filter(t => (t.answer_status || '').toLowerCase().trim() !== 'draft' && !t.task_expired);
+    
+        // 3. Adicionar nas categorias corretas
+        if (tipo in tasksByTipo) {
+          adicionarSemDuplicar(tasksByTipo[tipo], naoDraftsNaoExpiradas);
+        } else {
+          tasksByTipo.Normal = tasksByTipo.Normal || [];
+          adicionarSemDuplicar(tasksByTipo.Normal, naoDraftsNaoExpiradas);
+        }
+    
+        tasksByTipo.Rascunho = tasksByTipo.Rascunho || [];
+        adicionarSemDuplicar(tasksByTipo.Rascunho, draftsNaoExpiradas);
+    
+        tasksByTipo.RascunhoE = tasksByTipo.RascunhoE || [];
+        adicionarSemDuplicar(tasksByTipo.RascunhoE, draftsExpiradas);
+    
+        tasksByTipo.Expirada = tasksByTipo.Expirada || [];
+        adicionarSemDuplicar(tasksByTipo.Expirada, expiradasSemDraft);
       }
     });
+    if (tasksByTipo.Normal && tasksByTipo.Rascunho) {
+      const idsNormais = new Set(tasksByTipo.Normal.map(t => t.id));
+      tasksByTipo.Rascunho = tasksByTipo.Rascunho.filter(t => !idsNormais.has(t.id));
+    }
+    // 4. Diagnóstico final: verificar se algum item foi classificado em mais de uma categoria
+    const idIndex = {};
+    
+    for (const tipo in tasksByTipo) {
+      for (const t of tasksByTipo[tipo]) {
+        const id = String(t.id);
+        if (!idIndex[id]) idIndex[id] = [];
+        idIndex[id].push(tipo);
+      }
+    }
+    
+    for (const id in idIndex) {
+      if (idIndex[id].length > 1) {
+        console.warn(`❗ ID duplicado em múltiplos tipos: ${id} → [${idIndex[id].join(', ')}]`);
+      }
+    }
 
       const allTasks = [
       ...(tasksByTipo.Normal || []).map(t => ({ ...t, tipo: 'Normal' })),
@@ -258,7 +335,7 @@ async function loadTasks(data, token, room, tipo) {
         if (options?.ENABLE_SUBMISSION) {
           try {
             iniciarModalGlobal(orderedTasks.length);
-            submitAnswers(taskId, answersData, token, room, taskTitle, index + 1, orderedTasks.length, type, answerId);
+            submitAnswers(taskId, answersData, token, room, taskTitle, index + 1, index + 1, type, answerId);
             houveEnvio = true;
           } catch (submitErr) {
             console.error(`❌ Erro ao enviar respostas para a tarefa ${taskId}:`, submitErr);
@@ -268,22 +345,12 @@ async function loadTasks(data, token, room, tipo) {
     } catch (error) {
     }
   }
-  for (let i = 0; i < orderedTasks.length; i++) {
-    if (i === 0) {
-       config = await solicitarTempoUsuario();
-       options.TEMPO = config.tempo;
-       if (config.ignorarRascunho){
-           Atividade('TAREFA-SP','IGNOROU ATIVIDADES EM RASCUNHO!');
-       }  
-       if(config.ignorarExpiradas) {
-           Atividade('TAREFA-SP','IGNOROU ATIVIDADES EXPIRADAS!');
-       }
-        if (config.ignorarPendente) {
-            Atividade('TAREFA-SP', 'IGNOROU ATIVIDADES PENDENTES!');
-        }
-    } 
-    await processTask(orderedTasks[i], i);
-  }
+    config = await solicitarTempoUsuario(orderedTasks);
+    options.TEMPO = config.tempo;
+        
+    for (let a = 0; a < config.tarefasSelecionadas.length; a++) {
+        await processTask(config.tarefasSelecionadas[a], a);
+    }
 }
 
 
