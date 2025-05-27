@@ -44,6 +44,29 @@ function solicitarTempoUsuario(tasks) {
     });
     setTimeout(() => (caixa.style.transform = 'scale(1)'), 100);
 
+    const botaoFechar = document.createElement('button');
+    botaoFechar.textContent = '✖';
+    Object.assign(botaoFechar.style, {
+      position: 'absolute',
+      right: '15px',
+      bottom: '15px',
+      background: 'transparent',
+      border: 'none',
+      color: '#ccc',
+      fontSize: '22px',
+      cursor: 'pointer',
+      transition: 'color 0.2s ease',
+      padding: '4px',
+      userSelect: 'none',
+      lineHeight: '1'
+    });
+    botaoFechar.onmouseover = () => (botaoFechar.style.color = 'white');
+    botaoFechar.onmouseout = () => (botaoFechar.style.color = '#ccc');
+    botaoFechar.onclick = () => {
+      document.body.removeChild(overlay);
+      reject(new Error('Usuário fechou o modal'));
+    };
+    
     // Título
     const titulo = document.createElement('h2');
     titulo.textContent = '📝 Atividades';
@@ -246,6 +269,7 @@ function solicitarTempoUsuario(tasks) {
     };
 
     caixa.appendChild(botao);
+    caixa.appendChild(botaoFechar);
     overlay.appendChild(caixa);
     document.body.appendChild(overlay);
   });
