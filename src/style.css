@@ -38,7 +38,6 @@ html, body {
   animation: aparecer 1s ease-out;
 }
 
-
 #form::before {
   content: "";
   position: absolute;
@@ -48,9 +47,24 @@ html, body {
   left: -50px;
   right: 0px;
   bottom: 0px;
-  border: 3px solid rgba(0, 255, 128, 0.5);
-  border-radius: 200px;
+  border: 1px solid rgba(0, 255, 128, 0.5);
+  border-radius: 30%;
   animation: spin 2s linear infinite;
+  pointer-events: none;
+}
+
+#form::after {
+  content: "";
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  top: -135px;
+  left: -50px;
+  right: 0px;
+  bottom: 0px;
+  border: 2px solid rgba(0, 255, 128, 0.5);
+  border-radius: 20%;
+  animation: spinContrario 2s linear infinite;
   pointer-events: none;
 }
 
@@ -224,5 +238,14 @@ form {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes spinContrario {
+  0%{
+    transform: rotate(-0deg);
+  }
+  100%{
+    transform: rotate(-360deg);
   }
 }
