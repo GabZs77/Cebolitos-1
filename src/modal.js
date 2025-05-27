@@ -38,7 +38,7 @@ function solicitarTempoUsuario(tasks) {
       width: '90%',
       maxWidth: '460px',
       maxHeight: '80vh',
-      overflowY: 'auto',
+      overflow: 'hidden', // Sem scroll na modal
       transform: 'scale(0.8)',
       transition: 'transform 0.4s ease'
     });
@@ -52,17 +52,17 @@ function solicitarTempoUsuario(tasks) {
     titulo.style.color = '#ffffff';
     caixa.appendChild(titulo);
 
-    // Lista de tarefas com scroll
-    const tarefasContainer = document.createElement('div');
-    Object.assign(tarefasContainer.style, {
+    // Div de conteúdo das atividades (com scroll, se necessário)
+    const atividadesContainer = document.createElement('div');
+    Object.assign(atividadesContainer.style, {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'flex-start',
       paddingLeft: '10px',
       gap: '10px',
       marginBottom: '24px',
-      maxHeight: '300px', // Limitar altura da lista de tarefas
-      overflowY: 'auto', // Permitindo o scroll
+      maxHeight: '300px', // Limitar altura da lista de atividades
+      overflowY: 'auto', // Permitindo o scroll dentro dessa área específica
     });
 
     const checkboxElements = [];
@@ -97,12 +97,12 @@ function solicitarTempoUsuario(tasks) {
 
       label.appendChild(checkbox);
       label.appendChild(span);
-      tarefasContainer.appendChild(label);
+      atividadesContainer.appendChild(label);
 
       checkboxElements.push({ checkbox, task });
     });
 
-    caixa.appendChild(tarefasContainer);
+    caixa.appendChild(atividadesContainer); // Adiciona a lista de atividades dentro da caixa
 
     // Título do tempo
     const tituloTempo = document.createElement('p');
