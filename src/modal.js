@@ -49,7 +49,7 @@ function solicitarTempoUsuario(tasks) {
     Object.assign(botaoFechar.style, {
       position: 'absolute',
       right: '15px',
-      bottom: '15px',
+      top: '15px',
       background: 'transparent',
       border: 'none',
       color: '#ccc',
