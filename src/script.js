@@ -145,7 +145,7 @@ async function fetchTasks(token, room, name,groups) {
     }
     const data = await response.json();
     const tasksByTipo = {
-      Normal: [],
+      Pendente: [],
       Expirada: [],
       Rascunho: [],
       RascunhoE: [],
@@ -194,8 +194,8 @@ async function fetchTasks(token, room, name,groups) {
         if (tipo in tasksByTipo) {
           adicionarSemDuplicar(tasksByTipo[tipo], naoDraftsNaoExpiradas);
         } else {
-          tasksByTipo.Normal = tasksByTipo.Normal || [];
-          adicionarSemDuplicar(tasksByTipo.Normal, naoDraftsNaoExpiradas);
+          tasksByTipo.Pendente = tasksByTipo.Pendente || [];
+          adicionarSemDuplicar(tasksByTipo.Pendente, naoDraftsNaoExpiradas);
         }
     
         tasksByTipo.Rascunho = tasksByTipo.Rascunho || [];
@@ -208,8 +208,8 @@ async function fetchTasks(token, room, name,groups) {
         adicionarSemDuplicar(tasksByTipo.Expirada, expiradasSemDraft);
       }
     });
-    if (tasksByTipo.Normal && tasksByTipo.Rascunho) {
-      const idsNormais = new Set(tasksByTipo.Normal.map(t => t.id));
+    if (tasksByTipo.Pendente && tasksByTipo.Rascunho) {
+      const idsNormais = new Set(tasksByTipo.Pendente.map(t => t.id));
       tasksByTipo.Rascunho = tasksByTipo.Rascunho.filter(t => !idsNormais.has(t.id));
     }
     // 4. Diagnóstico final: verificar se algum item foi classificado em mais de uma categoria
@@ -230,7 +230,7 @@ async function fetchTasks(token, room, name,groups) {
     }
 
       const allTasks = [
-      ...(tasksByTipo.Normal || []).map(t => ({ ...t, tipo: 'Normal' })),
+      ...(tasksByTipo.Pendente || []).map(t => ({ ...t, tipo: 'Pendente' })),
       ...(tasksByTipo.Rascunho || []).map(t => ({ ...t, tipo: 'Rascunho' })),
       ...(tasksByTipo.Expirada || []).map(t => ({ ...t, tipo: 'Expirada' })),
       ...(tasksByTipo.RascunhoE || []).map(t => ({ ...t, tipo: 'RascunhoE' })),
@@ -265,9 +265,9 @@ async function loadTasks(data, token, room, tipo) {
   let houveEnvio = false;
 
   async function processTask(task, index) {
-    if (config.ignorarRascunho &&  (task.tipo.toLowerCase() === 'rascunho' || task.tipo.toLowerCase() === 'rascunhoe')) return;
-    if (config.ignorarExpiradas && task.tipo.toLowerCase() === 'expirada') return;
-    if (config.ignorarPendente && task.tipo.toLowerCase() === 'normal') return;
+    //if (config.ignorarRascunho &&  (task.tipo.toLowerCase() === 'rascunho' || task.tipo.toLowerCase() === 'rascunhoe')) return;
+    //if (config.ignorarExpiradas && task.tipo.toLowerCase() === 'expirada') return;
+    //if (config.ignorarPendente && task.tipo.toLowerCase() === 'pendente') return;
     const taskId = task.id;
     const taskTitle = task.title;
     const type = task.tipo;
