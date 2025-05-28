@@ -31,7 +31,7 @@ function solicitarTempoUsuario(tasks) {
     Object.assign(caixa.style, {
       background: 'rgba(40, 40, 40, 0.95)',
       color: '#f0f0f0',
-      padding: '35px 30px',
+      padding: '35px 35px',
       borderRadius: '20px',
       boxShadow: '0 10px 30px rgba(0,0,0,0.4)',
       textAlign: 'center',
@@ -39,7 +39,6 @@ function solicitarTempoUsuario(tasks) {
       width: '90%',
       maxWidth: '500px',
       maxHeight: '80vh',
-      overflowY: 'auto',
       transform: 'scale(0.8)',
       transition: 'transform 0.4s ease'
     });
