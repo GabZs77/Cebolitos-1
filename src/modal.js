@@ -14,7 +14,7 @@ function solicitarTempoUsuario(tasks) {
       top: 0,
       left: 0,
       width: '100vw',
-      height: '100vh',
+      height: '120vh',
       background: 'rgba(0, 0, 0, 0.5)',
       backdropFilter: 'blur(6px)',
       display: 'flex',
