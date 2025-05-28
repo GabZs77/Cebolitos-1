@@ -37,7 +37,7 @@ function solicitarTempoUsuario(tasks) {
       textAlign: 'center',
       fontFamily: "'Segoe UI', sans-serif",
       width: '90%',
-      maxWidth: '460px',
+      maxWidth: '480px',
       maxHeight: '80vh',
       transform: 'scale(0.8)',
       transition: 'transform 0.4s ease'
