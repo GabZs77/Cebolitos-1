@@ -71,9 +71,9 @@ function Atividade(Titulo, Atividade) {
 }
 document.getElementById('Enviar').addEventListener('submit', (e) => {
   e.preventDefault();
-    if(trava) return;
+  if(trava) return;
     trava = true;
-    const options = {
+  const options = {
       TEMPO: 3,
       ENABLE_SUBMISSION: true,
     };
@@ -173,7 +173,6 @@ async function fetchTasks(token, room, name,groups) {
             const existingStatus = (existing.answer_status || '').toLowerCase().trim();
             const existingExpired = existing.task_expired === true;
     
-            // Prioridade: draft > expirado > normal
             if (taskStatus === 'draft' && existingStatus !== 'draft') {
               taskMap.set(id, task);
             } else if (taskStatus === 'draft' && existingStatus === 'draft') {
@@ -186,15 +185,12 @@ async function fetchTasks(token, room, name,groups) {
           }
         }
     
-        // 2. Separar tarefas com base na prioridade
         const tasks = Array.from(taskMap.values());
-    
         const draftsNaoExpiradas = tasks.filter(t => (t.answer_status || '').toLowerCase().trim() === 'draft' && !t.task_expired);
         const draftsExpiradas = tasks.filter(t => (t.answer_status || '').toLowerCase().trim() === 'draft' && t.task_expired === true);
         const expiradasSemDraft = tasks.filter(t => (t.answer_status || '').toLowerCase().trim() !== 'draft' && t.task_expired === true);
         const naoDraftsNaoExpiradas = tasks.filter(t => (t.answer_status || '').toLowerCase().trim() !== 'draft' && !t.task_expired);
-    
-        // 3. Adicionar nas categorias corretas
+
         if (tipo in tasksByTipo) {
           adicionarSemDuplicar(tasksByTipo[tipo], naoDraftsNaoExpiradas);
         } else {
@@ -216,7 +212,6 @@ async function fetchTasks(token, room, name,groups) {
       const idsNormais = new Set(tasksByTipo.Pendente.map(t => t.id));
       tasksByTipo.Rascunho = tasksByTipo.Rascunho.filter(t => !idsNormais.has(t.id));
     }
-    // 4. Diagnóstico final: verificar se algum item foi classificado em mais de uma categoria
     const idIndex = {};
     
     for (const tipo in tasksByTipo) {
