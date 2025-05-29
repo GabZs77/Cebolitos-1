@@ -12,7 +12,18 @@ html, body {
   color: #fff;
   overflow: hidden;
 }
+.barra-tempo {
+  height: 6px;
+  margin-top: 8px;
+  border-radius: 20px;
+  background: linear-gradient(to right, orange, deeppink);
+  animation: reduzir-barra 2.5s linear forwards;
+}
 
+@keyframes reduzir-barra {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
 #centralizar {
   display: flex;
   align-items: center;
