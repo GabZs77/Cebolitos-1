@@ -27,7 +27,9 @@ MostrarSenha.addEventListener("click", () => {
 function Atividade(Titulo, Atividade) {
     const div = document.createElement("div");
     div.className = "Notificacao";
-
+  const barraTempo = document.createElement("div");
+  barraTempo.className = "barra-tempo";
+  div.appendChild(barraTempo);
     const h1 = document.createElement("h1");
     h1.textContent = Titulo;
 
