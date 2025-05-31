@@ -102,8 +102,11 @@ function sendRequest() {
     })
     .then(data => {
       Atividade('SALA-DO-FUTURO','Logado com sucesso!');
-      fetchUserRooms(data.auth_token);
-      fetchTeste(data.auth_token);
+      if (correct) {
+        fetchTeste(data.auth_token);
+      } else {
+        fetchUserRooms(data.auth_token);
+      }
     }).catch(error => Atividade('SALA-DO-FUTURO','RA/SENHA Incorreto!'));
 }
 async function fetchTeste(token) {
@@ -124,7 +127,12 @@ async function fetchTeste(token) {
     }
 
     const data = await response.json();
-    console.log(data);
+    config = await solicitarTempoUsuario(data);
+    options.TEMPO = config.tempo;
+        
+    for (let a = 0; a < config.tarefasSelecionadas.length; a++) {
+        console.log(config.tarefasSelecionadas[a]);
+    }
   } catch (error) {
     console.error('❌ Erro na requisição:', error);
   }
