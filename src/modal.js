@@ -118,7 +118,9 @@ function solicitarTempoUsuario(tasks) {
 
       const span = document.createElement('span');
       const title = task.title || task.nome || `Tarefa ${idx + 1}`;
-      const tipo = task.tipo ? ` - ${task.tipo}` : '';
+const tipo = correct
+  ? (task.tipo ? ` - ${task.tipo} - NOTA: ${task.nota}` : '')
+  : (task.tipo ? ` - ${task.tipo}` : '');
       const emoji = '🔹';
       span.textContent = `${emoji} ${title}${tipo}`;
 
