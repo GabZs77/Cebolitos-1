@@ -142,7 +142,7 @@ async function fetchTeste(token) {
         };
         Atividade('TAREFA-SP','Corrigindo atividade: ' + config.tarefasSelecionadas[a].title);
         setTimeout(()=>{
-          corrigirAtividade(dadosFiltrados,tarefa.task_id,tarefa.answer_id,tarefa.title);
+          corrigirAtividade(dadosFiltrados,tarefa.task_id,tarefa.answer_id,token,tarefa.title);
       },3000);
     }
   } catch (error) {
