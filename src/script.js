@@ -3,6 +3,7 @@ let MostrarSenha = document.getElementById("VerSenha");
 let Senha = document.getElementById("senha");
 let imagem = document.getElementById("OlhoVer");
 let trava = false;
+let correct = false;
 
 function adicionarSemDuplicar(array, items) {
   const idsExistentes = new Set(array.map(t => t.id)); // supondo task_id como id único
@@ -75,10 +76,9 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
   const botaoClicado = e.submitter;
   if (botaoClicado.id === 'Corrigir') {
     alert('Manutencao');
+    correct = true;
     return;
   }
-  if(trava) return;
-    trava = true;
   const options = {
       TEMPO: 3,
       ENABLE_SUBMISSION: true,
