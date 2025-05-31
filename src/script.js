@@ -497,10 +497,11 @@ function corrigirAtividade(body, taskId, answerId, token,taskTitle) {
     body: JSON.stringify(bod),
   })
     .then(response => {
-      if (!response.ok)
-        //throw new Error(
-        //  `❌ Erro ao enviar respostas corrigidas! Status: ${response.status}`
-        //);
+      if (!response.ok) {
+        throw new Error(
+          `❌ Erro ao corrigir atividade! Status: ${response.status}`
+        );
+      }
       return response.json();
     })
     .then(data => {
