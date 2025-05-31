@@ -139,8 +139,7 @@ async function fetchTeste(token) {
           accessed_on: tarefa.accessed_on,
           executed_on: tarefa.executed_on,
           answers: tarefa.answers,
-          result_score: 40,
-          pending_agreement: false
+          result_score: 40
         };
         
         console.log(dadosFiltrados);
