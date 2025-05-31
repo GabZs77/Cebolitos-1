@@ -88,7 +88,7 @@ function solicitarTempoUsuario(tasks) {
       paddingLeft: '10px',
       gap: '10px',
       marginBottom: '24px',
-      maxHeight: '240px', // Aproximadamente 4 tarefas
+      maxHeight: '220px', // Aproximadamente 4 tarefas
       overflowY: 'auto'
     });
 
