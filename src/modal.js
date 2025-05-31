@@ -208,10 +208,22 @@ function solicitarTempoUsuario(tasks) {
       }
     };
 
-    inputContainer.appendChild(decrementButton);
-    inputContainer.appendChild(inputTempo);
-    inputContainer.appendChild(incrementButton);
-
+    if(!correct) {
+      inputContainer.appendChild(decrementButton);
+      inputContainer.appendChild(inputTempo);
+      inputContainer.appendChild(incrementButton);
+    } else {
+      const msg = document.createElement('p');
+      Object.assign(msg.style, {
+        color: 'tomato',
+        fontSize: '14px',
+        display: 'block',
+        margin: '6px 0',
+        display: 'none'
+      });
+      msg.textContent = 'Selecione as atividades que você ja finalizou e que errou alguma pergunta, ai é so confirmar que o script vai estar corrigindo seu erro!';
+      caixa.appendChild(msg);
+    }
     // Erro
     const erro = document.createElement('p');
     Object.assign(erro.style, {
