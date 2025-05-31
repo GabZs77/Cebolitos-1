@@ -136,10 +136,9 @@ async function fetchTeste(token) {
         console.log(config.tarefasSelecionadas[a]);
         const tarefa = config.tarefasSelecionadas[a];
         const dadosFiltrados = {
+          status: 'draft',
           accessed_on: tarefa.accessed_on,
           executed_on: tarefa.executed_on,
-          score: tarefa.score,
-          revised: true,
           answers: tarefa.answers
         };
         
