@@ -64,6 +64,9 @@ function solicitarTempoUsuario(tasks) {
     botaoFechar.onmouseout = () => (botaoFechar.style.color = '#ccc');
     botaoFechar.onclick = () => {
       document.body.removeChild(overlay);
+      if (correct){
+        correct = false;
+      }
     };
     
     // Título
