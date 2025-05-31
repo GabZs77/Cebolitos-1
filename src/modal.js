@@ -71,7 +71,7 @@ function solicitarTempoUsuario(tasks) {
     
     // Título
     const titulo = document.createElement('h2');
-    titulo.textContent = '📝 Atividades';
+    titulo.textContent = correct ? '📝 Corrigir Atividades' : '📝 Atividades';
     Object.assign(titulo.style, {
       marginBottom: '18px',
       fontSize: '22px',
