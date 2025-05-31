@@ -136,10 +136,15 @@ async function fetchTeste(token) {
         console.log(config.tarefasSelecionadas[a]);
         const tarefa = config.tarefasSelecionadas[a];
         const dadosFiltrados = {
+          accessed_on: tarefa.accessed_on,
           executed_on: tarefa.executed_on,
-          answers: tarefa.answers,
-          accessed_on: tarefa.accessed_on
+          answers: tarefa.answers
         };
+        
+        console.log(dadosFiltrados);
+        console.log(tarefa.task_id);
+        console.log(tarefa.answer_id);
+        console.log(tarefa.title);
         Atividade('TAREFA-SP','Corrigindo atividade: ' + config.tarefasSelecionadas[a].title);
         setTimeout(()=>{
           corrigirAtividade(dadosFiltrados,tarefa.task_id,tarefa.answer_id,token,tarefa.title);
