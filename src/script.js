@@ -71,6 +71,12 @@ function Atividade(Titulo, Atividade) {
 }
 document.getElementById('Enviar').addEventListener('submit', (e) => {
   e.preventDefault();
+
+  const botaoClicado = e.submitter;
+  if (botaoClicado.id === 'Corrigir') {
+    alert('Manutencao');
+    return;
+  }
   if(trava) return;
     trava = true;
   const options = {
