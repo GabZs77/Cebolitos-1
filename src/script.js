@@ -138,6 +138,7 @@ async function fetchTeste(token) {
         const dadosFiltrados = {
           accessed_on: tarefa.accessed_on,
           executed_on: tarefa.executed_on,
+          result_score: 40,
           answers: tarefa.answers
         };
         
