@@ -217,7 +217,7 @@ function solicitarTempoUsuario(tasks) {
       const msg = document.createElement('p');
       Object.assign(msg.style, {
         marginBottom: '18px',
-        fontSize: '13px',
+        fontSize: '12px',
         color: '#f2f2f2'
       });
       msg.textContent = 'Selecione as atividades que você ja finalizou e que errou alguma pergunta, ai é so confirmar que o script vai estar corrigindo seu erro!';
