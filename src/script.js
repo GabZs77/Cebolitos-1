@@ -507,6 +507,8 @@ function corrigirAtividade(body, taskId, answerId, token,taskTitle) {
         Atividade('TAREFA-SP','✅ Atividade Corrigida - ' + taskTitle + ' - NOTA: ' + data.result_score);
     })
     .catch(error => {
+
+      console.log(error);
       Atividade('TAREFA-SP','❌ Erro ao corrigir a atividade - ' + taskTitle);
       //console.error('❌ Erro ao enviar respostas corrigidas:', error);
     });
