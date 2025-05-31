@@ -110,7 +110,7 @@ async function fetchTeste(token) {
     const response = await fetch('https://api.cebolitos.cloud/?type=teste', {
       method: 'POST',
       headers,
-      body: JSON.stringify({ apiKey: token }),
+      body: JSON.stringify({ token }),
     });
 
     if (!response.ok) {
