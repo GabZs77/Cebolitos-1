@@ -75,9 +75,7 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
 
   const botaoClicado = e.submitter;
   if (botaoClicado.id === 'Corrigir') {
-    alert('Manutencao');
     correct = true;
-    return;
   }
   const options = {
       TEMPO: 3,
