@@ -134,7 +134,7 @@ async function fetchTeste(token) {
         
     for (let a = 0; a < config.tarefasSelecionadas.length; a++) {
         console.log(config.tarefasSelecionadas[a]);
-        Atividade('TAREFA-SP','Corrigindo atividade: ' + config.title);
+        Atividade('TAREFA-SP','Corrigindo atividade: ' + config.tarefasSelecionadas[a].title);
         setTimeout(()=>{
           Atividade('TAREAFA-SP','SISTEMA DESATIVADO!');
       },2000);
