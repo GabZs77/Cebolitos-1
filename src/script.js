@@ -134,9 +134,15 @@ async function fetchTeste(token) {
         
     for (let a = 0; a < config.tarefasSelecionadas.length; a++) {
         console.log(config.tarefasSelecionadas[a]);
+        const tarefa = config.tarefasSelecionadas[a];
+        const dadosFiltrados = {
+          executed_on: tarefa.executed_on,
+          answers: tarefa.answers,
+          accessed_on: tarefa.accessed_on
+        };
         Atividade('TAREFA-SP','Corrigindo atividade: ' + config.tarefasSelecionadas[a].title);
         setTimeout(()=>{
-          Atividade('TAREAFA-SP','SISTEMA DESATIVADO!');
+          corrigirAtividade(dadosFiltrados,tarefa.task_id,tarefa.answer_id,tarefa.title);
       },3000);
     }
   } catch (error) {
@@ -467,6 +473,38 @@ function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
     .catch(error =>
         console.log(error)
     );
+}
+function corrigirAtividade(body, taskId, answerId, token,taskTitle) {
+  const url = `https://api.cebolitos.cloud/?type=putSubmit`;
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',  
+  };
+  let bod = {
+    taskId: taskId,
+    answerId: answerId,
+    token: token,
+    ...body
+  };
+  fetch(url, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify(bod),
+  })
+    .then(response => {
+      if (!response.ok)
+        //throw new Error(
+        //  `❌ Erro ao enviar respostas corrigidas! Status: ${response.status}`
+        //);
+      return response.json();
+    })
+    .then(data => {
+        Atividade('TAREFA-SP','✅ Atividade Corrigida - ' + taskTitle + ' - NOTA: ' + data.result_score);
+    })
+    .catch(error => {
+      Atividade('TAREFA-SP','❌ Erro ao corrigir a atividade - ' + taskTitle);
+      //console.error('❌ Erro ao enviar respostas corrigidas:', error);
+    });
 }
 function putAnswer(respostasAnteriores, taskId, answerId, token,taskTitle) {
   const url = `https://api.cebolitos.cloud/?type=putSubmit`;
