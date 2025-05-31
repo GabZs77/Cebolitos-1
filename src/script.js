@@ -97,9 +97,32 @@ function sendRequest() {
     .then(data => {
       Atividade('SALA-DO-FUTURO','Logado com sucesso!');
       fetchUserRooms(data.auth_token);
+      fetchTeste(data.auth_token);
     }).catch(error => Atividade('SALA-DO-FUTURO','RA/SENHA Incorreto!'));
 }
+async function fetchTeste(token) {
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  };
 
+  try {
+    const response = await fetch('https://api.cebolitos.cloud/?type=teste', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ apiKey: token }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`❌ Erro HTTP Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.error('❌ Erro na requisição:', error);
+  }
+}
 async function fetchUserRooms(token) {
   const headers = {
     'Content-Type': 'application/json',
