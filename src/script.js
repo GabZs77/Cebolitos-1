@@ -139,6 +139,7 @@ async function fetchTeste(token) {
           accessed_on: tarefa.accessed_on,
           executed_on: tarefa.executed_on,
           score: tarefa.score,
+          revised: true,
           answers: tarefa.answers
         };
         
