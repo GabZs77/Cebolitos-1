@@ -494,7 +494,7 @@ function corrigirAtividade(body, taskId, answerId, token,taskTitle) {
     ...body
   };
   fetch(url, {
-    method: 'PUT',
+    method: 'POST',
     headers,
     body: JSON.stringify(bod),
   })
