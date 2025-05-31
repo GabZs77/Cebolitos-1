@@ -506,6 +506,7 @@ function corrigirAtividade(body, taskId, answerId, token,taskTitle) {
     .then(data => {
         console.log(data);
         Atividade('TAREFA-SP','✅ Atividade Corrigida - ' + taskTitle + ' - NOTA: ');
+      console.log(data);
     })
     .catch(error => {
 
