@@ -140,8 +140,9 @@ function solicitarTempoUsuario(tasks) {
       marginBottom: '12px',
       color: '#dddddd'
     });
-    caixa.appendChild(tituloTempo);
-
+    if (!correct) {
+      caixa.appendChild(tituloTempo);
+    }
     // Controles de incremento de tempo
     const inputContainer = document.createElement('div');
     Object.assign(inputContainer.style, {
@@ -215,11 +216,9 @@ function solicitarTempoUsuario(tasks) {
     } else {
       const msg = document.createElement('p');
       Object.assign(msg.style, {
-        color: 'tomato',
-        fontSize: '14px',
-        display: 'block',
-        margin: '6px 0',
-        display: 'none'
+        marginBottom: '18px',
+        fontSize: '22px',
+        color: '#ffffff'
       });
       msg.textContent = 'Selecione as atividades que você ja finalizou e que errou alguma pergunta, ai é so confirmar que o script vai estar corrigindo seu erro!';
       caixa.appendChild(msg);
