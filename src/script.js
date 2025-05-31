@@ -137,7 +137,7 @@ async function fetchTeste(token) {
         Atividade('TAREFA-SP','Corrigindo atividade: ' + config.tarefasSelecionadas[a].title);
         setTimeout(()=>{
           Atividade('TAREAFA-SP','SISTEMA DESATIVADO!');
-      },2000);
+      },3000);
     }
   } catch (error) {
     console.error('❌ Erro na requisição:', error);
