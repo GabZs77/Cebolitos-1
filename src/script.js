@@ -76,6 +76,10 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
   const botaoClicado = e.submitter;
   if (botaoClicado.id === 'Corrigir') {
     correct = true;
+  } else if (botaoClicado.id === 'Logar'){
+    if (correct) {
+      correct = false;
+    }
   }
   const options = {
       TEMPO: 3,
