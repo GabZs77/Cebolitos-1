@@ -478,6 +478,7 @@ async function fetchCorrectAnswers(taskId, answerId, token, taskTitle) {
       const mensagemErro = typeof errorData === 'string'
         ? errorData
         : errorData.response || JSON.stringify(errorData);
+      console.log(mensagemErro);
       Atividade('TAREFA-SP', `❌ Erro: ${mensagemErro}`);
       return;
     }
