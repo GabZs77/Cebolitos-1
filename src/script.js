@@ -458,7 +458,7 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
   }
 }
 
-function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
+async function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
   const url = `https://api.cebolitos.cloud/?type=fetchSubmit`;
   const headers = {
     'Content-Type': 'application/json',
