@@ -474,7 +474,11 @@ async function fetchCorrectAnswers(taskId, answerId, token, taskTitle) {
 
     if (!response.ok) {
       const errorData = await response.json();
-      Atividade('TAREFA-SP', `❌ Erro: ${errorData.response || errorData.message || 'Erro desconhecido'}`);
+
+      const mensagemErro = typeof errorData === 'string'
+        ? errorData
+        : errorData.response || JSON.stringify(errorData);
+      Atividade('TAREFA-SP', `❌ Erro: ${mensagemErro}`);
       return;
     }
 
