@@ -6,7 +6,7 @@ let trava = false;
 let correct = false;
 
 function adicionarSemDuplicar(array, items) {
-  const idsExistentes = new Set(array.map(t => t.id)); // supondo task_id como id único
+  const idsExistentes = new Set(array.map(t => t.id));
   for (const item of items) {
     if (!idsExistentes.has(item.id)) {
       array.push(item);
@@ -468,7 +468,7 @@ function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
   fetch(url, { method: 'POST', headers,body:JSON.stringify({ token,taskId,answerId }) })
     .then(response => {
       if (!response.ok) {
-        Atividade('TAREFA-SP', '❌ Erro: ' + ${response.response});
+        Atividade('TAREFA-SP', `❌ Erro: ${response.response}`);
       }
       return response.json();
     })
@@ -498,7 +498,7 @@ function corrigirAtividade(body, taskId, answerId, token,taskTitle) {
   })
     .then(response => {
       if (!response.ok) {
-        Atividade('TAREFA-SP', '❌ Erro: ' + ${response.response});
+        Atividade('TAREFA-SP', `❌ Erro: ${response.response}`);
       }
       return response.json();
     })
