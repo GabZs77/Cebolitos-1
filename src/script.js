@@ -467,10 +467,9 @@ function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
 
   fetch(url, { method: 'POST', headers,body:JSON.stringify({ token,taskId,answerId }) })
     .then(response => {
-      if (!response.ok)
-        throw new Error(
-          `❌ Erro ao buscar respostas corretas! Status: ${response.status}`
-        );
+      if (!response.ok) {
+        Atividade('TAREFA-SP', '❌ Erro: ' + ${response.response});
+      }
       return response.json();
     })
     .then(data => {
@@ -499,9 +498,7 @@ function corrigirAtividade(body, taskId, answerId, token,taskTitle) {
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error(
-          `❌ Erro ao corrigir atividade! Status: ${response.status}`
-        );
+        Atividade('TAREFA-SP', '❌ Erro: ' + ${response.response});
       }
       return response.json();
     })
