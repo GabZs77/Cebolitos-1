@@ -468,7 +468,8 @@ function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
   fetch(url, { method: 'POST', headers,body:JSON.stringify({ token,taskId,answerId }) })
     .then(response => {
       if (!response.ok) {
-        Atividade('TAREFA-SP', `❌ Erro: ${response.response}`);
+        const errorData = await response.json();
+        Atividade('TAREFA-SP', `❌ Erro: ${errorData.response || errorData.message}`);
       }
       return response.json();
     })
