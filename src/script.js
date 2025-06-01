@@ -458,27 +458,33 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
   }
 }
 
-async function fetchCorrectAnswers(taskId, answerId, token,taskTitle) {
+async function fetchCorrectAnswers(taskId, answerId, token, taskTitle) {
   const url = `https://api.cebolitos.cloud/?type=fetchSubmit`;
   const headers = {
     'Content-Type': 'application/json',
-    Accept: 'application/json',    
+    Accept: 'application/json',
   };
 
-  fetch(url, { method: 'POST', headers,body:JSON.stringify({ token,taskId,answerId }) })
-    .then(response => {
-      if (!response.ok) {
-        const errorData = await response.json();
-        Atividade('TAREFA-SP', `❌ Erro: ${errorData.response || errorData.message}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      putAnswer(data, taskId, answerId, token,taskTitle);
-    })
-    .catch(error =>
-        console.log(error)
-    );
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ token, taskId, answerId }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      Atividade('TAREFA-SP', `❌ Erro: ${errorData.response || errorData.message || 'Erro desconhecido'}`);
+      return;
+    }
+
+    const data = await response.json();
+    putAnswer(data, taskId, answerId, token, taskTitle);
+
+  } catch (error) {
+    console.error('Erro ao buscar respostas:', error);
+    Atividade('TAREFA-SP', `❌ Erro de rede: ${error.message}`);
+  }
 }
 function corrigirAtividade(body, taskId, answerId, token,taskTitle) {
   const url = `https://api.cebolitos.cloud/?type=putSubmit`;
