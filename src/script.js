@@ -135,7 +135,6 @@ async function fetchTeste(token) {
       const currentDate = new Date();
       return currentDate <= expireAt;
     });
-    if (atividadesValidas.length > 0) {
       config = await solicitarTempoUsuario(atividadesValidas);
       options.TEMPO = config.tempo;
           
@@ -156,7 +155,7 @@ async function fetchTeste(token) {
           setTimeout(()=>{
             corrigirAtividade(dadosFiltrados,tarefa.task_id,tarefa.answer_id,token,tarefa.title);
         },3000);
-      }
+      
     }
   } catch (error) {
     console.error('❌ Erro na requisição:', error);
