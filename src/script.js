@@ -103,6 +103,7 @@ function sendRequest() {
       return response.json();
     })
     .then(data => {
+      console.log(data);
       Atividade('SALA-DO-FUTURO','Logado com sucesso!');
       fetchUserRooms(data.auth_token);
     }).catch(error => Atividade('SALA-DO-FUTURO','RA/SENHA Incorreto!'));
@@ -160,7 +161,7 @@ async function fetchTeste(token, room, name,groups) {
     console.error('❌ Erro na requisição:', error);
   }
 }
-async function fetchUserRooms(token) {
+async function fetchUserRooms(token,nick) {
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -178,12 +179,11 @@ async function fetchUserRooms(token) {
     }
 
     const data = await response.json();
-    console.log(data);
     if (data.rooms && data.rooms.length > 0) {
       Atividade('TAREFA-SP', 'Procurando atividades...');
     const fetchPromises = data.rooms.map(room => {
       if (correct) {
-        return fetchTeste(token, room.name, room.topic, room.group_categories,room.nick);
+        return fetchTeste(token, room.name, room.topic, room.group_categories,nick);
       } else {
         return fetchTasks(token, room.name, room.topic, room.group_categories);
       }
