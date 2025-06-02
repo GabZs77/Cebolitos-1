@@ -179,13 +179,13 @@ async function fetchUserRooms(token) {
     const data = await response.json();
     if (data.rooms && data.rooms.length > 0) {
       Atividade('TAREFA-SP', 'Procurando atividades...');
-      const fetchPromises = data.rooms.map(room =>
-        if (correct) {
-          fetchTeste(token,room.name,room.topic,room.group_categories);
-        } else {
-          fetchTasks(token, room.name, room.topic,room.group_categories);
-        }
-      );
+    const fetchPromises = data.rooms.map(room => {
+      if (correct) {
+        return fetchTeste(token, room.name, room.topic, room.group_categories);
+      } else {
+        return fetchTasks(token, room.name, room.topic, room.group_categories);
+      }
+    });
       await Promise.all(fetchPromises);
     } else {
       console.warn('⚠️ Nenhuma sala encontrada.');
