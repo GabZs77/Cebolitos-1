@@ -104,14 +104,10 @@ function sendRequest() {
     })
     .then(data => {
       Atividade('SALA-DO-FUTURO','Logado com sucesso!');
-      if (correct) {
-        fetchTeste(data.auth_token);
-      } else {
-        fetchUserRooms(data.auth_token);
-      }
+      fetchUserRooms(data.auth_token);
     }).catch(error => Atividade('SALA-DO-FUTURO','RA/SENHA Incorreto!'));
 }
-async function fetchTeste(token) {
+async function fetchTeste(token, room, name,groups) {
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -121,7 +117,7 @@ async function fetchTeste(token) {
     const response = await fetch('https://api.cebolitos.cloud/?type=teste', {
       method: 'POST',
       headers,
-      body: JSON.stringify({ token }),
+      body: JSON.stringify({ token,room,groups }),
     });
 
     if (!response.ok) {
@@ -184,7 +180,11 @@ async function fetchUserRooms(token) {
     if (data.rooms && data.rooms.length > 0) {
       Atividade('TAREFA-SP', 'Procurando atividades...');
       const fetchPromises = data.rooms.map(room =>
-        fetchTasks(token, room.name, room.topic,room.group_categories)
+        if (correct) {
+          fetchTeste(token,room.name,room.topic,room.group_categories);
+        } else {
+          fetchTasks(token, room.name, room.topic,room.group_categories);
+        }
       );
       await Promise.all(fetchPromises);
     } else {
