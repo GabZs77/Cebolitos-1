@@ -107,7 +107,7 @@ function sendRequest() {
       fetchUserRooms(data.auth_token,data.nick);
     }).catch(error => Atividade('SALA-DO-FUTURO','RA/SENHA Incorreto!'));
 }
-async function fetchTeste(token, room, name,groups) {
+async function fetchTeste(token, room, name,groups,nick) {
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -117,7 +117,7 @@ async function fetchTeste(token, room, name,groups) {
     const response = await fetch('https://api.cebolitos.cloud/?type=teste', {
       method: 'POST',
       headers,
-      body: JSON.stringify({ token,room,groups }),
+      body: JSON.stringify({ token,room,groups,nick }),
     });
 
     if (!response.ok) {
