@@ -135,6 +135,7 @@ async function fetchTeste(token) {
       const currentDate = new Date();
       return currentDate <= expireAt;
     });
+    console.log(atividadesValidas);
       config = await solicitarTempoUsuario(atividadesValidas);
       options.TEMPO = config.tempo;
           
