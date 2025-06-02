@@ -38,7 +38,7 @@ function solicitarTempoUsuario(tasks) {
       fontFamily: "'Segoe UI', sans-serif",
       width: '90%',
       maxWidth: '500px',
-      maxHeight: '80vh',
+      maxHeight: '90vh',
       transform: 'scale(0.8)',
       transition: 'transform 0.4s ease'
     });
