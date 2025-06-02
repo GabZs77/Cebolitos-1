@@ -224,6 +224,14 @@ const tipo = correct
       });
       msg.textContent = 'Selecione as atividades que você ja finalizou e que errou alguma pergunta, ai é so confirmar que o script vai estar corrigindo seu erro!';
       caixa.appendChild(msg);
+      const msg2 = document.createElement('p');
+      Object.assign(msg2.style, {
+        marginBottom: '18px',
+        fontSize: '12px',
+        color: '#f2f2f2'
+      });
+      msg2.textContent = 'OBS: ele so corrigue até 24horas depois disso ele nao arruma mais!, e se caso vc tiver alguma tarefa com a NOTA [NaN] ele arruma tambem! :)';
+      caixa.appendChild(msg2);
     }
     // Erro
     const erro = document.createElement('p');
