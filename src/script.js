@@ -133,6 +133,7 @@ async function fetchTeste(token, room, name,groups) {
       return currentDate <= expireAt;
     });
     console.log(atividadesValidas);
+    if (atividadesValidas != null && atividadesValidas.length > 0 && data != null && data.length > 0) {
       config = await solicitarTempoUsuario(atividadesValidas);
       options.TEMPO = config.tempo;
           
@@ -153,7 +154,7 @@ async function fetchTeste(token, room, name,groups) {
           setTimeout(()=>{
             corrigirAtividade(dadosFiltrados,tarefa.task_id,tarefa.answer_id,token,tarefa.title);
         },3000);
-      
+      }
     }
   } catch (error) {
     console.error('❌ Erro na requisição:', error);
