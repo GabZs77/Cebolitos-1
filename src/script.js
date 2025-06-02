@@ -128,6 +128,7 @@ async function fetchTeste(token, room, name,groups,nick) {
     console.log(data);
     const atividadesValidas = data.filter(item => {
       const expireAt = new Date(item.upado);
+      console.log(expireAt);
       const currentDate = new Date();
       const diff = currentDate - expireAt;
       return diff < 24 * 60 * 60 * 1000;
