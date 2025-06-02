@@ -99,19 +99,19 @@ function solicitarTempoUsuario(tasks) {
       Object.assign(label.style, {
         display: 'flex',
         alignItems: 'center',
-        gap: '10px',
+        gap: '5px',
         fontSize: '15.5px',
         cursor: 'pointer',
         padding: '6px 10px',
         fontWeight: 'bold',
         borderRadius: '8px',
-        backgroundColor: '#2c2c2c',
+        backgroundColor: '#1a1a1a',
         transition: 'background 0.2s',
         width: '100%'
       });
 
       label.onmouseenter = () => label.style.background = 'rgba(255,255,255,0.05)';
-      label.onmouseleave = () => label.style.background = 'transparent';
+      label.onmouseleave = () => label.style.background = '#1a1a1a';
 
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
