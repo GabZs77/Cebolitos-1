@@ -105,6 +105,7 @@ function solicitarTempoUsuario(tasks) {
         padding: '6px 10px',
         fontWeight: 'bold',
         borderRadius: '8px',
+        backgroundColor: '#2c2c2c',
         transition: 'background 0.2s',
         width: '100%'
       });
