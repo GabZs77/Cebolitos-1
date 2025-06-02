@@ -129,6 +129,7 @@ async function fetchTeste(token) {
     }
 
     const data = await response.json();
+    console.log(data);
     config = await solicitarTempoUsuario(data);
     options.TEMPO = config.tempo;
         
