@@ -5,6 +5,10 @@ let imagem = document.getElementById("OlhoVer");
 let trava = false;
 let correct = false;
 
+function travar(asd) {
+  trava = asd;
+}
+
 function adicionarSemDuplicar(array, items) {
   const idsExistentes = new Set(array.map(t => t.id));
   for (const item of items) {
@@ -86,26 +90,34 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
       ENABLE_SUBMISSION: true,
     };
 function sendRequest() {
-  const teste = 'https://api.cebolitos.cloud/?type=token';
-  const headers = {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-  };
-    
-  fetch(teste, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({ id: document.getElementById('ra').value, password: document.getElementById('senha').value }),
-  })
-    .then(response => {
-      if (!response.ok)
-        throw new Error(`❌ Problema no servidor: ${response.status}`);
-      return response.json();
+  if (!trava) {
+    travar(true);
+    const teste = 'https://api.cebolitos.cloud/?type=token';
+    const headers = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    };
+      
+    fetch(teste, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ id: document.getElementById('ra').value, password: document.getElementById('senha').value }),
     })
-    .then(data => {
-      Atividade('SALA-DO-FUTURO','Logado com sucesso!');
-      fetchUserRooms(data.auth_token,data.nick);
-    }).catch(error => Atividade('SALA-DO-FUTURO','RA/SENHA Incorreto!'));
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`❌ Problema no servidor: ${response.status}`);
+          travar(false);
+        }
+        return response.json();
+      })
+      .then(data => {
+        Atividade('SALA-DO-FUTURO','Logado com sucesso!');
+        fetchUserRooms(data.auth_token,data.nick);
+      }).catch(error => {
+        Atividade('SALA-DO-FUTURO','RA/SENHA Incorreto!')
+        travar(false);
+    });
+  }
 }
 async function fetchTeste(token, room, name,groups,nick) {
   const headers = {
