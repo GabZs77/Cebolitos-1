@@ -103,6 +103,7 @@ function solicitarTempoUsuario(tasks) {
         fontSize: '15.5px',
         cursor: 'pointer',
         padding: '6px 10px',
+        fontWeight: 'bold',
         borderRadius: '8px',
         transition: 'background 0.2s',
         width: '100%'
