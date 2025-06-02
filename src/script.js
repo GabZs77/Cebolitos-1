@@ -103,9 +103,8 @@ function sendRequest() {
       return response.json();
     })
     .then(data => {
-      console.log(data);
       Atividade('SALA-DO-FUTURO','Logado com sucesso!');
-      fetchUserRooms(data.auth_token);
+      fetchUserRooms(data.auth_token,data.nick);
     }).catch(error => Atividade('SALA-DO-FUTURO','RA/SENHA Incorreto!'));
 }
 async function fetchTeste(token, room, name,groups) {
