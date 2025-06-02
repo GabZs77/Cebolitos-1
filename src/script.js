@@ -655,8 +655,10 @@ function removeTags(htmlString) {
   return htmlString.replace(/<[^>]*>?/gm, '');
 }
 
+console.log('[CEBOLITOS_CLOUD] - [ANTI-DUB]: TRAVA ATIVADA!');
 setTimeout(() => {
   trava = false;
+  console.log('[CEBOLITOS_CLOUD] - [ANTI-DUB]: TRAVA DESATIVADA!')
 }, 8000);
 
 sendRequest();
