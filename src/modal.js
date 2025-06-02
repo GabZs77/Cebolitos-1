@@ -183,7 +183,7 @@ const tipo = correct
     const inputTempo = document.createElement('input');
     inputTempo.value = 1;
     inputTempo.min = 1;
-    inputTempo.max = 6;
+    inputTempo.max = 10;
     Object.assign(inputTempo.style, {
       width: '80px',
       padding: '8px',
@@ -211,7 +211,7 @@ const tipo = correct
     incrementButton.onmouseout = () => incrementButton.style.background = '#4CAF50';
 
     incrementButton.onclick = () => {
-      if (parseInt(inputTempo.value) < 6) {
+      if (parseInt(inputTempo.value) < 10) {
         inputTempo.value = parseInt(inputTempo.value) + 1;
       }
     };
