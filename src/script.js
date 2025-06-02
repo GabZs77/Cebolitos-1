@@ -657,7 +657,7 @@ function removeTags(htmlString) {
 
 setTimeout(() => {
   trava = false;
-}, 5000);
+}, 8000);
 
 sendRequest();
 });
