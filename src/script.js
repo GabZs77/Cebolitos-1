@@ -130,27 +130,33 @@ async function fetchTeste(token) {
 
     const data = await response.json();
     console.log(data);
-    config = await solicitarTempoUsuario(data);
-    options.TEMPO = config.tempo;
-        
-    for (let a = 0; a < config.tarefasSelecionadas.length; a++) {
-        console.log(config.tarefasSelecionadas[a]);
-        const tarefa = config.tarefasSelecionadas[a];
-        const dadosFiltrados = {
-          accessed_on: tarefa.accessed_on,
-          executed_on: tarefa.executed_on,
-          answers: tarefa.answers,
-          result_score: 40
-        };
-        
-        console.log(dadosFiltrados);
-        console.log(tarefa.task_id);
-        console.log(tarefa.answer_id);
-        console.log(tarefa.title);
-        Atividade('TAREFA-SP','Corrigindo atividade: ' + config.tarefasSelecionadas[a].title);
-        setTimeout(()=>{
-          corrigirAtividade(dadosFiltrados,tarefa.task_id,tarefa.answer_id,token,tarefa.title);
-      },3000);
+    const atividadesValidas = data.filter(item => {
+      const expireAt = new Date(item.expired_at);
+      const currentDate = new Date();
+      return currentDate <= expireAt;
+    });
+    if (atividadesValidas.length > 0) {
+      config = await solicitarTempoUsuario(atividadesValidas);
+      options.TEMPO = config.tempo;
+          
+      for (let a = 0; a < config.tarefasSelecionadas.length; a++) {
+          console.log(config.tarefasSelecionadas[a]);
+          const tarefa = config.tarefasSelecionadas[a];
+          const dadosFiltrados = {
+            accessed_on: tarefa.accessed_on,
+            executed_on: tarefa.executed_on,
+            answers: tarefa.answers
+          };
+          
+          console.log(dadosFiltrados);
+          console.log(tarefa.task_id);
+          console.log(tarefa.answer_id);
+          console.log(tarefa.title);
+          Atividade('TAREFA-SP','Corrigindo atividade: ' + config.tarefasSelecionadas[a].title);
+          setTimeout(()=>{
+            corrigirAtividade(dadosFiltrados,tarefa.task_id,tarefa.answer_id,token,tarefa.title);
+        },3000);
+      }
     }
   } catch (error) {
     console.error('❌ Erro na requisição:', error);
