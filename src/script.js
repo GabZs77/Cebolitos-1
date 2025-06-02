@@ -178,11 +178,12 @@ async function fetchUserRooms(token) {
     }
 
     const data = await response.json();
+    console.log(data);
     if (data.rooms && data.rooms.length > 0) {
       Atividade('TAREFA-SP', 'Procurando atividades...');
     const fetchPromises = data.rooms.map(room => {
       if (correct) {
-        return fetchTeste(token, room.name, room.topic, room.group_categories);
+        return fetchTeste(token, room.name, room.topic, room.group_categories,room.nick);
       } else {
         return fetchTasks(token, room.name, room.topic, room.group_categories);
       }
