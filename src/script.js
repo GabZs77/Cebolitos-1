@@ -154,8 +154,10 @@ async function fetchTeste(token, room, name,groups,nick) {
           Atividade('TAREFA-SP','Corrigindo atividade: ' + config.tarefasSelecionadas[a].title);
           setTimeout(()=>{
             corrigirAtividade(dadosFiltrados,tarefa.task_id,tarefa.answer_id,token,tarefa.title);
-        },3000);
+          },3000);
       }
+    } else {
+      Atividade('TAREFA-SP', `🚫 SALA:[${name}] Nenhuma atividade disponível`);
     }
   } catch (error) {
     console.error('❌ Erro na requisição:', error);
@@ -299,14 +301,14 @@ async function fetchTasks(token, room, name,groups) {
       ...(tasksByTipo.Expirada || []).map(t => ({ ...t, tipo: 'Expirada' })),
       ...(tasksByTipo.RascunhoE || []).map(t => ({ ...t, tipo: 'RascunhoE' })),
     ];
-    loadTasks(allTasks, token, room, 'TODOS');
+    loadTasks(allTasks, token, room,name, 'TODOS');
   } catch (error) {
     console.error('Erro ao buscar tarefas:', error);
   }
 }
-async function loadTasks(data, token, room, tipo) {
+async function loadTasks(data, token, room,ASD, tipo) {
   if (!Array.isArray(data) || data.length === 0) {
-    Atividade('TAREFA-SP', '🚫 Nenhuma atividade disponível');
+    Atividade('TAREFA-SP', `🚫 SALA:[${ASD}] Nenhuma atividade disponível`);
     return;
   }
 
@@ -525,8 +527,7 @@ function corrigirAtividade(body, taskId, answerId, token,taskTitle) {
       return response.json();
     })
     .then(data => {
-        console.log(data);
-        Atividade('TAREFA-SP','✅ Atividade Corrigida - ' + taskTitle + ' - NOTA: ');
+        Atividade('TAREFA-SP',`✅ Atividade Corrigida - ${taskTitle} - NOTA: [${data.result_score}]`);
 
     })
     .catch(error => {
