@@ -123,7 +123,15 @@ function solicitarTempoUsuario(tasks) {
 const tipo = correct
   ? (task.tipo ? ` - ${task.tipo} - NOTA: ${task.nota}` : '')
   : (task.tipo ? ` - ${task.tipo}` : '');
-      const emoji = '🔹';
+
+      let emoji = '🔹';
+      const tipoLower = (task.tipo || '').toLowerCase();
+      
+      if (['pendente'].includes(tipoLower)) {
+        emoji = '🔸';
+      } else if (['expirada'].includes(tipoLower)) {
+        emoji = '🔺';
+      }
       span.textContent = `${emoji} ${title}${tipo}`;
 
       label.appendChild(checkbox);
