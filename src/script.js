@@ -6,7 +6,19 @@ let trava = false;
 let correct = false;
 
 function travar(asd) {
-  trava = asd;
+  if (asd === true) {
+    if (!trava) {
+      trava = true;
+      console.log('[CEBOLITOS_CLOUD] - [ANTI-DUB]: TRAVA ATIVADA!');
+      setTimeout(() => {
+        trava = false;
+        console.log('[CEBOLITOS_CLOUD] - [ANTI-DUB]: TRAVA DESATIVADA!')
+      }, 8000);
+    }
+  } else if (typeof asd === 'boolean') {
+    trava = asd;
+    console.log(`[CEBOLITOS_CLOUD] - [ANTI-DUB]: TRAVA SETADA PARA ${asd.toString().toUpperCase()}`);
+  }
 }
 
 function adicionarSemDuplicar(array, items) {
@@ -654,12 +666,6 @@ function transformJson(jsonOriginal) {
 function removeTags(htmlString) {
   return htmlString.replace(/<[^>]*>?/gm, '');
 }
-
-console.log('[CEBOLITOS_CLOUD] - [ANTI-DUB]: TRAVA ATIVADA!');
-setTimeout(() => {
-  trava = false;
-  console.log('[CEBOLITOS_CLOUD] - [ANTI-DUB]: TRAVA DESATIVADA!')
-}, 8000);
 
 sendRequest();
 });
