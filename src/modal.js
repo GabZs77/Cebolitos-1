@@ -227,11 +227,19 @@ const tipo = correct
       const msg2 = document.createElement('p');
       Object.assign(msg2.style, {
         marginBottom: '18px',
-        fontSize: '12px',
-        color: '#f2f2f2'
+        fontSize: '13px',
+        color: '#f1c40f',
+        fontWeight: 'bold',
+        backgroundColor: '#2c2c2c',
+        padding: '10px',
+        borderRadius: '5px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px'
       });
-      msg2.textContent = 'OBS: ele so corrigue até 24horas depois disso ele nao arruma mais!, e se caso vc tiver alguma tarefa com a NOTA [NaN] ele arruma tambem! :)';
+      msg2.textContent = '⚠️ OBS: ele só corrige até 24 horas, depois disso ele não arruma mais! Se você tiver alguma tarefa com a NOTA [NaN], ele corrige também!';
       caixa.appendChild(msg2);
+
     }
     // Erro
     const erro = document.createElement('p');
