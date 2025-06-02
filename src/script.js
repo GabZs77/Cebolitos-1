@@ -131,8 +131,9 @@ async function fetchTeste(token) {
     const data = await response.json();
     console.log(data);
     const atividadesValidas = data.filter(item => {
-      const expireAt = new Date(item.expired_at);
-      const currentDate = new Date();
+      const expireAt = new Date(item.expired_at).getTime();
+      console.log(expireAt);
+      const currentDate = new Date().getTime();
       return currentDate <= expireAt;
     });
     console.log(atividadesValidas);
