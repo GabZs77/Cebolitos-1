@@ -21,7 +21,7 @@ Agora você pode visualizar suas atividades realizadas nas últimas 24 horas. Ca
 
 - 🔐 Permite login com RA e senha de aluno.
 - 📚 Acessa suas atividades automaticamente.
-- 🤖 Identifica tarefas pendentes e expiradas.
+- 🤖 Identifica tarefas pendentes, expiradas e rascunhos.
 - 🧠 Realiza todas suas atividades corretamente!
 
 ---
