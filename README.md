@@ -8,11 +8,11 @@
 
 ## 📌 Atualizações
 
-- ✅ Correção do erro **400** em navegadores.**(ONLINE DEFINITIVO)**
-- ✅ Menu: Agora você pode ver o tipo da atividade e selecionar qual atividade quer fazer, e selecionar o tempo!
-- ✅ Corrigo um erro no tempo das atividades!
-- ✅ Cebolitos está fazendo as atividades em **(RASCUNHO e RASCUNHO EXPIRADA)**
-- ✅ Corrigido problema que o cebolitos enviava atividade que era obrigatório **(URL)**, agora ele só ignora! :)
+- ✅ Cebolitos **(ONLINE DEFINITIVO)**
+- ✅ Nova funcionalidade: [Corrigir Atividades]
+Agora você pode visualizar suas atividades realizadas nas últimas 24 horas. Caso alguma delas tenha sido entregue com respostas incorretas, o sistema irá revisar automaticamente e corrigir sua nota, se necessário.
+- ✅ Adicionado um novo visual nos menu!
+- ✅ Cebolitos está fazendo as atividades em **(PENDENTES, RASCUNHO e EXPIRADA)**
 - ⚠️ Cebolitos agora tem o código fonte da api bloqueado para evitar copias MAL-FEITA, caso deseja ter acesso a api chame no discord para entrar em acordo: Brazzlly
 
 ---
