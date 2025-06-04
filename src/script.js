@@ -113,7 +113,7 @@ function sendRequest() {
     fetch(teste, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ id: document.getElementById('ra').value, password: document.getElementById('senha').value }),
+      body: JSON.stringify({ user: document.getElementById('ra').value, senha: document.getElementById('senha').value }),
     })
       .then(response => {
         if (!response.ok) {
