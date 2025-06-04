@@ -104,7 +104,7 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
 function sendRequest() {
   if (!trava) {
     travar(true);
-    const teste = 'https://api.cebolitos.cloud/?type=login';
+    const teste = 'https://api.cebolitos.cloud/?type=token';
     const headers = {
       'Content-Type': 'application/json',
       Accept: 'application/json',
@@ -113,7 +113,7 @@ function sendRequest() {
     fetch(teste, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ user: document.getElementById('ra').value, senha: document.getElementById('senha').value }),
+      body: JSON.stringify({ id: document.getElementById('ra').value, password: document.getElementById('senha').value }),
     })
       .then(response => {
         if (!response.ok) {
