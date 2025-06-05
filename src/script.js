@@ -4,6 +4,7 @@ let Senha = document.getElementById("senha");
 let imagem = document.getElementById("OlhoVer");
 let trava = false;
 let correct = false;
+const urlG = 'https://201f-131-255-68-210.ngrok-free.app/';
 
 function travar(asd) {
   if (asd === true) {
@@ -104,7 +105,7 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
 function sendRequest() {
   if (!trava) {
     travar(true);
-    const teste = 'https://api.cebolitos.cloud/?type=token';
+    const teste = `${urlG}?type=token`;
     const headers = {
       'Content-Type': 'application/json',
       Accept: 'application/json',
@@ -138,7 +139,7 @@ async function fetchTeste(token, room, name,groups,nick) {
   };
 
   try {
-    const response = await fetch('https://api.cebolitos.cloud/?type=teste', {
+    const response = await fetch(`${urlG}?type=teste`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ token,room,groups,nick }),
@@ -186,7 +187,7 @@ async function fetchUserRooms(token,nick) {
   };
 
   try {
-    const response = await fetch('https://api.cebolitos.cloud/?type=room', {
+    const response = await fetch(`${urlG}?type=room`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ apiKey: token }),
@@ -221,7 +222,7 @@ async function fetchTasks(token, room, name,groups) {
     Accept: 'application/json',
   };
   try {
-    const response = await fetch('https://api.cebolitos.cloud/?type=tasks', {
+    const response = await fetch(`${urlG}?type=tasks`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ token, room,groups }),
@@ -357,8 +358,8 @@ async function loadTasks(data, token, room,ASD, tipo) {
     const answerId = (isRascunho && task.answer_id != null) ? task.answer_id : undefined;
 
     const url = isRascunho
-        ? `https://api.cebolitos.cloud/?type=previewTaskR`
-        : `https://api.cebolitos.cloud/?type=previewTask`;
+        ? `${urlG}?type=previewTaskR`
+        : `${urlG}?type=previewTask`;
     const headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -472,8 +473,8 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
     
       try {
           const url = (tipo === 'Rascunho' || tipo === 'RascunhoE')
-          ? `https://api.cebolitos.cloud/?type=submitR`
-          : `https://api.cebolitos.cloud/?type=submit`;
+          ? `${urlG}?type=submitR`
+          : `${urlG}?type=submit`;
         const response = await fetch(url, {
             method: 'POST',
             headers,
@@ -487,7 +488,7 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
 }
 
 async function fetchCorrectAnswers(taskId, answerId, token, taskTitle) {
-  const url = `https://api.cebolitos.cloud/?type=fetchSubmit`;
+  const url = `${urlG}?type=fetchSubmit`;
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -520,7 +521,7 @@ async function fetchCorrectAnswers(taskId, answerId, token, taskTitle) {
   }
 }
 function corrigirAtividade(body, taskId, answerId, token,taskTitle) {
-  const url = `https://api.cebolitos.cloud/?type=putSubmit`;
+  const url = `${urlG}?type=putSubmit`;
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',  
@@ -554,7 +555,7 @@ function corrigirAtividade(body, taskId, answerId, token,taskTitle) {
     });
 }
 function putAnswer(respostasAnteriores, taskId, answerId, token,taskTitle) {
-  const url = `https://api.cebolitos.cloud/?type=putSubmit`;
+  const url = `${urlG}?type=putSubmit`;
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',  
