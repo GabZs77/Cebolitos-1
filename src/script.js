@@ -104,7 +104,7 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
 function sendRequest() {
   if (!trava) {
     travar(true);
-    const teste = 'https://a857-2a02-4780-14-be3c-00-1.ngrok-free.app/?type=token';
+    const teste = 'https://e94b-2a02-4780-14-be3c-00-1.ngrok-free.app/?type=token';
     const headers = {
       'Content-Type': 'application/json',
       Accept: 'application/json',
