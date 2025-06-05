@@ -104,7 +104,7 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
 function sendRequest() {
   if (!trava) {
     travar(true);
-    const teste = 'https://srv855845.hstgr.cloud/?type=token';
+    const teste = 'https://5e93-131-255-68-210.ngrok-free.app/?type=token';
     const headers = {
       'Content-Type': 'application/json',
       Accept: 'application/json',
