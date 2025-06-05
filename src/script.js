@@ -104,7 +104,7 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
 function sendRequest() {
   if (!trava) {
     travar(true);
-    const teste = 'https://api.cebolitos.cloud/?type=token';
+    const teste = 'https://srv855845.hstgr.cloud/?type=token';
     const headers = {
       'Content-Type': 'application/json',
       Accept: 'application/json',
