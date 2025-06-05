@@ -159,7 +159,6 @@ async function fetchTeste(token, room, name,groups,nick) {
     });*/
     if (/*atividadesValidas != null && atividadesValidas.length > 0 &&*/ data != null && data.length > 0) {
       config = await solicitarTempoUsuario(data);
-      options.TEMPO = config.tempo;
           
       for (let a = 0; a < config.tarefasSelecionadas.length; a++) {
           const tarefa = config.tarefasSelecionadas[a];
