@@ -4,7 +4,7 @@ let Senha = document.getElementById("senha");
 let imagem = document.getElementById("OlhoVer");
 let trava = false;
 let correct = false;
-const urlG = 'https://vps58980.publiccloud.com.br/';
+const urlG = 'https://550e-131-255-68-210.ngrok-free.app/';
 
 function travar(asd) {
   if (asd === true) {
