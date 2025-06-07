@@ -175,7 +175,7 @@ async function fetchTeste(token, room, name,groups,nick) {
           },3000);
       }
     } else {
-      Atividade('TAREFA-SP', `🚫 SALA:[${name}] Nenhuma atividade disponível`);
+      Atividade('TAREFA-SP', `🚫 SALA:[${name}] Nenhuma atividade disponível para corrigir!`);
     }
   } catch (error) {
     console.error('❌ Erro na requisição:', error);
