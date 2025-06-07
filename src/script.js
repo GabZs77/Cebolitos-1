@@ -4,6 +4,7 @@ let Senha = document.getElementById("senha");
 let imagem = document.getElementById("OlhoVer");
 let trava = false;
 let correct = false;
+let prova = false;
 const urlG = 'https://kindly-charmed-grubworm.ngrok-free.app/';
 
 function travar(asd) {
@@ -93,12 +94,15 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
   e.preventDefault();
 
   const botaoClicado = e.submitter;
-  if (botaoClicado.id === 'Corrigir') {
+   if (botaoClicado.id === 'Corrigir') {
     correct = true;
-  } else if (botaoClicado.id === 'Logar'){
-    if (correct) {
-      correct = false;
-    }
+    prova = false;
+  } else if (botaoClicado.id === 'Logar') {
+    correct = false;
+    prova = false;
+  } else if (botaoClicado.id === 'prova') {
+    correct = false;
+    prova = true;
   }
   const options = {
       TEMPO: 3,
@@ -204,6 +208,8 @@ async function fetchUserRooms(token,nick) {
     const fetchPromises = data.rooms.map(room => {
       if (correct) {
         return fetchTeste(token, room.name, room.topic, room.group_categories,nick);
+      } else if (prova) {
+        return fetchProva(token,room.name,room.topic,room.group_categories,nick);
       } else {
         return fetchTasks(token, room.name, room.topic, room.group_categories);
       }
