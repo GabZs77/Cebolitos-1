@@ -87,6 +87,7 @@ function Atividade(Titulo, Atividade) {
         })
     }, 2500);
 }
+Atividade("SISTEMA","Servidores instaveis e sendo preparado para prova paulista em breve voltara ao normal!");
 document.getElementById('Enviar').addEventListener('submit', (e) => {
   e.preventDefault();
 
