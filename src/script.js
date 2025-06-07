@@ -42,7 +42,7 @@ MostrarSenha.addEventListener("click", () => {
     }
 });
 
-function Atividade(Titulo, Atividade) {
+function Atividade(Titulo, Atividade, tempo = 2500) {
     const div = document.createElement("div");
     div.className = "Notificacao";
 
@@ -85,9 +85,10 @@ function Atividade(Titulo, Atividade) {
         div.addEventListener("animationend", () => {
           div.remove();
         })
-    }, 2500);
+    }, tempo);
 }
-Atividade("SISTEMA","Servidores instaveis e sendo preparado para prova paulista em breve voltara ao normal!");
+Atividade("SISTEMA","Informamos que os servidores estão passando por instabilidades no momento devido aos preparativos para a Prova Paulista. A normalização do sistema ocorrerá em breve.",5000);
+Atividade("AVISO", "Além disso, comunicamos que a função Correção de Prova será liberada no dia 09/06 às 17h, Agradecemos a compreensão.",5000);
 document.getElementById('Enviar').addEventListener('submit', (e) => {
   e.preventDefault();
 
