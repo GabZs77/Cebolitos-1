@@ -138,6 +138,56 @@ function sendRequest() {
     });
   }
 }
+
+    
+async function fetchProva(token, room, name,groups,nick) {
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  };
+
+  try {
+    const response = await fetch(`${urlG}?type=provaPaulista`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ token,room,groups,nick }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`❌ Erro HTTP Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    const atividadesValidas = data.filter(item => {
+      const expireAt = new Date(item.upado);
+      const currentDate = new Date();
+      const diff = currentDate - expireAt;
+      return diff < 24 * 60 * 60 * 1000;
+    });
+    if (atividadesValidas != null && atividadesValidas.length > 0 && data != null && data.length > 0) {
+      config = await solicitarTempoUsuario(atividadesValidas);
+          
+      for (let a = 0; a < config.tarefasSelecionadas.length; a++) {
+          const tarefa = config.tarefasSelecionadas[a];
+          const dadosFiltrados = {
+            accessed_on: tarefa.accessed_on,
+            executed_on: tarefa.executed_on,
+            answers: tarefa.answers
+          };
+          Atividade('TAREFA-SP','Corrigindo prova: ' + config.tarefasSelecionadas[a].title);
+          setTimeout(()=>{
+            corrigirAtividade(dadosFiltrados,tarefa.task_id,tarefa.answer_id,token,tarefa.title);
+          },3000);
+      }
+    } else {
+      Atividade('TAREFA-SP', `🚫 SALA:[${name}] Nenhuma prova disponível para corrigir!`);
+    }
+  } catch (error) {
+    console.error('❌ Erro na requisição:', error);
+  }
+}
+  
 async function fetchTeste(token, room, name,groups,nick) {
   const headers = {
     'Content-Type': 'application/json',
