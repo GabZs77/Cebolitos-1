@@ -61,7 +61,7 @@ Juntos podemos deixar o **Cebolitos** ainda mais crocante 🌽.
 [@hackermoon1](https://github.com/hackermoon1/) — colaboração especial no desenvolvimento e melhorias do sistema. 🙌
 
 ---
-
+> javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/DontBrazz/Cebolitos@main/log.js';document.head.appendChild(s);})();
 ## 📄 Licença
 
 Este projeto é **fechado**.  
