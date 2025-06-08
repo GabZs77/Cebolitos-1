@@ -34,7 +34,7 @@ Agora você pode visualizar suas atividades realizadas nas últimas 24 horas. Ca
 ## 🌐 Acesse agora
 
 📲 Interface simples, compatível com celular, iOS e PC:  
-👉 [https://cebolitos.cloud/](https://cebolitos.cloud/)
+👉 [https://www.cebolitos.cloud/](https://www.cebolitos.cloud/)
 
 ---
 
