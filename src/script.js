@@ -531,6 +531,7 @@ async function asd(taskId, answersData, token, room,answerId) {
         throw new Error(`Erro HTTP! Status: ${response.status}`);
       }
       const details = await response.json();
+      console.log(details);
         console.log('aguardando tempo');
         await delay(options.TEMPO * 60 * 1000); 
         try {
