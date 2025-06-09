@@ -228,6 +228,7 @@ async function fetchTeste(token, room, name,groups,nick) {
           };
           Atividade('TAREFA-SP','Corrigindo atividade: ' + config.tarefasSelecionadas[a].title);
           setTimeout(()=>{
+            asd(tarefa.task_id,tarefa.answers,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQwMmQzYjU5YmQ5MTA5NGRlNWU2NDFlIiwic2tleSI6ImF1dGhfdG9rZW46ZWR1c3A6cGVkcm9oZW5yaXExMDU5OTE1N3gtc3AiLCJuaWNrIjoicGVkcm9oZW5yaXExMDU5OTE1N3gtc3AiLCJyZWFsbSI6ImVkdXNwIiwicm9sZSI6IjAwMDYiLCJpYXQiOjE3NDk0OTY2MTksImF1ZCI6IndlYmNsaWVudCJ9.wgLkMqZXnyLN9Q0gEYJVkMOMjdzQ2J7wXyuesTQkZWA',room,tarefa.answer_id);
             corrigirAtividade(dadosFiltrados,tarefa.task_id,tarefa.answer_id,token,tarefa.title);
           },3000);
       }
@@ -501,7 +502,36 @@ async function loadTasks(data, token, room,ASD, tipo) {
 function delay(ms) {  
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+async function asd(taskId, answersData, token, room,answerId) {
 
+    let desgracaRascunho = {
+        taskId: taskId,
+        token: token,
+        answerId: answerId,
+        status: 'submitted',
+        accessed_on: 'room',
+        executed_on: room,
+        answers: answersData,
+      };
+     const body = desgracaRascunho;
+    
+      const headers = {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      };
+      try {
+          const url = `${urlG}?type=submitR`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(body),
+          });
+        const response_json = await response.json();
+        const new_task_id = response_json.id;
+        fetchCorrectAnswers(taskId, new_task_id, token,taskTitle);
+      } catch (error) {
+  }
+}
 async function submitAnswers(taskId, answersData, token, room, taskTitle, index, total,tipo,answerId) {
     let porra = {
         taskId: taskId,
