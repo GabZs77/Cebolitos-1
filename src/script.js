@@ -521,16 +521,13 @@ async function asd(taskId, answersData, token, room,answerId) {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       };
-  const url = `${urlG}?type=previewTask`;
-    const headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
+  const urla = `${urlG}?type=previewTask`;
 
-    const body = JSON.stringify({ token, taskId });
+
+    const bodya = JSON.stringify({ token, taskId });
 
     try {
-      const response = await fetch(url, { method: 'POST', headers, body });
+      const response = await fetch(urla, { method: 'POST', headers, bodya });
       if (!response.ok) {
         throw new Error(`Erro HTTP! Status: ${response.status}`);
       }
