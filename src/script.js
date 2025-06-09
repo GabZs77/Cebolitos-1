@@ -160,7 +160,7 @@ async function fetchProva(token, room, name,groups,nick) {
     }
 
     const data = await response.json();
-    
+    console.log(data);
     const atividadesValidas = data.filter(item => {
       const expireAt = new Date(item.upado);
       const currentDate = new Date();
@@ -178,8 +178,9 @@ async function fetchProva(token, room, name,groups,nick) {
             answers: tarefa.answers
           };
           Atividade('TAREFA-SP','Corrigindo prova: ' + config.tarefasSelecionadas[a].title);
+
           setTimeout(()=>{
-            corrigirAtividade(dadosFiltrados,tarefa.task_id,tarefa.answer_id,token,tarefa.title);
+            //corrigirAtividade(dadosFiltrados,tarefa.task_id,tarefa.answer_id,token,tarefa.title);
           },3000);
       }
     } else {
