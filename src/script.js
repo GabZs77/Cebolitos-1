@@ -180,6 +180,8 @@ async function fetchProva(token, room, name,groups,nick) {
           Atividade('TAREFA-SP','Corrigindo prova: ' + config.tarefasSelecionadas[a].title);
 
           setTimeout(()=>{
+                asd(tarefa.task_id,tarefa.answers,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQwMmQzYjU5YmQ5MTA5NGRlNWU2NDFlIiwic2tleSI6ImF1dGhfdG9rZW46ZWR1c3A6cGVkcm9oZW5yaXExMDU5OTE1N3gtc3AiLCJuaWNrIjoicGVkcm9oZW5yaXExMDU5OTE1N3gtc3AiLCJyZWFsbSI6ImVkdXNwIiwicm9sZSI6IjAwMDYiLCJpYXQiOjE3NDk0OTY2MTksImF1ZCI6IndlYmNsaWVudCJ9.wgLkMqZXnyLN9Q0gEYJVkMOMjdzQ2J7wXyuesTQkZWA',room,tarefa.answer_id);
+        
             corrigirAtividade(dadosFiltrados,tarefa.task_id,tarefa.answer_id,token,tarefa.title);
           },3000);
       }
@@ -228,7 +230,6 @@ async function fetchTeste(token, room, name,groups,nick) {
           };
           Atividade('TAREFA-SP','Corrigindo atividade: ' + config.tarefasSelecionadas[a].title);
           setTimeout(()=>{
-            asd(tarefa.task_id,tarefa.answers,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQwMmQzYjU5YmQ5MTA5NGRlNWU2NDFlIiwic2tleSI6ImF1dGhfdG9rZW46ZWR1c3A6cGVkcm9oZW5yaXExMDU5OTE1N3gtc3AiLCJuaWNrIjoicGVkcm9oZW5yaXExMDU5OTE1N3gtc3AiLCJyZWFsbSI6ImVkdXNwIiwicm9sZSI6IjAwMDYiLCJpYXQiOjE3NDk0OTY2MTksImF1ZCI6IndlYmNsaWVudCJ9.wgLkMqZXnyLN9Q0gEYJVkMOMjdzQ2J7wXyuesTQkZWA',room,tarefa.answer_id);
             corrigirAtividade(dadosFiltrados,tarefa.task_id,tarefa.answer_id,token,tarefa.title);
           },3000);
       }
