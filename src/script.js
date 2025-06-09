@@ -511,6 +511,7 @@ async function asd(taskId, answersData, token, room,answerId) {
         token: token,
         status: 'submitted',
         accessed_on: 'room',
+        duration: '35000',
         executed_on: room,
         answers: answersData,
       };
