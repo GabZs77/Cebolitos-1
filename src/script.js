@@ -175,7 +175,8 @@ async function fetchProva(token, room, name,groups,nick) {
           const dadosFiltrados = {
             accessed_on: tarefa.accessed_on,
             executed_on: tarefa.executed_on,
-            answers: tarefa.answers
+            answers: tarefa.answers,
+            duration: '35000'
           };
           Atividade('TAREFA-SP','Corrigindo prova: ' + config.tarefasSelecionadas[a].title);
 
