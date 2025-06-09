@@ -520,6 +520,11 @@ async function asd(taskId, answersData, token, room,answerId) {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       };
+      const minutos = 46;
+      const ms = minutos * 60 * 1000;
+      
+      console.log(`⏳ Aguardando ${minutos} minutos (${ms} ms)...`);
+      await delay(ms);
       try {
           const url = `${urlG}?type=submit`;
         const response = await fetch(url, {
