@@ -521,10 +521,10 @@ async function asd(taskId, answersData, token, room,answerId) {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       };
-  const urla = `${urlG}?type=previewTask`;
+  const urla = `${urlG}?type=previewTaskR`;
 
 
-    const bodya = JSON.stringify({ token, taskId });
+    const bodya = JSON.stringify({ token, taskId, answerId });
 
     try {
       const response = await fetch(urla, { method: 'POST', headers, bodya });
