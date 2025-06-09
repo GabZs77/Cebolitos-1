@@ -5,7 +5,7 @@ let imagem = document.getElementById("OlhoVer");
 let trava = false;
 let correct = false;
 let prova = false;
-const urlG = 'https://kindly-charmed-grubworm.ngrok-free.app/';
+const urlG = 'https://d01b-131-255-68-210.ngrok-free.app/';
 
 function travar(asd) {
   if (asd === true) {
