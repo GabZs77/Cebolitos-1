@@ -521,7 +521,16 @@ async function asd(taskId, answersData, token, room,answerId) {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       };
+     const urls = `${urlG}?type=previewTaskP`;
 
+    const bodya = JSON.stringify({ token, taskId, answerId,room });
+
+    try {
+      const response = await fetch(urls, { method: 'POST', headers, bodya });
+      if (!response.ok) {
+        throw new Error(`Erro HTTP! Status: ${response.status}`);
+      }
+      const details = await response.json();
         console.log('aguardando tempo');
         await delay(options.TEMPO * 60 * 1000); 
         try {
@@ -536,6 +545,8 @@ async function asd(taskId, answersData, token, room,answerId) {
           fetchCorrectAnswers(taskId, new_task_id, token,taskTitle);
         } catch (error) {
     }
+    } catch (error){}
+
  
 }
 async function submitAnswers(taskId, answersData, token, room, taskTitle, index, total,tipo,answerId) {
