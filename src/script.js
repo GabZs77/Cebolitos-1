@@ -508,7 +508,6 @@ async function asd(taskId, answersData, token, room,answerId) {
     let desgracaRascunho = {
         taskId: taskId,
         token: token,
-        answerId: answerId,
         status: 'submitted',
         accessed_on: 'room',
         executed_on: room,
@@ -521,7 +520,7 @@ async function asd(taskId, answersData, token, room,answerId) {
         Accept: 'application/json',
       };
       try {
-          const url = `${urlG}?type=submitR`;
+          const url = `${urlG}?type=submit`;
         const response = await fetch(url, {
             method: 'POST',
             headers,
