@@ -160,6 +160,7 @@ async function fetchProva(token, room, name,groups,nick) {
     }
 
     const data = await response.json();
+
     console.log(data);
     const atividadesValidas = data.filter(item => {
       const expireAt = new Date(item.upado);
@@ -172,18 +173,24 @@ async function fetchProva(token, room, name,groups,nick) {
           
       for (let a = 0; a < config.tarefasSelecionadas.length; a++) {
           const tarefa = config.tarefasSelecionadas[a];
-          const dadosFiltrados = {
-            accessed_on: tarefa.accessed_on,
-            executed_on: tarefa.executed_on,
-            answers: tarefa.answers,
-            duration: '35000'
-          };
           Atividade('TAREFA-SP','Corrigindo prova: ' + config.tarefasSelecionadas[a].title);
-
           setTimeout(()=>{
-                asd(tarefa.task_id,tarefa.answers,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQwMmQzYjU5YmQ5MTA5NGRlNWU2NDFlIiwic2tleSI6ImF1dGhfdG9rZW46ZWR1c3A6cGVkcm9oZW5yaXExMDU5OTE1N3gtc3AiLCJuaWNrIjoicGVkcm9oZW5yaXExMDU5OTE1N3gtc3AiLCJyZWFsbSI6ImVkdXNwIiwicm9sZSI6IjAwMDYiLCJpYXQiOjE3NDk0OTY2MTksImF1ZCI6IndlYmNsaWVudCJ9.wgLkMqZXnyLN9Q0gEYJVkMOMjdzQ2J7wXyuesTQkZWA',room,tarefa.answer_id);
-        
-            corrigirAtividade(dadosFiltrados,tarefa.task_id,tarefa.answer_id,token,tarefa.title);
+                try {
+                  const response = await fetch(`${urlG}?type=corrigirProva`, {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify({ token,tarefa }),
+                  });
+              
+                  if (!response.ok) {
+                    throw new Error(`❌ Erro HTTP Status: ${response.status}`);
+                  }
+              
+                  const data = await response.json();
+              
+                } catch (error) {
+                  console.error('❌ Erro na requisição:', error);
+                }
           },3000);
       }
     } else {
