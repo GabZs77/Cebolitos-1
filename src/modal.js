@@ -428,12 +428,13 @@ function solicitarProva(tasks) {
       checkbox.type = 'checkbox';
       checkbox.style.transform = 'scale(1.2)';
       checkbox.style.cursor = 'pointer';
-
+      const totalQuestoes = Object.keys(task.answers).length;
       const span = document.createElement('span');
       const title = task.task.title || `Tarefa`;
-
+      const nota = task.result_score;
+      const notaS = nota === totalQuestoes ? `NOTA [${task.result_score}] MAXIMA` : `NOTA [${task.result_score}]`;
       let emoji = '🔹';
-      span.textContent = `${emoji} ${title}`;
+      span.textContent = `${emoji} ${title} - ${notaS}`;
 
       label.appendChild(checkbox);
       label.appendChild(span);
@@ -445,95 +446,15 @@ function solicitarProva(tasks) {
     caixa.appendChild(atividadesContainer);
 
     // Título do tempo
-    const tituloTempo = document.createElement('p');
-    tituloTempo.textContent = '⏱️ Tempo por atividade (minutos)';
-    Object.assign(tituloTempo.style, {
-      fontWeight: 'bold',
-      fontSize: '16px',
-      marginBottom: '12px',
-      color: '#dddddd'
-    });
-    if (!correct) {
-      caixa.appendChild(tituloTempo);
-    }
-    // Controles de incremento de tempo
-    const inputContainer = document.createElement('div');
-    Object.assign(inputContainer.style, {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '10px'
-    });
-    caixa.appendChild(inputContainer);
 
-    const decrementButton = document.createElement('button');
-    decrementButton.textContent = '-';
-    Object.assign(decrementButton.style, {
-      padding: '8px 12px',
-      fontSize: '18px',
-      background: '#4CAF50',
-      color: '#fff',
-      border: 'none',
-      borderRadius: '8px',
-      cursor: 'pointer',
-      transition: 'background 0.2s ease'
-    });
-    decrementButton.onmouseover = () => decrementButton.style.background = '#43a047';
-    decrementButton.onmouseout = () => decrementButton.style.background = '#4CAF50';
-
-    const inputTempo = document.createElement('input');
-    inputTempo.value = 1;
-    inputTempo.min = 1;
-    inputTempo.max = 10;
-    Object.assign(inputTempo.style, {
-      width: '80px',
-      padding: '8px',
-      fontSize: '16px',
-      textAlign: 'center',
-      border: '1px solid #555',
-      borderRadius: '10px',
-      background: '#333',
-      color: '#fff'
-    });
-
-    const incrementButton = document.createElement('button');
-    incrementButton.textContent = '+';
-    Object.assign(incrementButton.style, {
-      padding: '8px 12px',
-      fontSize: '18px',
-      background: '#4CAF50',
-      color: '#fff',
-      border: 'none',
-      borderRadius: '8px',
-      cursor: 'pointer',
-      transition: 'background 0.2s ease'
-    });
-    incrementButton.onmouseover = () => incrementButton.style.background = '#43a047';
-    incrementButton.onmouseout = () => incrementButton.style.background = '#4CAF50';
-
-    incrementButton.onclick = () => {
-      if (parseInt(inputTempo.value) < 10) {
-        inputTempo.value = parseInt(inputTempo.value) + 1;
-      }
-    };
-    decrementButton.onclick = () => {
-      if (parseInt(inputTempo.value) > 1) {
-        inputTempo.value = parseInt(inputTempo.value) - 1;
-      }
-    };
-
-    if(!correct) {
-      inputContainer.appendChild(decrementButton);
-      inputContainer.appendChild(inputTempo);
-      inputContainer.appendChild(incrementButton);
-    } else {
+    
       const msg = document.createElement('p');
       Object.assign(msg.style, {
         marginBottom: '18px',
         fontSize: '12px',
         color: '#f2f2f2'
       });
-      msg.textContent = 'Selecione as atividades que você ja finalizou e que errou alguma pergunta, ai é so confirmar que o script vai estar corrigindo seu erro!';
+      msg.textContent = 'Selecione as provas que você ja finalizou e que errou alguma questao, ai é so confirmar que o script vai estar corrigindo seu erro!';
       caixa.appendChild(msg);
       const msg2 = document.createElement('p');
       Object.assign(msg2.style, {
@@ -548,10 +469,10 @@ function solicitarProva(tasks) {
         alignItems: 'center',
         gap: '8px'
       });
-      msg2.textContent = '⚠️ OBS: ele só corrige até 24 horas, depois disso ele não arruma mais! Se você tiver alguma tarefa com a NOTA [NaN], ele corrige também!';
+      msg2.textContent = '⚠️ OBS: ele só corrige até 24 horas, depois disso ele não arruma mais!';
       caixa.appendChild(msg2);
 
-    }
+    
     // Erro
     const erro = document.createElement('p');
     Object.assign(erro.style, {
@@ -586,12 +507,6 @@ function solicitarProva(tasks) {
     };
 
     botao.onclick = () => {
-      const valor = parseInt(inputTempo.value);
-      if (isNaN(valor) || valor < 1 || valor > 6) {
-        erro.textContent = 'Digite um número válido de 1 a 6.';
-        erro.style.display = 'block';
-        return;
-      }
 
       const tarefasSelecionadas = checkboxElements
         .filter(({ checkbox }) => checkbox.checked)
