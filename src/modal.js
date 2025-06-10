@@ -316,6 +316,306 @@ const tipo = correct
   });
 }
 
+function solicitarProva(tasks) {
+  return new Promise((resolve) => {
+    // Overlay
+    const overlay = document.createElement('div');
+    Object.assign(overlay.style, {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      background: 'rgba(0, 0, 0, 0.5)',
+      backdropFilter: 'blur(6px)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: '10000',
+      opacity: 0,
+      transition: 'opacity 0.3s ease-in-out'
+    });
+    setTimeout(() => (overlay.style.opacity = 1), 10);
+
+    // Modal box
+    const caixa = document.createElement('div');
+    Object.assign(caixa.style, {
+      background: 'rgba(40, 40, 40, 0.95)',
+      color: '#f0f0f0',
+      padding: '35px 35px',
+      borderRadius: '20px',
+      boxShadow: '0 10px 30px rgba(0,0,0,0.4)',
+      textAlign: 'center',
+      fontFamily: "'Segoe UI', sans-serif",
+      width: '90%',
+      maxWidth: '500px',
+      maxHeight: '90vh',
+      transform: 'scale(0.8)',
+      transition: 'transform 0.4s ease'
+    });
+    setTimeout(() => (caixa.style.transform = 'scale(1)'), 100);
+
+    const botaoFechar = document.createElement('button');
+    botaoFechar.textContent = '✖';
+    Object.assign(botaoFechar.style, {
+      position: 'absolute',
+      right: '15px',
+      top: '15px',
+      background: 'transparent',
+      border: 'none',
+      color: '#ccc',
+      fontSize: '22px',
+      cursor: 'pointer',
+      transition: 'color 0.2s ease',
+      padding: '4px',
+      userSelect: 'none',
+      lineHeight: '1'
+    });
+    botaoFechar.onmouseover = () => (botaoFechar.style.color = 'white');
+    botaoFechar.onmouseout = () => (botaoFechar.style.color = '#ccc');
+    botaoFechar.onclick = () => {
+      document.body.removeChild(overlay);
+      if (correct){
+        correct = false;
+      }
+    };
+    
+    // Título
+    const titulo = document.createElement('h2');
+    titulo.textContent = correct ? '📝 Corrigir Atividades' : '📝 Atividades';
+    Object.assign(titulo.style, {
+      marginBottom: '18px',
+      fontSize: '22px',
+      color: '#ffffff'
+    });
+    caixa.appendChild(titulo);
+
+    // Container com scroll limitado a 4 tarefas
+    const atividadesContainer = document.createElement('div');
+    Object.assign(atividadesContainer.style, {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      paddingLeft: '10px',
+      gap: '10px',
+      marginBottom: '24px',
+      maxHeight: '220px', // Aproximadamente 4 tarefas
+      overflowY: 'auto'
+    });
+
+    const checkboxElements = [];
+
+    tasks.forEach((task) => {
+      const label = document.createElement('label');
+      Object.assign(label.style, {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '5px',
+        fontSize: '15.5px',
+        cursor: 'pointer',
+        padding: '6px 10px',
+        fontWeight: 'bold',
+        borderRadius: '8px',
+        backgroundColor: '#1a1a1a',
+        transition: 'background 0.2s',
+        width: '100%'
+      });
+
+      label.onmouseenter = () => label.style.background = 'rgba(255,255,255,0.05)';
+      label.onmouseleave = () => label.style.background = '#1a1a1a';
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.style.transform = 'scale(1.2)';
+      checkbox.style.cursor = 'pointer';
+
+      const span = document.createElement('span');
+      const title = task.task.title || `Tarefa`;
+
+      let emoji = '🔹';
+      span.textContent = `${emoji} ${title}`;
+
+      label.appendChild(checkbox);
+      label.appendChild(span);
+      atividadesContainer.appendChild(label);
+
+      checkboxElements.push({ checkbox, task });
+    });
+
+    caixa.appendChild(atividadesContainer);
+
+    // Título do tempo
+    const tituloTempo = document.createElement('p');
+    tituloTempo.textContent = '⏱️ Tempo por atividade (minutos)';
+    Object.assign(tituloTempo.style, {
+      fontWeight: 'bold',
+      fontSize: '16px',
+      marginBottom: '12px',
+      color: '#dddddd'
+    });
+    if (!correct) {
+      caixa.appendChild(tituloTempo);
+    }
+    // Controles de incremento de tempo
+    const inputContainer = document.createElement('div');
+    Object.assign(inputContainer.style, {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '10px'
+    });
+    caixa.appendChild(inputContainer);
+
+    const decrementButton = document.createElement('button');
+    decrementButton.textContent = '-';
+    Object.assign(decrementButton.style, {
+      padding: '8px 12px',
+      fontSize: '18px',
+      background: '#4CAF50',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '8px',
+      cursor: 'pointer',
+      transition: 'background 0.2s ease'
+    });
+    decrementButton.onmouseover = () => decrementButton.style.background = '#43a047';
+    decrementButton.onmouseout = () => decrementButton.style.background = '#4CAF50';
+
+    const inputTempo = document.createElement('input');
+    inputTempo.value = 1;
+    inputTempo.min = 1;
+    inputTempo.max = 10;
+    Object.assign(inputTempo.style, {
+      width: '80px',
+      padding: '8px',
+      fontSize: '16px',
+      textAlign: 'center',
+      border: '1px solid #555',
+      borderRadius: '10px',
+      background: '#333',
+      color: '#fff'
+    });
+
+    const incrementButton = document.createElement('button');
+    incrementButton.textContent = '+';
+    Object.assign(incrementButton.style, {
+      padding: '8px 12px',
+      fontSize: '18px',
+      background: '#4CAF50',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '8px',
+      cursor: 'pointer',
+      transition: 'background 0.2s ease'
+    });
+    incrementButton.onmouseover = () => incrementButton.style.background = '#43a047';
+    incrementButton.onmouseout = () => incrementButton.style.background = '#4CAF50';
+
+    incrementButton.onclick = () => {
+      if (parseInt(inputTempo.value) < 10) {
+        inputTempo.value = parseInt(inputTempo.value) + 1;
+      }
+    };
+    decrementButton.onclick = () => {
+      if (parseInt(inputTempo.value) > 1) {
+        inputTempo.value = parseInt(inputTempo.value) - 1;
+      }
+    };
+
+    if(!correct) {
+      inputContainer.appendChild(decrementButton);
+      inputContainer.appendChild(inputTempo);
+      inputContainer.appendChild(incrementButton);
+    } else {
+      const msg = document.createElement('p');
+      Object.assign(msg.style, {
+        marginBottom: '18px',
+        fontSize: '12px',
+        color: '#f2f2f2'
+      });
+      msg.textContent = 'Selecione as atividades que você ja finalizou e que errou alguma pergunta, ai é so confirmar que o script vai estar corrigindo seu erro!';
+      caixa.appendChild(msg);
+      const msg2 = document.createElement('p');
+      Object.assign(msg2.style, {
+        marginBottom: '18px',
+        fontSize: '13px',
+        color: '#f1c40f',
+        fontWeight: 'bold',
+        backgroundColor: '#2c2c2c',
+        padding: '10px',
+        borderRadius: '5px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px'
+      });
+      msg2.textContent = '⚠️ OBS: ele só corrige até 24 horas, depois disso ele não arruma mais! Se você tiver alguma tarefa com a NOTA [NaN], ele corrige também!';
+      caixa.appendChild(msg2);
+
+    }
+    // Erro
+    const erro = document.createElement('p');
+    Object.assign(erro.style, {
+      color: 'tomato',
+      fontSize: '14px',
+      margin: '6px 0',
+      display: 'none'
+    });
+    caixa.appendChild(erro);
+
+    // Botão confirmar
+    const botao = document.createElement('button');
+    botao.textContent = '✅ Confirmar';
+    Object.assign(botao.style, {
+      marginTop: '15px',
+      padding: '12px 28px',
+      background: '#4CAF50',
+      border: 'none',
+      borderRadius: '12px',
+      color: 'white',
+      fontSize: '16px',
+      cursor: 'pointer',
+      boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+      transition: 'all 0.2s ease-in-out'
+    });
+    botao.onmouseover = () => botao.style.background = '#43a047';
+    botao.onmousedown = () => botao.style.transform = 'scale(0.96)';
+    botao.onmouseup = () => botao.style.transform = 'scale(1)';
+    botao.onmouseout = () => {
+      botao.style.background = '#4CAF50';
+      botao.style.transform = 'scale(1)';
+    };
+
+    botao.onclick = () => {
+      const valor = parseInt(inputTempo.value);
+      if (isNaN(valor) || valor < 1 || valor > 6) {
+        erro.textContent = 'Digite um número válido de 1 a 6.';
+        erro.style.display = 'block';
+        return;
+      }
+
+      const tarefasSelecionadas = checkboxElements
+        .filter(({ checkbox }) => checkbox.checked)
+        .map(({ task }) => task);
+
+      if (tarefasSelecionadas.length === 0) {
+        erro.textContent = 'Selecione pelo menos uma tarefa.';
+        erro.style.display = 'block';
+        return;
+      }
+
+      document.body.removeChild(overlay);
+      resolve({
+        tempo: valor,
+        tarefasSelecionadas
+      });
+    };
+
+    caixa.appendChild(botao);
+    caixa.appendChild(botaoFechar);
+    overlay.appendChild(caixa);
+    document.body.appendChild(overlay);
+  });
+}
 
 
 function solicitarTempoUsuario2(tasks) {
