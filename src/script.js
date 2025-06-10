@@ -182,7 +182,7 @@ async function fetchProva(token, room, name, groups, nick) {
             id: tarefaCompleta.id,
             task_id: tarefaCompleta.task_id
           };
-        Atividade('TAREFA-SP', 'Corrigindo prova: ' + tarefa.title);
+        Atividade('TAREFA-SP', 'Corrigindo prova: ' + tarefa.task.title);
 
         try {
           const response = await fetch(`${urlG}?type=corrigirProva`, {
