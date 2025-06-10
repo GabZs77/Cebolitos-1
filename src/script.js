@@ -182,8 +182,9 @@ async function fetchProva(token, room, name, groups, nick) {
             id: tarefaCompleta.id,
             task_id: tarefaCompleta.task_id
           };
-        Atividade('TAREFA-SP', 'Corrigindo prova: ' + tarefa.task.title);
-
+          const intervaloMensagem = setInterval(() => {
+            Atividade('PROVA-PAULISTA', '⏳ Corrigindo prova...' + tarefa.task.title);
+          }, 2000);
         try {
           const response = await fetch(`${urlG}?type=corrigirProva`, {
             method: 'POST',
@@ -196,16 +197,15 @@ async function fetchProva(token, room, name, groups, nick) {
           }
 
           const result = await response.json();
-
-            Atividade('PROVA-PAULISTA',`✅ PROVA CORRIGIDA!`);
+           clearInterval(intervaloMensagem);
+          Atividade('PROVA-PAULISTA',`✅ PROVA CORRIGIDA!`);
 
           console.log('✅ Correção enviada:', result);
         } catch (error) {
+           clearInterval(intervaloMensagem);
+          Atividade('PROVA-PAULISTA', '❌ ERRO ao corrigir prova!');
           console.error('❌ Erro na correção:', error);
         }
-
-        // Aguarda 3 segundos antes de seguir para a próxima tarefa
-        await new Promise(resolve => setTimeout(resolve, 3000));
       }
     } else {
       Atividade('TAREFA-SP', `🚫 SALA:[${name}] Nenhuma prova disponível para corrigir!`);
