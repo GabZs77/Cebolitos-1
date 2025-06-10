@@ -171,7 +171,17 @@ async function fetchProva(token, room, name, groups, nick) {
       const config = await solicitarProva(data);
 
       for (let a = 0; a < config.tarefasSelecionadas.length; a++) {
-        const tarefa = config.tarefasSelecionadas[a];
+          const tarefaCompleta = config.tarefasSelecionadas[a];
+
+  // Criar objeto somente com os campos desejados
+          const tarefa = {
+            answers: tarefaCompleta.answers,
+            task: tarefaCompleta.task,
+            executed_on: tarefaCompleta.executed_on,
+            accessed_on: tarefaCompleta.accessed_on,
+            id: tarefaCompleta.id,
+            task_id: tarefaCompleta.task_id
+          };
         Atividade('TAREFA-SP', 'Corrigindo prova: ' + tarefa.title);
 
         try {
