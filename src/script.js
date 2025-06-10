@@ -138,11 +138,10 @@ function sendRequest() {
     });
   }
 }
-
-    
-async function fetchProva(token, room, name,groups,nick) {
-  Atividade('PROVA-PAULISTA','SISTEMA DESATIVADO ATÉ 09/06',5000);
+async function fetchProva(token, room, name, groups, nick) {
+  Atividade('PROVA-PAULISTA', 'SISTEMA DESATIVADO ATÉ 09/06', 5000);
   return;
+
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -152,7 +151,7 @@ async function fetchProva(token, room, name,groups,nick) {
     const response = await fetch(`${urlG}?type=provaPaulista`, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ token,room,groups,nick }),
+      body: JSON.stringify({ token, room, groups, nick }),
     });
 
     if (!response.ok) {
@@ -161,37 +160,39 @@ async function fetchProva(token, room, name,groups,nick) {
 
     const data = await response.json();
 
-    console.log(data);
     const atividadesValidas = data.filter(item => {
       const expireAt = new Date(item.upado);
       const currentDate = new Date();
       const diff = currentDate - expireAt;
       return diff < 24 * 60 * 60 * 1000;
     });
-    if (atividadesValidas != null && atividadesValidas.length > 0 && data != null && data.length > 0) {
-      config = await solicitarProva(atividadesValidas);
-          
+
+    if (atividadesValidas && atividadesValidas.length > 0) {
+      const config = await solicitarProva(atividadesValidas);
+
       for (let a = 0; a < config.tarefasSelecionadas.length; a++) {
-          const tarefa = config.tarefasSelecionadas[a];
-          Atividade('TAREFA-SP','Corrigindo prova: ' + config.tarefasSelecionadas[a].title);
-          setTimeout(()=>{
-                try {
-                  const response = await fetch(`${urlG}?type=corrigirProva`, {
-                    method: 'POST',
-                    headers,
-                    body: JSON.stringify({ token,tarefa }),
-                  });
-              
-                  if (!response.ok) {
-                    throw new Error(`❌ Erro HTTP Status: ${response.status}`);
-                  }
-              
-                  const data = await response.json();
-              
-                } catch (error) {
-                  console.error('❌ Erro na requisição:', error);
-                }
-          },3000);
+        const tarefa = config.tarefasSelecionadas[a];
+        Atividade('TAREFA-SP', 'Corrigindo prova: ' + tarefa.title);
+
+        try {
+          const response = await fetch(`${urlG}?type=corrigirProva`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ token, tarefa }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`❌ Erro HTTP Status: ${response.status}`);
+          }
+
+          const result = await response.json();
+          console.log('✅ Correção enviada:', result);
+        } catch (error) {
+          console.error('❌ Erro na correção:', error);
+        }
+
+        // Aguarda 3 segundos antes de seguir para a próxima tarefa
+        await new Promise(resolve => setTimeout(resolve, 3000));
       }
     } else {
       Atividade('TAREFA-SP', `🚫 SALA:[${name}] Nenhuma prova disponível para corrigir!`);
@@ -200,6 +201,7 @@ async function fetchProva(token, room, name,groups,nick) {
     console.error('❌ Erro na requisição:', error);
   }
 }
+
   
 async function fetchTeste(token, room, name,groups,nick) {
   const headers = {
