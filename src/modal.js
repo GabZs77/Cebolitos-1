@@ -520,7 +520,6 @@ function solicitarProva(tasks) {
 
       document.body.removeChild(overlay);
       resolve({
-        tempo: valor,
         tarefasSelecionadas
       });
     };
