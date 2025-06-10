@@ -159,7 +159,7 @@ async function fetchProva(token, room, name, groups, nick) {
     }
 
     const data = await response.json();
-
+    console.log(data);
     const atividadesValidas = data.filter(item => {
       const expireAt = new Date(item.upado);
       const currentDate = new Date();
