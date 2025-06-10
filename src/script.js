@@ -196,13 +196,9 @@ async function fetchProva(token, room, name, groups, nick) {
           }
 
           const result = await response.json();
-          const max = result.answers.length;
-          const nota = result.result_score;
-          if (nota === max) {
-            Atividade('PROVA-PAULISTA',`✅ PROVA CORRIGIDA! | NOTA ${result.result_score}`);
-          } else {
-            Atividade('PROVA-PAULISTA',`✅ PROVA CORRIGIDA! | NOTA ${result.result_score}, Reenvie para obter o maximo de nota!`);
-          }
+
+            Atividade('PROVA-PAULISTA',`✅ PROVA CORRIGIDA!`);
+
           console.log('✅ Correção enviada:', result);
         } catch (error) {
           console.error('❌ Erro na correção:', error);
