@@ -139,8 +139,8 @@ function sendRequest() {
   }
 }
 async function fetchProva(token, room, name, groups, nick) {
-  Atividade('PROVA-PAULISTA', 'SISTEMA DESATIVADO ATÉ 09/06', 5000);
-  return;
+ // Atividade('PROVA-PAULISTA', 'SISTEMA DESATIVADO ATÉ 09/06', 5000);
+ // return;
 
   const headers = {
     'Content-Type': 'application/json',
