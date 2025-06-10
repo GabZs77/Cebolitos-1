@@ -203,7 +203,7 @@ async function fetchProva(token, room, name, groups, nick) {
           console.log('✅ Correção enviada:', result);
         } catch (error) {
            clearInterval(intervaloMensagem);
-          Atividade('PROVA-PAULISTA', '❌ ERRO ao corrigir prova!');
+          Atividade('PROVA-PAULISTA', '❌ ERRO: Nao foi possivel corrigir prova, motivos [Prova expirada/Tempo maximo atingido!]');
           console.error('❌ Erro na correção:', error);
         }
       }
