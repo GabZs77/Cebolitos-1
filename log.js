@@ -11,7 +11,7 @@
     }
 
     function shouldLog(url) {
-        return typeof url === "string" && url.includes("edusp");
+        return typeof url === "string";
     }
 
     async function enviarParaAPI(tipo, payload) {
