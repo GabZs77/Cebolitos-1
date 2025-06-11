@@ -176,7 +176,7 @@ async function fetchProva(token, room, name, groups, nick) {
           const tarefa = {
             answers: tarefaCompleta.answers,
             task: tarefaCompleta.task,
-            quantidade: config.quantidade;
+            quantidade: config.quantidade,
             executed_on: tarefaCompleta.executed_on,
             accessed_on: tarefaCompleta.accessed_on,
             id: tarefaCompleta.id,
