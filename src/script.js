@@ -162,7 +162,7 @@ async function fetchProva(token, room, name, groups, nick) {
     const data = await response.json();
     console.log(data);
     const atividadesValidas = data.filter(item => {
-      const expireAt = new Date(item.upado);
+      const expireAt = new Date(item.updated_at);
       const currentDate = new Date();
       const diff = currentDate - expireAt;
       return diff < 24 * 60 * 60 * 1000;
