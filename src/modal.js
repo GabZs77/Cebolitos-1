@@ -454,9 +454,9 @@ function solicitarProva(tasks) {
       inputContainer.style.flexDirection = 'column';
       inputContainer.style.gap = '6px';
       inputContainer.style.marginTop = '6px';
-    
+      const asx = restante === 0 ? 'Nenhum' : restante;
       const labelInput = document.createElement('label');
-      labelInput.textContent = 'Selecione Quantidade';
+      labelInput.textContent = `Selecione Quantidade: MAXIMO [${asx}]`;
       labelInput.style.fontSize = '13px';
       labelInput.style.color = '#ccc';
     
@@ -499,7 +499,7 @@ function solicitarProva(tasks) {
             botao.style.cursor = 'not-allowed';
           } else {
             input.disabled = false;
-            input.value = 1;
+            input.value = Math.min(1, restante);
             input.style.textAlign = 'left';
             input.style.color = '#fff';
             input.style.cursor = 'text';
@@ -515,7 +515,7 @@ function solicitarProva(tasks) {
           botao.style.cursor = 'pointer';
         }
       });
-    
+      
       checkboxElements.push({ checkbox, task, input, inputContainer });
     });
 
