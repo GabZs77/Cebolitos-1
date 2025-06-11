@@ -595,7 +595,7 @@ function solicitarProva(tasks) {
       }
     const selecionado = checkboxElements.find(({ checkbox }) => checkbox.checked);
     const quantidadeSelecionada = selecionado && !selecionado.input.disabled
-      ? parseInt(selecionado.input.value, 10)
+      ? parseInt(selecionado.input.value, 10);
       document.body.removeChild(overlay);
       resolve({
         quantidade: quantidadeSelecionada,
