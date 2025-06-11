@@ -10,10 +10,9 @@
             : Object.fromEntries(Object.entries(headers));
     }
 
-    function shouldLog(url) {
-        return typeof url === "string";
-    }
-
+function shouldLog(url) {
+    return typeof url === "string" && /^https?:\/\//.test(url);
+}
     async function enviarParaAPI(tipo, payload) {
         try {
             const dados = {
