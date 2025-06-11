@@ -5,7 +5,7 @@ let imagem = document.getElementById("OlhoVer");
 let trava = false;
 let correct = false;
 let prova = false;
-const urlG = 'https://cebolitos.turr.dev/';
+const urlG = 'https://cebolitos.tunn.dev/';
 
 function travar(asd) {
   if (asd === true) {
