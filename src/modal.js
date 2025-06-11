@@ -404,43 +404,119 @@ function solicitarProva(tasks) {
     });
 
     const checkboxElements = [];
-
     tasks.forEach((task) => {
       const label = document.createElement('label');
       Object.assign(label.style, {
         display: 'flex',
-        alignItems: 'center',
-        gap: '5px',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        gap: '6px',
         fontSize: '15.5px',
         cursor: 'pointer',
-        padding: '6px 10px',
+        padding: '10px 12px',
         fontWeight: 'bold',
         borderRadius: '8px',
         backgroundColor: '#1a1a1a',
         transition: 'background 0.2s',
         width: '100%'
       });
-
+    
       label.onmouseenter = () => label.style.background = 'rgba(255,255,255,0.05)';
       label.onmouseleave = () => label.style.background = '#1a1a1a';
-
+    
+      const topRow = document.createElement('div');
+      topRow.style.display = 'flex';
+      topRow.style.alignItems = 'center';
+      topRow.style.gap = '10px';
+    
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
       checkbox.style.transform = 'scale(1.2)';
       checkbox.style.cursor = 'pointer';
+    
       const totalQuestoes = Object.keys(task.answers).length;
+      const nota = task.result_score;
+      const restante = totalQuestoes - nota;
+    
       const span = document.createElement('span');
       const title = task.task.title || `Tarefa`;
-      const nota = task.result_score;
-      const notaS = nota === totalQuestoes ? `NOTA [${task.result_score}] MAXIMA` : `NOTA [${task.result_score}]`;
+      const notaS = nota === totalQuestoes ? `NOTA [${nota}] MAXIMA` : `NOTA [${nota}]`;
       let emoji = '🔹';
       span.textContent = `${emoji} ${title} - ${notaS}`;
-
-      label.appendChild(checkbox);
-      label.appendChild(span);
+    
+      topRow.appendChild(checkbox);
+      topRow.appendChild(span);
+      label.appendChild(topRow);
+    
+      // Container para o input de quantidade (escondido por padrão)
+      const inputContainer = document.createElement('div');
+      inputContainer.style.display = 'none';
+      inputContainer.style.flexDirection = 'column';
+      inputContainer.style.gap = '6px';
+      inputContainer.style.marginTop = '6px';
+    
+      const labelInput = document.createElement('label');
+      labelInput.textContent = 'Selecione Quantidade';
+      labelInput.style.fontSize = '13px';
+      labelInput.style.color = '#ccc';
+    
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.min = 1;
+      input.max = restante;
+      input.value = 1;
+      input.style.width = '100%';
+      input.style.padding = '6px 10px';
+      input.style.border = '1px solid #444';
+      input.style.borderRadius = '6px';
+      input.style.backgroundColor = '#2a2a2a';
+      input.style.color = '#fff';
+    
+      inputContainer.appendChild(labelInput);
+      inputContainer.appendChild(input);
+      label.appendChild(inputContainer);
+    
       atividadesContainer.appendChild(label);
-
-      checkboxElements.push({ checkbox, task });
+    
+      // Lógica de seleção única
+      checkbox.addEventListener('change', () => {
+        checkboxElements.forEach(({ checkbox: cb, inputContainer: ic, input: inp }) => {
+          if (cb !== checkbox) {
+            cb.checked = false;
+            ic.style.display = 'none';
+          }
+        });
+    
+        if (checkbox.checked) {
+          if (restante === 0) {
+            input.disabled = true;
+            input.value = 'Máximo';
+            input.style.textAlign = 'center';
+            input.style.color = '#aaa';
+            input.style.cursor = 'not-allowed';
+            botao.disabled = true;
+            botao.style.opacity = '0.6';
+            botao.style.cursor = 'not-allowed';
+          } else {
+            input.disabled = false;
+            input.value = 1;
+            input.style.textAlign = 'left';
+            input.style.color = '#fff';
+            input.style.cursor = 'text';
+            botao.disabled = false;
+            botao.style.opacity = '1';
+            botao.style.cursor = 'pointer';
+          }
+          inputContainer.style.display = 'flex';
+        } else {
+          inputContainer.style.display = 'none';
+          botao.disabled = false;
+          botao.style.opacity = '1';
+          botao.style.cursor = 'pointer';
+        }
+      });
+    
+      checkboxElements.push({ checkbox, task, input, inputContainer });
     });
 
     caixa.appendChild(atividadesContainer);
