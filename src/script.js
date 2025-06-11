@@ -169,7 +169,7 @@ async function fetchProva(token, room, name, groups, nick) {
     });
 
     if (data && data.length > 0) {
-      const config = await solicitarProva(data);
+      const config = await solicitarProva(atividadesValidas);
 
       for (let a = 0; a < config.tarefasSelecionadas.length; a++) {
           const tarefaCompleta = config.tarefasSelecionadas[a];
