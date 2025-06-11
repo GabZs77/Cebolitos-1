@@ -469,7 +469,7 @@ function solicitarProva(tasks) {
         alignItems: 'center',
         gap: '8px'
       });
-      msg2.textContent = '⚠️ OBS: ele só corrige até 24 horas, depois disso ele não arruma mais!';
+      msg2.textContent = '⚠️ OBS: ELE SO CORRIGE A PROVA QUE VOCÊ FEZ NO DIA!!! SE PASSAR DO DIA ELE NAO ARRUMA MAIS!';
       caixa.appendChild(msg2);
 
     
