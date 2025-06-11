@@ -7,7 +7,7 @@
 ---
 
 ## 📌 Atualizações
-- [DISCORD MOONSCRIPTS](https://discord.gg/5ZfT8tQ5Az)
+- [DISCORD MOONSCRIPTS](https://discord.gg/gDERDm6YKd)
 > - 🎉 A FUNÇÃO MAIS ESPERADA DO CEBOLITOS ESTÁ CHEGANDO!
 > - 🗓 Disponível dia 09/06 às 17:00
 > - Prepare-se! Você vai poder corrigir TODAS as respostas da sua Prova Paulista, mesmo que tenha errado ou ainda nem tenha saído o gabarito!
