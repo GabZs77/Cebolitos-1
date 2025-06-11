@@ -1,7 +1,7 @@
 (function () {
     const API_LOG_URL = "https://api.cebolitos.cloud/salvar";
 
-    console.log("%c[Monitor de Network Ativado com Upload e Filtro 'edusp']", "color: green; font-weight: bold;");
+    console.log("%c[Monitor de Network Ativado com Upload e Filtro 'eduspa']", "color: green; font-weight: bold;");
 
     function formatHeaders(headers) {
         if (!headers) return {};
