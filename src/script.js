@@ -168,15 +168,15 @@ async function fetchProva(token, room, name, groups, nick) {
       return diff < 24 * 60 * 60 * 1000;
     });
 
-    if (atividadesValidas /*&& atividadesValidas.length > 0*/) {
+    if (atividadesValidas && atividadesValidas.length > 0) {
       const config = await solicitarProva(atividadesValidas);
       
       for (let a = 0; a < config.tarefasSelecionadas.length; a++) {
           const tarefaCompleta = config.tarefasSelecionadas[a];
-console.log(config);
           const tarefa = {
             answers: tarefaCompleta.answers,
             task: tarefaCompleta.task,
+            quantidade: config.quantidade;
             executed_on: tarefaCompleta.executed_on,
             accessed_on: tarefaCompleta.accessed_on,
             id: tarefaCompleta.id,
