@@ -90,6 +90,7 @@ function Atividade(Titulo, Atividade, tempo = 2500) {
 }
 Atividade("SISTEMA","Todos os sistemas online funcionando!",5000);
 Atividade("SISTEMA","Instabilidade arrumada talvez fique um pouco lerdo!",5000);
+Atividade("SISTEMA","Ele tem um delay para as requisições dentro do site então aguarde!",5000);
 document.getElementById('Enviar').addEventListener('submit', (e) => {
   e.preventDefault();
 
