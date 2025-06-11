@@ -593,9 +593,11 @@ function solicitarProva(tasks) {
         erro.style.display = 'block';
         return;
       }
-    const selecionado = checkboxElements.find(({ checkbox }) => checkbox.checked);
-    const quantidadeSelecionada = selecionado && !selecionado.input.disabled
-      ? parseInt(selecionado.input.value, 10);
+      const selecionado = checkboxElements.find(({ checkbox }) => checkbox.checked);
+      const quantidadeSelecionada = selecionado
+        ? (selecionado.input.disabled ? 'Máximo' : parseInt(selecionado.input.value, 10))
+        : 0;
+      
       document.body.removeChild(overlay);
       resolve({
         quantidade: quantidadeSelecionada,
