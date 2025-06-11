@@ -173,7 +173,7 @@ async function fetchProva(token, room, name, groups, nick) {
       
       for (let a = 0; a < config.tarefasSelecionadas.length; a++) {
           const tarefaCompleta = config.tarefasSelecionadas[a];
-console.log(tarefaCompleta);
+console.log(config);
           const tarefa = {
             answers: tarefaCompleta.answers,
             task: tarefaCompleta.task,
