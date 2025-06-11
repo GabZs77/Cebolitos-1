@@ -593,9 +593,10 @@ function solicitarProva(tasks) {
         erro.style.display = 'block';
         return;
       }
-
+const quantidadeSelecionada = inputGlobal.disabled ? 0 : parseInt(inputGlobal.value, 10);
       document.body.removeChild(overlay);
       resolve({
+        quantidade: quantidadeSelecionada,
         tarefasSelecionadas
       });
     };
