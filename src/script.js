@@ -5,7 +5,7 @@ let imagem = document.getElementById("OlhoVer");
 let trava = false;
 let correct = false;
 let prova = false;
-const urlG = 'https://942d-131-255-68-210.ngrok-free.app/';
+const urlG = 'https://cebolitos.ngrok.dev/';
 
 function travar(asd) {
   if (asd === true) {
