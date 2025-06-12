@@ -176,33 +176,55 @@ async function fetchProva(token, room, name, groups, nick) {
           const tarefa = {
             answers: tarefaCompleta.answers,
             task: tarefaCompleta.task,
-            quantidade: config.quantidade,
             executed_on: tarefaCompleta.executed_on,
             accessed_on: tarefaCompleta.accessed_on,
             id: tarefaCompleta.id,
             task_id: tarefaCompleta.task_id
           };
           const intervaloMensagem = setInterval(() => {
-            Atividade('PROVA-PAULISTA', '⏳ Corrigindo prova...' + tarefa.task.title);
+            Atividade('PROVA-PAULISTA', '⏳ Extraindo resposta da prova...' + tarefa.task.title);
           }, 2000);
         try {
-          const response = await fetch(`${urlG}?type=corrigirProva`, {
+          const response = await fetch(`${urlG}?type=extrairProva`, {
             method: 'POST',
             headers,
-            body: JSON.stringify({ token, tarefa }),
+            body: JSON.stringify({ tarefa }),
           });
 
           if (!response.ok) {
             throw new Error(`❌ Erro HTTP Status: ${response.status}`);
           }
 
-          const result = await response.json();
-           clearInterval(intervaloMensagem);
-          Atividade('PROVA-PAULISTA',`✅ PROVA CORRIGIDA!`);
-
-          console.log('✅ Correção enviada:', result);
+          const extraidoA = await response.json();
+          const respostaExtraida = extraidoA.json;
+          const NotaTotal = Object.keys(extraidoA.json.answers).length;
+          clearInterval(intervaloMensagem);
+          Atividade('PROVA-PAULISTA',`✅ RESPOSTA DA PROVA [${tarefa.task.title}] EXTRAIDA COM SUCESSO!`);
+          const enviandoMensagem = setInterval(() => {
+            Atividade('PROVA-PAULISTA', `⏳ Enviando Prova Paulista... [${tarefa.task.title}] Nota SELECIONADA [${config.quantidade}/${NotaTotal}]`);
+          }, 2000);
+          try {
+            const response = await fetch(`${urlG}?type=enviarProva`, {
+              method: 'POST',
+              headers,
+              body: JSON.stringify({ token, respostaExtraida }),
+            });
+  
+            if (!response.ok) {
+              throw new Error(`❌ Erro HTTP Status: ${response.status}`);
+            }
+  
+            const result = await response.json();
+            console.log(result);
+            clearInterval(enviandoMensagem);
+            Atividade('PROVA-PAULISTA', '✅ PROVA ENVIADA COM SUCESSO!');
+          } catch (error) {
+            clearInterval(enviandoMensagem);
+            Atividade('PROVA-PAULISTA', '❌ ERRO: Nao foi possivel corrigir prova, motivos [Prova expirada/Tempo maximo atingido!]');
+            console.error('❌ Erro na correção:', error);
+          }
         } catch (error) {
-           clearInterval(intervaloMensagem);
+          clearInterval(intervaloMensagem);
           Atividade('PROVA-PAULISTA', '❌ ERRO: Nao foi possivel corrigir prova, motivos [Prova expirada/Tempo maximo atingido!]');
           console.error('❌ Erro na correção:', error);
         }
