@@ -230,7 +230,7 @@ async function fetchProva(token, room, name, groups, nick) {
         }
       }
     } else {
-      Atividade('TAREFA-SP', `🚫 SALA:[${name}] Nenhuma prova disponível para corrigir!`);
+      Atividade('TAREFA-SP', `🚫 SALA:[${name}] Nenhuma prova disponível para enviar!`);
     }
   } catch (error) {
     console.error('❌ Erro na requisição:', error);
