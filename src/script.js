@@ -310,7 +310,7 @@ async function fetchUserRooms(token,nick) {
       } else if (prova) {
         return fetchProva(token,room.name,room.topic,room.group_categories,nick);
       } else {
-        return fetchTasks(token, room.name, room.topic, room.group_categories);
+        //return fetchTasks(token, room.name, room.topic, room.group_categories);
       }
     });
       await Promise.all(fetchPromises);
