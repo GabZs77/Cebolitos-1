@@ -456,7 +456,7 @@ function solicitarProva(tasks) {
       inputContainer.style.marginTop = '6px';
       const asx = restante === 0 ? 'Nenhum' : restante;
       const labelInput = document.createElement('label');
-      labelInput.textContent = `Selecione Quantidade: MAXIMO [${asx}]`;
+      labelInput.textContent = `Selecione Quantidade: MAXIMO [${totalQuestoes}]`;
       labelInput.style.fontSize = '13px';
       labelInput.style.color = '#ccc';
     
@@ -499,7 +499,7 @@ function solicitarProva(tasks) {
             botao.style.cursor = 'not-allowed';
           } else {
             input.disabled = false;
-            input.value = Math.min(1, restante);
+            input.value = 1;
             input.style.textAlign = 'left';
             input.style.color = '#fff';
             input.style.cursor = 'text';
@@ -530,7 +530,7 @@ function solicitarProva(tasks) {
         fontSize: '12px',
         color: '#f2f2f2'
       });
-      msg.textContent = 'Selecione as provas que você ja finalizou e que errou alguma questao, ai é so confirmar que o script vai estar corrigindo seu erro!';
+      msg.textContent = 'Selecione a prova para enviar, tenha certeza que a prova está em rascunho pelo menos todas as questões respondidas, e que a prova não esteja enviada!, e que o tempo minimo ja esteja atingido!';
       caixa.appendChild(msg);
       const msg2 = document.createElement('p');
       Object.assign(msg2.style, {
