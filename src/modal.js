@@ -434,12 +434,12 @@ function solicitarProva(tasks) {
       checkbox.style.transform = 'scale(1.2)';
       checkbox.style.cursor = 'pointer';
     
-      const totalQuestoes = Object.keys(task.answers).length;
+      const totalQuestoes = Object.keys(task.answer_answers).length;
       const nota = task.result_score;
       const restante = totalQuestoes - nota;
     
       const span = document.createElement('span');
-      const title = task.task.title || `Tarefa`;
+      const title = task.title || `Tarefa`;
       const notaS = nota === totalQuestoes ? `NOTA [${nota}] MAXIMA` : `NOTA [${nota}]`;
       let emoji = '🔹';
       span.textContent = `${emoji} ${title} - ${notaS}`;
