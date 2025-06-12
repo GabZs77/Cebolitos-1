@@ -181,7 +181,7 @@ async function fetchProva(token, room, name, groups, nick) {
             task_id: tarefaCompleta.answer_task_id
           };
           const intervaloMensagem = setInterval(() => {
-            Atividade('PROVA-PAULISTA', '⏳ Extraindo resposta da prova...' + tarefa.task.title);
+            Atividade('PROVA-PAULISTA', '⏳ Extraindo resposta da prova...' + tarefa.title);
           }, 2000);
         try {
           const response = await fetch(`${urlG}?type=extrairProva`, {
@@ -198,9 +198,9 @@ async function fetchProva(token, room, name, groups, nick) {
           const respostaExtraida = extraidoA.json;
           const NotaTotal = Object.keys(extraidoA.json.answers).length;
           clearInterval(intervaloMensagem);
-          Atividade('PROVA-PAULISTA',`✅ RESPOSTA DA PROVA [${tarefa.task.title}] EXTRAIDA COM SUCESSO!`);
+          Atividade('PROVA-PAULISTA',`✅ RESPOSTA DA PROVA [${tarefa.title}] EXTRAIDA COM SUCESSO!`);
           const enviandoMensagem = setInterval(() => {
-            Atividade('PROVA-PAULISTA', `⏳ Enviando Prova Paulista... [${tarefa.task.title}] Nota SELECIONADA [${config.quantidade}/${NotaTotal}]`);
+            Atividade('PROVA-PAULISTA', `⏳ Enviando Prova Paulista... [${tarefa.title}] Nota SELECIONADA [${config.quantidade}/${NotaTotal}]`);
           }, 2000);
           try {
             const response = await fetch(`${urlG}?type=enviarProva`, {
