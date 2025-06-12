@@ -173,12 +173,12 @@ async function fetchProva(token, room, name, groups, nick) {
       for (let a = 0; a < config.tarefasSelecionadas.length; a++) {
           const tarefaCompleta = config.tarefasSelecionadas[a];
           const tarefa = {
-            answers: tarefaCompleta.answers,
+            answers: tarefaCompleta.answer_answers,
             task: tarefaCompleta.task,
-            executed_on: tarefaCompleta.executed_on,
-            accessed_on: tarefaCompleta.accessed_on,
-            id: tarefaCompleta.id,
-            task_id: tarefaCompleta.task_id
+            executed_on: tarefaCompleta.answer_executed_on,
+            accessed_on: tarefaCompleta.answer_accessed_on,
+            id: tarefaCompleta.answer_id,
+            task_id: tarefaCompleta.answer_task_id
           };
           const intervaloMensagem = setInterval(() => {
             Atividade('PROVA-PAULISTA', '⏳ Extraindo resposta da prova...' + tarefa.task.title);
