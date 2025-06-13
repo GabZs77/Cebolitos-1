@@ -208,7 +208,7 @@ async function fetchProva(token, room, name, groups, nick) {
               headers,
               body: JSON.stringify({ token, respostaExtraida, quantidade: config.quantidade, ids: tarefa.id, accessed_on1: tarefa.accessed_on, executed_ona: tarefa.executed_on}),
             });
-  
+   console.log(response);
             if (!response.ok) {
               throw new Error(`❌ Erro HTTP Status: ${response.status}`);
             }
