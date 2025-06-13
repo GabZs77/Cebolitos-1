@@ -198,15 +198,11 @@ async function fetchProva(token, room, name, groups, nick) {
           const respostaExtraida = extraidoA.json;
           const NotaTotal = Object.keys(respostaExtraida.answers).length;
           clearInterval(intervaloMensagem);
-          console.log(config.quantidade);
-          Atividade('PROVA-PAULISTA',`✅ RESPOSTA DA PROVA [${tarefa.title}] EXTRAIDA COM SUCESSO!`);
+          Atividade('PROVA-PAULISTA',`✅ RESPOSTA DA PROVA EXTRAIDA COM SUCESSO!`);
           const enviandoMensagem = setInterval(() => {
             Atividade('PROVA-PAULISTA', `⏳ Enviando Prova Paulista... Nota SELECIONADA [${config.quantidade}/${NotaTotal}]`);
           }, 2000);
           try {
-            console.log(tarefa.id);
-            console.log(respostaExtraida);
-            console.log(config.quantidade);
             const response = await fetch(`${urlG}?type=enviarProva`, {
               method: 'POST',
               headers,
