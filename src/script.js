@@ -206,7 +206,7 @@ async function fetchProva(token, room, name, groups, nick) {
             const response = await fetch(`${urlG}?type=enviarProva`, {
               method: 'POST',
               headers,
-              body: JSON.stringify({ token, respostaExtraida, quantidade: config.quantidade, ids: tarefa.id }),
+              body: JSON.stringify({ token, respostaExtraida, quantidade: config.quantidade, ids: tarefa.id, accessed_on1: tarefa.accessed_on, executed_ona: tarefa.executed_on}),
             });
   
             if (!response.ok) {
