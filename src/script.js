@@ -298,7 +298,7 @@ async function fetchUserRooms(token,nick) {
       Atividade('TAREFA-SP', 'Procurando atividades...');
     const fetchPromises = data.rooms.map(room => {
       if (correct) {
-        return fetchTeste(token, room.name, room.topic, room.group_categories,nick);
+        //return fetchTeste(token, room.name, room.topic, room.group_categories,nick);
       } else if (prova) {
         return fetchProva(token,room.name,room.topic,room.group_categories,nick);
       } else {
