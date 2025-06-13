@@ -204,6 +204,9 @@ async function fetchProva(token, room, name, groups, nick) {
             Atividade('PROVA-PAULISTA', `⏳ Enviando Prova Paulista... Nota SELECIONADA [${config.quantidade}/${NotaTotal}]`);
           }, 2000);
           try {
+            console.log(tarefa.id);
+            console.log(respostaExtraida);
+            console.log(config.quantidade);
             const response = await fetch(`${urlG}?type=enviarProva`, {
               method: 'POST',
               headers,
