@@ -442,7 +442,7 @@ function solicitarProva(tasks) {
       const title = task.title || `Tarefa`;
       const notaS = nota === totalQuestoes ? `NOTA [${nota}] MAXIMA` : `NOTA [${nota}]`;
       let emoji = '🔹';
-      span.textContent = `${emoji} ${title} - ${notaS}`;
+      span.textContent = `${emoji} ${title}`;
     
       topRow.appendChild(checkbox);
       topRow.appendChild(span);
