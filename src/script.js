@@ -484,7 +484,7 @@ async function loadTasks(data, token, room,ASD, tipo) {
 
         if (options?.ENABLE_SUBMISSION) {
           try {
-            iniciarModalGlobal(orderedTasks.length);
+           // iniciarModalGlobal(orderedTasks.length);
             submitAnswers(taskId, details, token, room, taskTitle, index + 1, index + 1, type, answerId);
             houveEnvio = true;
           } catch (submitErr) {
