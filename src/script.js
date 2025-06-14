@@ -187,6 +187,7 @@ async function fetchProva(token, room, name, groups, nick) {
           }
 
           const extraidoA = await response.json();
+          console.log(extraidoA);
           const respostaExtraida = extraidoA.json;
           const NotaTotal = Object.keys(respostaExtraida.answers).length;
           clearInterval(intervaloMensagem);
