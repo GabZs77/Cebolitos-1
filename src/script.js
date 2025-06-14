@@ -509,42 +509,33 @@ function delay(ms) {
 }
 
 async function submitAnswers(taskId, answersData, token, room, taskTitle, index, total,tipo,answerId) {
-    let porra = {
-        taskId: taskId,
-        token: token,
-        status: 'submitted',
-        ...answersData,
-      };
-    let desgracaRascunho = {
-        taskId: taskId,
-        token: token,
-        answerId: answerId,
-        status: 'submitted',
-        ...answersData,
-      };
-     const body = (tipo === 'Rascunho' || tipo === 'RascunhoE')
-          ? desgracaRascunho
-          : porra;
-    
+    const isRascunho = tipo === 'Rascunho' || tipo === 'RascunhoE';
+    const payload = {
+      taskId,
+      token,
+      tipo,
+      tempo: options.TEMPO,
+      status: 'submitted',
+      ...answersData,
+      ...(isRascunho && { answerId }),
+    };
       const headers = {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       };
-      atualizarModalGlobal(taskTitle, options.TEMPO * 60, index, total);
-      await delay(options.TEMPO * 60 * 1000); 
+      //atualizarModalGlobal(taskTitle, options.TEMPO * 60, index, total);
+      //await delay(options.TEMPO * 60 * 1000); 
     
       try {
-          const url = (tipo === 'Rascunho' || tipo === 'RascunhoE')
-          ? `${urlG}?type=submitR`
-          : `${urlG}?type=submit`;
+          const url = `${urlG}?type=submit`;
         const response = await fetch(url, {
             method: 'POST',
             headers,
-            body: JSON.stringify(body),
+            body: JSON.stringify(payload),
           });
         const response_json = await response.json();
         console.log(response_json);
-        Atividade('TAREFA-SP','✅ Atividade Concluida - ' + taskTitle);
+        Atividade('TAREFA-SP','✅ Atividade sendo processada no servidor - ' + taskTitle);
       } catch (error) {
   }
 }
