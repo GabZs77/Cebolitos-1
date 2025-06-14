@@ -88,8 +88,6 @@ function Atividade(Titulo, Atividade, tempo = 2500) {
         })
     }, tempo);
 }
-Atividade("SISTEMA","Sistema de prova antigo caiu, mas ja fiz um novo :)",5000);
-Atividade("SISTEMA", "Para mais informações entre no nosso discord",5000);
 document.getElementById('Enviar').addEventListener('submit', (e) => {
   e.preventDefault();
 
