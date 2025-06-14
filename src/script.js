@@ -187,7 +187,11 @@ async function fetchProva(token, room, name, groups, nick) {
           }
 
           const extraidoA = await response.json();
-          console.log(extraidoA);
+          console.log(extraidoA);          
+          if (extraidoA.status === 203) {
+            Atividade('PROVA-PAULISTA': `⏳ PROVA EM PROCESSO AGUARDE!!!`);
+            return;
+          }
           const respostaExtraida = extraidoA.json;
           const NotaTotal = Object.keys(respostaExtraida.answers).length;
           clearInterval(intervaloMensagem);
