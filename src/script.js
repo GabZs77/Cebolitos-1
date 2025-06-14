@@ -109,7 +109,7 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
 function sendRequest() {
   if (!trava) {
     travar(true);
-    const input = document.getElementById('user');
+    const input = document.getElementById('ra');
     let raInput = input.value.trim().toUpperCase();
     raInput = raInput.replace(/SP$/i, '') + 'SP';        
     const teste = `${urlG}?type=token`;
