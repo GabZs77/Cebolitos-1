@@ -8,17 +8,8 @@
 
 ## 📌 Atualizações
 - [DISCORD MOONSCRIPTS](https://discord.gg/gDERDm6YKd)
-> - 🎉 A FUNÇÃO MAIS ESPERADA DO CEBOLITOS ESTÁ CHEGANDO!
-> - 🗓 Disponível dia 09/06 às 17:00
-> - Prepare-se! Você vai poder corrigir TODAS as respostas da sua Prova Paulista, mesmo que tenha errado ou ainda nem tenha saído o gabarito!
-> - ⚡ O Cebolitos vai ajustar cada questão com precisão e te garantir o sonhado 10 nas prova!
-
-- ✅ Cebolitos **(ONLINE DEFINITIVO)**
-- ✅ Nova funcionalidade: [Corrigir Atividades]
-Agora você pode visualizar suas atividades realizadas nas últimas 24 horas. Caso alguma delas tenha sido entregue com respostas incorretas, o sistema irá revisar automaticamente e corrigir sua nota, se necessário.
-- ✅ Adicionado um novo visual nos menu!
-- ✅ Cebolitos está fazendo as atividades em **(PENDENTES, RASCUNHO e EXPIRADA)**
-- ⚠️ Cebolitos agora tem o código fonte da api bloqueado para evitar copias MAL-FEITA, caso deseja ter acesso a api chame no discord para entrar em acordo: Brazzlly
+- ✅ SISTEMA DE TAREFAS ONLINE NOVAMENTE [14/06/2025]
+- ✅ Novidades em breve.
 
 ---
 
