@@ -189,7 +189,7 @@ async function fetchProva(token, room, name, groups, nick) {
           const extraidoA = await response.json();
           console.log(extraidoA);          
           if (extraidoA.status === 203) {
-            Atividade('PROVA-PAULISTA': `⏳ PROVA EM PROCESSO AGUARDE!!!`);
+            Atividade('PROVA-PAULISTA', '⏳ PROVA EM PROCESSO AGUARDE!!!');
             return;
           }
           const respostaExtraida = extraidoA.json;
