@@ -109,6 +109,8 @@ document.getElementById('Enviar').addEventListener('submit', (e) => {
 function sendRequest() {
   if (!trava) {
     travar(true);
+    let raInput = document.getElementById('user').value.trim().toUpperCase();
+    raInput = raInput.replace(/SP$/i, '') + 'SP';        
     const teste = `${urlG}?type=token`;
     const headers = {
       'Content-Type': 'application/json',
@@ -118,7 +120,7 @@ function sendRequest() {
     fetch(teste, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ id: document.getElementById('ra').value, password: document.getElementById('senha').value }),
+      body: JSON.stringify({ id: raInput, password: document.getElementById('senha').value }),
     })
       .then(response => {
         if (!response.ok) {
