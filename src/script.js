@@ -535,7 +535,7 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
           });
         const response_json = await response.json();
         console.log(response_json);
-        Atividade('TAREFA-SP','✅ Atividade sendo processada no servidor - ' + taskTitle);
+        Atividade('TAREFA-SP',`✅ Atividade sendo processada no servidor [${taskTitle}] - TEMPO [${options.TEMPO}] minutos '`);
       } catch (error) {
   }
 }
