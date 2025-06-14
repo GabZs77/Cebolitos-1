@@ -451,26 +451,19 @@ async function loadTasks(data, token, room,ASD, tipo) {
   let houveEnvio = false;
 
   async function processTask(task, index) {
-    //if (config.ignorarRascunho &&  (task.tipo.toLowerCase() === 'rascunho' || task.tipo.toLowerCase() === 'rascunhoe')) return;
-    //if (config.ignorarExpiradas && task.tipo.toLowerCase() === 'expirada') return;
-    //if (config.ignorarPendente && task.tipo.toLowerCase() === 'pendente') return;
     const taskId = task.id;
     const taskTitle = task.title;
     const type = task.tipo;
     const isRascunho = (type === 'Rascunho' || type === 'RascunhoE');
     const answerId = (isRascunho && task.answer_id != null) ? task.answer_id : undefined;
 
-    const url = isRascunho
-        ? `${urlG}?type=previewTaskR`
-        : `${urlG}?type=previewTask`;
+    const url = `${urlG}?type=previewTask`;
     const headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
 
-    const body = isRascunho && answerId != null
-    ? JSON.stringify({ token, taskId, answerId })
-    : JSON.stringify({ token, taskId });
+    const body = JSON.stringify({ taskId, room, copy: 'cebolitos' });
 
     try {
       const response = await fetch(url, { method: 'POST', headers, body });
@@ -478,34 +471,6 @@ async function loadTasks(data, token, room,ASD, tipo) {
         throw new Error(`Erro HTTP! Status: ${response.status}`);
       }
       const details = await response.json();
-      const answersData = {};
-        
-      const PutaMEDIA = details.questions.some(q => q && q.type === 'media');
-      if (PutaMEDIA) {
-        Atividade('TAREFA-SP', `⏭️ Atividade "${task.title}" anulada por conter questão do tipo media`);
-        return; 
-      }
-      details.questions.forEach(question => {
-        if (!question || question.type === 'info') return;
-
-        const questionId = question.id;
-        let answer = {};
-
-        if (question.options && typeof question.options === 'object') {
-          const options = Object.values(question.options);
-          const correctIndex = Math.floor(Math.random() * options.length);
-          options.forEach((_, i) => {
-            answer[i] = i === correctIndex;
-          });
-        }
-
-        answersData[questionId] = {
-          question_id: questionId,
-          question_type: question.type,
-          answer,
-        };
-      });
-
       const contemRedacao = isRedacao(task);
 
       if (contemRedacao) {
@@ -522,7 +487,7 @@ async function loadTasks(data, token, room,ASD, tipo) {
         if (options?.ENABLE_SUBMISSION) {
           try {
             iniciarModalGlobal(orderedTasks.length);
-            submitAnswers(taskId, answersData, token, room, taskTitle, index + 1, index + 1, type, answerId);
+            submitAnswers(taskId, details, token, room, taskTitle, index + 1, index + 1, type, answerId);
             houveEnvio = true;
           } catch (submitErr) {
             console.error(`❌ Erro ao enviar respostas para a tarefa ${taskId}:`, submitErr);
@@ -544,69 +509,20 @@ async function loadTasks(data, token, room,ASD, tipo) {
 function delay(ms) {  
   return new Promise(resolve => setTimeout(resolve, ms));
 }
-async function asd(taskId, answersData, token, room,answerId) {
 
-    let desgracaRascunho = {
-        taskId: taskId,
-        token: token,
-        status: 'submitted',
-        accessed_on: 'room',
-        duration: '35000',
-        executed_on: room,
-        answers: answersData,
-      };
-     const body = desgracaRascunho;
-    
-      const headers = {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      };
-     const urls = `${urlG}?type=previewTaskP`;
-
-    const bodya = JSON.stringify({ token, taskId, answerId,room });
-
-    try {
-      const response = await fetch(urls, { method: 'POST', headers, bodya });
-      if (!response.ok) {
-        throw new Error(`Erro HTTP! Status: ${response.status}`);
-      }
-      const details = await response.json();
-      console.log(details);
-        console.log('aguardando tempo');
-        await delay(options.TEMPO * 60 * 1000); 
-        try {
-            const url = `${urlG}?type=submit`;
-          const response = await fetch(url, {
-              method: 'POST',
-              headers,
-              body: JSON.stringify(body),
-            });
-          const response_json = await response.json();
-          const new_task_id = response_json.id;
-          fetchCorrectAnswers(taskId, new_task_id, token,taskTitle);
-        } catch (error) {
-    }
-    } catch (error){}
-
- 
-}
 async function submitAnswers(taskId, answersData, token, room, taskTitle, index, total,tipo,answerId) {
     let porra = {
         taskId: taskId,
         token: token,
         status: 'submitted',
-        accessed_on: 'room',
-        executed_on: room,
-        answers: answersData,
+        ...answersData,
       };
     let desgracaRascunho = {
         taskId: taskId,
         token: token,
         answerId: answerId,
         status: 'submitted',
-        accessed_on: 'room',
-        executed_on: room,
-        answers: answersData,
+        ...answersData,
       };
      const body = (tipo === 'Rascunho' || tipo === 'RascunhoE')
           ? desgracaRascunho
@@ -629,192 +545,12 @@ async function submitAnswers(taskId, answersData, token, room, taskTitle, index,
             body: JSON.stringify(body),
           });
         const response_json = await response.json();
-        const new_task_id = response_json.id;
-        fetchCorrectAnswers(taskId, new_task_id, token,taskTitle);
+        console.log(response_json);
+        Atividade('TAREFA-SP','✅ Atividade Concluida - ' + taskTitle);
       } catch (error) {
   }
 }
 
-async function fetchCorrectAnswers(taskId, answerId, token, taskTitle) {
-  const url = `${urlG}?type=fetchSubmit`;
-  const headers = {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-  };
-
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ token, taskId, answerId }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-
-      const mensagemErro = typeof errorData === 'string'
-        ? errorData
-        : errorData.response || JSON.stringify(errorData);
-      console.log(mensagemErro);
-      Atividade('TAREFA-SP', `❌ Erro: ${mensagemErro}`);
-      return;
-    }
-
-    const data = await response.json();
-    putAnswer(data, taskId, answerId, token, taskTitle);
-
-  } catch (error) {
-    console.error('Erro ao buscar respostas:', error);
-    Atividade('TAREFA-SP', `❌ Erro de rede: ${error.message}`);
-  }
-}
-function corrigirAtividade(body, taskId, answerId, token,taskTitle) {
-  const url = `${urlG}?type=putSubmit`;
-  const headers = {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',  
-  };
-  let bod = {
-    taskId: taskId,
-    answerId: answerId,
-    token: token,
-    ...body
-  };
-  fetch(url, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify(bod),
-  })
-    .then(response => {
-      if (!response.ok) {
-        Atividade('TAREFA-SP', `❌ Erro: ${response.response}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-        Atividade('TAREFA-SP',`✅ Atividade Corrigida - ${taskTitle} - NOTA: [${data.result_score}]`);
-
-    })
-    .catch(error => {
-
-      console.log(error);
-      Atividade('TAREFA-SP','❌ Erro ao corrigir a atividade - ' + taskTitle);
-      //console.error('❌ Erro ao enviar respostas corrigidas:', error);
-    });
-}
-function putAnswer(respostasAnteriores, taskId, answerId, token,taskTitle) {
-  const url = `${urlG}?type=putSubmit`;
-  const headers = {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',  
-  };
-  const novasRespostasPayload = transformJson(respostasAnteriores);
-  let bod = {
-    taskId: taskId,
-    answerId: answerId,
-    token: token,
-    ...novasRespostasPayload
-  };
-  fetch(url, {
-    method: 'PUT',
-    headers,
-    body: JSON.stringify(bod),
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(
-          `❌ Erro ao enviar respostas corrigidas! Status: ${response.status}`
-        );
-      }
-      return response.json();
-    })
-    .then(data => {
-        Atividade('TAREFA-SP','✅ Atividade Concluida - ' + taskTitle);
-    })
-    .catch(error => {
-      Atividade('TAREFA-SP','❌ Erro ao corrigir a atividade - ' + taskTitle);
-      //console.error('❌ Erro ao enviar respostas corrigidas:', error);
-    });
-}
-function transformJson(jsonOriginal) {
-    if (!jsonOriginal || !jsonOriginal.task || !jsonOriginal.task.questions) {
-      throw new Error("Estrutura de dados inválida para transformação.");
-    }
-
-    let novoJson = {
-      accessed_on: jsonOriginal.accessed_on,
-      executed_on: jsonOriginal.executed_on,
-      answers: {}
-    };
-
-    for (let questionId in jsonOriginal.answers) {
-      let questionData = jsonOriginal.answers[questionId];
-      let taskQuestion = jsonOriginal.task.questions.find(q => q.id === parseInt(questionId));
-
-      if (!taskQuestion) {
-        console.warn(`Questão com ID ${questionId} não encontrada!`);
-        continue;
-      }
-
-      let answerPayload = {
-        question_id: questionData.question_id,
-        question_type: taskQuestion.type,
-        answer: null
-      };
-
-      try {
-        switch (taskQuestion.type) {
-          case "order-sentences":
-            if (taskQuestion.options && taskQuestion.options.sentences && Array.isArray(taskQuestion.options.sentences)) {
-              answerPayload.answer = taskQuestion.options.sentences.map(sentence => sentence.value);
-            }
-            break;
-          case "fill-words":
-            if (taskQuestion.options && taskQuestion.options.phrase && Array.isArray(taskQuestion.options.phrase)) {
-              answerPayload.answer = taskQuestion.options.phrase
-                .map(item => item.value)
-                .filter((_, index) => index % 2 !== 0);
-            }
-            break;
-          case "text_ai":
-            let cleanedAnswer = removeTags(taskQuestion.comment || '');
-            answerPayload.answer = { "0": cleanedAnswer };
-            break;
-          case "fill-letters":
-            if (taskQuestion.options && taskQuestion.options.answer !== undefined) {
-              answerPayload.answer = taskQuestion.options.answer;
-            }
-            break;
-          case "cloud":
-            if (taskQuestion.options && taskQuestion.options.ids && Array.isArray(taskQuestion.options.ids)) {
-              answerPayload.answer = taskQuestion.options.ids;
-            }
-            break;
-          default:
-            if (taskQuestion.options && typeof taskQuestion.options === 'object') {
-              answerPayload.answer = Object.fromEntries(
-                Object.keys(taskQuestion.options).map(optionId => {
-                  const optionData = taskQuestion.options[optionId];
-                  const answerValue = (optionData && optionData.answer !== undefined) ? optionData.answer : false;
-                  return [optionId, answerValue];
-                })
-              );
-            }
-            break;
-        }
-        novoJson.answers[questionId] = answerPayload;
-      } catch (err) {
-        console.error(`Erro ao processar questão ID ${questionId}:`, err);
-        trava = false;
-        continue;
-      }
-    }
-    return novoJson;
-  }
-
-function removeTags(htmlString) {
-  return htmlString.replace(/<[^>]*>?/gm, '');
-}
 
 sendRequest();
 });
