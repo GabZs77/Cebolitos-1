@@ -7,7 +7,7 @@
 ---
 
 ## 📌 Atualizações
-- ✅ SISTEMA DE TAREFAS ONLINE NOVAMENTE [14/06/2025]
+-  SISTEMA DESLIGADO [15/06/2025]
 
 ---
 
