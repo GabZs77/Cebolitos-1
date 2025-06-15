@@ -7,8 +7,6 @@
 ---
 
 ## 📌 Atualizações
-- [DISCORD MOONSCRIPTS](https://discord.gg/gDERDm6YKd)
-- ✅ Entre no discord para ficar por dentro das novidades!
 - ✅ SISTEMA DE TAREFAS ONLINE NOVAMENTE [14/06/2025]
 
 ---
