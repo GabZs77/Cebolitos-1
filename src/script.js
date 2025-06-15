@@ -321,6 +321,8 @@ async function fetchUserRooms(token,nick) {
 }
 
 async function fetchTasks(token, room, name,groups) {
+  Atividade('Sistema em manutenção...','embreve voltara!');
+  return;
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
