@@ -1,4 +1,3 @@
-
 let MostrarSenha = document.getElementById("VerSenha");
 let Senha = document.getElementById("senha");
 let imagem = document.getElementById("OlhoVer");
